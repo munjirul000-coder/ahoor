@@ -63,3 +63,13 @@ python3 build.py         # regenerate index.html (landing)
 Push to GitHub → Deploy on Render (free tier):
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/munjirul000-coder/ahoor)
+
+## Features (v2 — Profile + Marketplace)
+
+- **Business profile setup** — role, business name, district (64 districts, bn/en), category, description, logo; editable anytime
+- **Marketplace feed** — browse all posts with tabs (All / Buyer Requirements / Supplier Products), search, category & district filters
+- **Buyer posts** — requirement with title, category, quantity+unit, budget, location, deadline, description, reference image
+- **Supplier posts** — product with MOQ, price (or "Contact for Price"), capacity, images
+- **Quote requests** — "Get Quotes" / "Request Quote" buttons; sellers see received quotes in dashboard
+- **Dashboard** — profile summary, my posts (edit/close/delete), received quotes, create-post & marketplace shortcuts
+- Owner-only editing/deletion enforced server-side (403 otherwise); all pages bilingual
