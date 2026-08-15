@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahoor — আমার অ্যাকাউন্ট</title>
+<meta name="theme-color" content="#0A1122">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1430'/%3E%3Cpath d='M16 8.5 9.6 23.5h12.8z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='9.6' cy='23.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='22.4' cy='23.5' r='2.6' fill='%23FF8A4C'/%3E%3C/svg%3E">
+<style>
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,__INTER__) format('woff2')}
+@font-face{font-family:'Noto Sans Bengali';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,__NSB__) format('woff2')}
+:root{--ink:#0A1122;--bg:#F4F6FA;--text:#101828;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+html[lang="bn"]{--font:'Noto Sans Bengali','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+html[lang="bn"] body{line-height:1.72}
+__CSS__
+</style>
+</head>
+<body data-meta="meta.dash">
+
+<header class="auth-nav">
+  <div class="container">
+    <a class="brand" href="/index.html" aria-label="Ahoor — home">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="9" fill="url(#lg1)"/>
+        <path d="M16 8.5 9.6 23.5h12.8z" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/>
+        <circle cx="16" cy="8.5" r="2.7" fill="#fff"/><circle cx="9.6" cy="23.5" r="2.7" fill="#fff"/><circle cx="22.4" cy="23.5" r="2.7" fill="#FF8A4C"/>
+        <defs><linearGradient id="lg1" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#3B77FF"/><stop offset="1" stop-color="#1E4FD8"/></linearGradient></defs>
+      </svg>
+      <span class="brand-name">Ahoor<em>.</em></span>
+    </a>
+    <div class="auth-nav-right">
+      <a class="back-home" href="/index.html">
+        <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        <span data-i18n="db.home">Back to Home</span>
+      </a>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" class="lang-btn on" data-lang="bn" aria-pressed="true">বাংলা</button>
+        <span class="lsep" aria-hidden="true">|</span>
+        <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="auth-main">
+  <div class="auth-card wide">
+    <div id="loadingBox" style="text-align:center;padding:30px 0">
+      <span class="spinner" style="display:inline-block;border-color:rgba(47,107,255,.25);border-top-color:#2F6BFF;width:26px;height:26px"></span>
+      <p style="margin-top:12px;color:#8A95AC;font-size:.88rem" data-i18n="ui.loading">Loading…</p>
+    </div>
+
+    <div id="dashBody" style="display:none">
+      <div class="dash-head">
+        <span class="avatar" id="avatar">A</span>
+        <h1 id="welcome">Welcome to Ahoor</h1>
+        <p id="memberSince"></p>
+        <span class="chip-type" id="typeChip"></span>
+      </div>
+      <div class="dash-grid">
+        <div class="dash-card" onclick="Ahoor.toast(Ahoor.t('db.soon'),'ok')">
+          <span class="soon-tag" data-i18n="db.soon">Coming soon</span>
+          <span class="dico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+          <b data-i18n="db.profile">My Profile</b>
+          <span data-i18n="db.profileD">Your business information</span>
+        </div>
+        <div class="dash-card" onclick="Ahoor.toast(Ahoor.t('db.soon'),'ok')">
+          <span class="soon-tag" data-i18n="db.soon">Coming soon</span>
+          <span class="dico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1.5"/><path d="M12 11v6"/><path d="M9 14h6"/></svg></span>
+          <b data-i18n="db.opps">My Opportunities</b>
+          <span data-i18n="db.oppsD">Requirements &amp; offers you posted</span>
+        </div>
+        <div class="dash-card" onclick="Ahoor.toast(Ahoor.t('db.soon'),'ok')">
+          <span class="soon-tag" data-i18n="db.soon">Coming soon</span>
+          <span class="dico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg></span>
+          <b data-i18n="db.msgs">Messages</b>
+          <span data-i18n="db.msgsD">Business conversations</span>
+        </div>
+        <div class="dash-card" onclick="Ahoor.toast(Ahoor.t('db.soon'),'ok')">
+          <span class="soon-tag" data-i18n="db.soon">Coming soon</span>
+          <span class="dico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+          <b data-i18n="db.settings">Account Settings</b>
+          <span data-i18n="db.settingsD">Security &amp; preferences</span>
+        </div>
+      </div>
+      <div class="dash-actions">
+        <a class="btn btn-outline" href="/index.html"><span data-i18n="db.home">Back to Home</span></a>
+        <button type="button" class="btn btn-ghost" id="btnSignout"><span class="spinner"></span><span class="btn-label" data-i18n="db.signout">Sign Out</span></button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="auth-foot">
+  <div class="container">
+    <p data-i18n="foot.made">Made in Bangladesh</p>
+    <p style="margin-top:6px" data-i18n="foot.cr">© 2026 Ahoor. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+__JS__
+(function(){
+  'use strict';
+  var A = window.Ahoor;
+  A.api('/api/session').then(function(r){
+    if(!r.data.user){ location.href='/login?next=/dashboard'; return; }
+    var u = r.data.user;
+    document.getElementById('loadingBox').style.display='none';
+    document.getElementById('dashBody').style.display='';
+    var initial = (u.name||'A').trim().charAt(0).toUpperCase();
+    document.getElementById('avatar').textContent = initial;
+    document.getElementById('welcome').textContent = A.t('db.welcome',{name:u.name});
+    document.getElementById('memberSince').textContent = A.t('db.member',{d:new Date(u.createdAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})});
+    document.getElementById('typeChip').textContent = A.t('db.type.'+(u.type||'buyer'));
+    document.addEventListener('langchange', function(){
+      document.getElementById('welcome').textContent = A.t('db.welcome',{name:u.name});
+      document.getElementById('typeChip').textContent = A.t('db.type.'+(u.type||'buyer'));
+    });
+  });
+  document.getElementById('btnSignout').addEventListener('click', function(){
+    var b=this;
+    A.setLoading(b,true,'db.signingout');
+    A.api('/api/logout',{}).then(function(){
+      location.href='/login.html';
+    });
+  });
+})();
+</script>
+</body>
+</html>

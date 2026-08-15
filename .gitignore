@@ -1,0 +1,17 @@
+# data (runtime-generated user accounts)
+data/*.json
+data/*.tmp
+
+# build/test artifacts — not needed at runtime
+qa/
+qa-auth/
+test_auth.py
+ahoor-demo.html
+
+# assets are embedded into the HTML at build time
+assets/*.woff2
+assets/*.css
+
+# misc
+*.log
+.DS_Store

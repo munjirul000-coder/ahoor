@@ -1,0 +1,13 @@
+{
+  "name": "ahoor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ahoor — B2B marketplace for Bangladesh (bilingual landing + auth system)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "python3 build-auth.py && python3 build.py",
+    "test": "python3 test_auth.py"
+  },
+  "engines": { "node": ">=18" }
+}
