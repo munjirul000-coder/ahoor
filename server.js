@@ -19,7 +19,9 @@ const crypto = require('crypto');
 const ROOT = __dirname;
 const DATA_DIR = path.join(ROOT, 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
-const DEV = process.env.NODE_ENV !== 'production'; // dev shows verification codes (no SMS/email gateway)
+// Dev codes are shown until a real SMS/email gateway is configured.
+// Set AHOOR_DEV_CODES=false (or add SMTP/SMS creds) to hide them.
+const DEV = String(process.env.AHOOR_DEV_CODES || 'true').toLowerCase() !== 'false';
 const PORT = process.env.PORT || 8080;
 
 /* ---------------- store (JSON file, atomic writes) ---------------- */
