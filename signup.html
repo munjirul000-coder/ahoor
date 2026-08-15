@@ -1075,6 +1075,12 @@ function esc(s){ var d=document.createElement('div'); d.textContent=s; return d.
 function api(path, body){
   var opts = { method:'POST', headers:{'Content-Type':'application/json'}, credentials:'same-origin' };
   if(body) opts.body = JSON.stringify(body);
+  var ctrl = null;
+  if(typeof AbortController !== 'undefined'){
+    ctrl = new AbortController();
+    opts.signal = ctrl.signal;
+    setTimeout(function(){ ctrl.abort(); }, 15000);
+  }
   return fetch(path, opts).then(function(r){
     var ct = r.headers.get('content-type') || '';
     if(ct.indexOf('application/json') === -1){
