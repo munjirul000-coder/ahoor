@@ -28,7 +28,10 @@ function getTransporter() {
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT || '465', 10),
     secure: String(process.env.SMTP_PORT || '465') === '465',
-    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+    connectionTimeout: 12000,
+    socketTimeout: 15000,
+    greetingTimeout: 12000
   });
   return _transporter;
 }
@@ -277,8 +280,14 @@ async function sendCode(target, channel, toEmail) {
     channel
   };
   save();
-  const emailed = await sendCodeEmail(toEmail, code);
-  console.log(`[Ahoor] ${channel} code for ${target}: ${code} (email: ${emailed ? 'sent' : 'skipped'})`);
+  let emailed = false;
+  try {
+    emailed = await Promise.race([
+      sendCodeEmail(toEmail, code),
+      new Promise(res => setTimeout(() => res(false), 18000))
+    ]);
+  } catch (e) { emailed = false; }
+  console.log(`[Ahoor] ${channel} code for ${target}: ${code} (email: ${emailed ? 'sent' : 'skipped/fallback'})`);
   return { ok: true, code: emailed ? null : (SHOW_CODES ? code : null), expiresIn: 600 };
 }
 function checkCode(target, code) {
