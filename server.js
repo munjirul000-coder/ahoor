@@ -19,7 +19,11 @@ const crypto = require('crypto');
 const ROOT = __dirname;
 const DATA_DIR = path.join(ROOT, 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
-const DEV = process.env.NODE_ENV !== 'production'; // dev shows verification codes (no SMS/email gateway)
+const DEV = process.env.NODE_ENV !== 'production';
+// No SMS/email gateway is connected yet, so verification codes are shown
+// on-screen in a labelled "demo mode" box. Set SHOW_CODES=0 once a real
+// gateway is connected (Render sets NODE_ENV=production automatically).
+const SHOW_CODES = process.env.SHOW_CODES !== '0';
 const PORT = process.env.PORT || 8080;
 
 /* ---------------- store (JSON file, atomic writes) ---------------- */
@@ -151,7 +155,7 @@ function sendCode(target /* 'signup:email' | 'reset:...' */, channel) {
   };
   save();
   console.log(`[Ahoor dev] ${channel} code for ${target}: ${code}`);
-  return { ok: true, code: DEV ? code : null, expiresIn: 600 };
+  return { ok: true, code: SHOW_CODES ? code : null, expiresIn: 600 };
 }
 function checkCode(target, code) {
   const e = db.codes['code:' + target];

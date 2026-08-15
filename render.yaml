@@ -1,12 +1,13 @@
-# Ahoor — Render Blueprint (one-click deploy)
-# Docs: https://render.com/docs/blueprint-spec
+# Ahoor — Render Blueprint
 services:
   - type: web
     name: ahoor
     runtime: node
     plan: free
-    buildCommand: ""
+    buildCommand: npm install
     startCommand: node server.js
     envVars:
       - key: PORT
         value: 10000
+      - key: SHOW_CODES
+        value: "1"
