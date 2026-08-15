@@ -1,0 +1,781 @@
+<body>
+<a class="skip" href="#home" data-i18n="skip">Skip to content</a>
+
+<!-- ============ NAVBAR ============ -->
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="#home" aria-label="Ahoor — home">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="9" fill="url(#lg1)"/>
+        <path d="M16 8.5 9.6 23.5h12.8z" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/>
+        <circle cx="16" cy="8.5" r="2.7" fill="#fff"/>
+        <circle cx="9.6" cy="23.5" r="2.7" fill="#fff"/>
+        <circle cx="22.4" cy="23.5" r="2.7" fill="#FF8A4C"/>
+        <defs>
+          <linearGradient id="lg1" x1="0" y1="0" x2="32" y2="32">
+            <stop stop-color="#3B77FF"/><stop offset="1" stop-color="#1E4FD8"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="brand-name">Ahoor<em>.</em></span>
+    </a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#home" class="active" data-i18n="nav.home">Home</a>
+      <a href="#how-it-works" data-i18n="nav.how">How It Works</a>
+      <a href="#opportunities" data-i18n="nav.opps">Opportunities</a>
+      <a href="#suppliers" data-i18n="nav.suppliers">Suppliers</a>
+      <a href="#categories" data-i18n="nav.cats">Categories</a>
+      <a href="/marketplace.html" data-i18n="nav.market">Marketplace</a>
+    </nav>
+    <div class="nav-actions">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" class="lang-btn on" data-lang="bn" aria-pressed="true">বাংলা</button>
+        <span class="lsep" aria-hidden="true">|</span>
+        <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="link-signin" href="/login.html" data-i18n="nav.signin">Sign In</a>
+      <a class="btn btn-primary" href="/signup.html"><span data-i18n="nav.join">Join Ahoor</span></a>
+      <button class="burger" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu" data-i18n-aria="nav.burger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a class="mlink" href="#home" data-i18n="nav.home">Home</a>
+    <a class="mlink" href="#how-it-works" data-i18n="nav.how">How It Works</a>
+    <a class="mlink" href="#opportunities" data-i18n="nav.opps">Opportunities</a>
+    <a class="mlink" href="#suppliers" data-i18n="nav.suppliers">Suppliers</a>
+    <a class="mlink" href="#categories" data-i18n="nav.cats">Categories</a>
+    <a class="mlink" href="/marketplace.html" data-i18n="nav.market">Marketplace</a>
+    <div class="mbtns">
+      <a class="btn btn-outline" href="/login.html"><span data-i18n="nav.signin">Sign In</span></a>
+      <a class="btn btn-primary" href="/signup.html"><span data-i18n="nav.join">Join Ahoor</span></a>
+    </div>
+    <div class="mlang">
+      <span class="mlang-label" data-i18n="lang.label">Language</span>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" class="lang-btn on" data-lang="bn" aria-pressed="true">বাংলা</button>
+        <span class="lsep" aria-hidden="true">|</span>
+        <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="home">
+  <div class="hero-grid" aria-hidden="true"></div>
+  <canvas id="net" aria-hidden="true"></canvas>
+  <div class="hero-fade" aria-hidden="true"></div>
+  <div class="container hero-inner">
+    <div class="hero-pill"><span class="pill-dot"></span><span data-i18n="hero.pill">Post → Match → Quote → Connect → Deal</span></div>
+    <h1><span data-i18n="hero.h1a">Find Buyers. Find Suppliers.</span><br><span class="grad" data-i18n="hero.h1b">Grow Your Business.</span></h1>
+    <p class="sub" data-i18n="hero.sub">Post what your business needs or what your business offers. Ahoor helps connect you with relevant buyers, suppliers, manufacturers, and business opportunities across Bangladesh.</p>
+    <div class="hero-cards">
+      <a class="hcard hcard-buy" href="/signup.html?type=buyer">
+        <div class="hcard-top">
+          <span class="hcard-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="m7 11 5 5 5-5"/><path d="M12 4v12"/></svg>
+          </span>
+          <span class="hcard-tag" data-i18n="hero.buyTag">I WANT TO BUY</span>
+        </div>
+        <h3 data-i18n="hero.buyTitle">Post What You Need</h3>
+        <p data-i18n="hero.buyDesc">Tell businesses exactly what you are looking for and receive relevant quotations and responses.</p>
+        <span class="btn btn-primary"><span data-i18n="hero.buyCta">Post a Requirement</span>
+          <svg class="arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+      </a>
+      <a class="hcard hcard-sell" href="/signup.html?type=supplier">
+        <div class="hcard-top">
+          <span class="hcard-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+          </span>
+          <span class="hcard-tag" data-i18n="hero.sellTag">I WANT TO SELL</span>
+        </div>
+        <h3 data-i18n="hero.sellTitle">Show What You Offer</h3>
+        <p data-i18n="hero.sellDesc">Showcase your products, services, manufacturing capabilities, or available production capacity.</p>
+        <span class="btn btn-orange"><span data-i18n="hero.sellCta">Create a Business Offer</span>
+          <svg class="arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+      </a>
+    </div>
+    <p class="hero-note" data-i18n="hero.note">No storefronts. No listings clutter. Just businesses finding the right businesses.</p>
+  </div>
+</section>
+
+<!-- ============ TRUST STRIP ============ -->
+<section class="trust" aria-label="What Ahoor is built for">
+  <div class="container">
+    <div class="trust-card reveal">
+      <div class="trust-item">
+        <span class="trust-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+        </span>
+        <div><strong data-i18n="trust.1t">Built for Bangladeshi Businesses</strong><span data-i18n="trust.1d">Made for the local market, by people who know it.</span></div>
+      </div>
+      <div class="trust-item">
+        <span class="trust-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 20h20"/><path d="M4 20V10l5 3v-3l5 3V4h6v16"/></svg>
+        </span>
+        <div><strong data-i18n="trust.2t">Manufacturers &amp; Suppliers</strong><span data-i18n="trust.2d">Garments, textiles, packaging, and beyond.</span></div>
+      </div>
+      <div class="trust-item">
+        <span class="trust-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </span>
+        <div><strong data-i18n="trust.3t">Bulk Buyers</strong><span data-i18n="trust.3d">For wholesale, sourcing, and production orders.</span></div>
+      </div>
+      <div class="trust-item">
+        <span class="trust-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg>
+        </span>
+        <div><strong data-i18n="trust.4t">Business Opportunities</strong><span data-i18n="trust.4d">Buy requests, offers, and available capacity.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS — MATCHING FLOW DEMO ============ -->
+<section class="hiw section-pad" id="how-it-works">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow" data-i18n="hiw.eyebrow">How Ahoor Works</span>
+      <h2 class="h2"><span data-i18n="hiw.p1">Post</span> <span class="flow-arrow">→</span> <span data-i18n="hiw.p2">Match</span> <span class="flow-arrow">→</span> <span data-i18n="hiw.p3">Quote</span> <span class="flow-arrow">→</span> <span data-i18n="hiw.p4">Connect</span> <span class="flow-arrow">→</span> <span data-i18n="hiw.p5">Deal</span></h2>
+      <p class="lead" data-i18n="hiw.lead">A business requirement turns into a deal — watch the whole flow, step by step.</p>
+    </div>
+
+    <div class="mdemo reveal" id="mdemo">
+      <div class="md-tabs" role="tablist" aria-label="How Ahoor works">
+        <button class="md-tab active" data-step="1" role="tab" aria-selected="true">
+          <span class="md-tnum">01</span><b data-i18n="hiw.t1">Post</b><span class="md-tname" data-i18n="hiw.t1s">Buyer posts a requirement</span>
+        </button>
+        <button class="md-tab" data-step="2" role="tab" aria-selected="false">
+          <span class="md-tnum">02</span><b data-i18n="hiw.t2">Match</b><span class="md-tname" data-i18n="hiw.t2s">Ahoor finds relevant businesses</span>
+        </button>
+        <button class="md-tab" data-step="3" role="tab" aria-selected="false">
+          <span class="md-tnum">03</span><b data-i18n="hiw.t3">Quote</b><span class="md-tname" data-i18n="hiw.t3s">Suppliers send quotations</span>
+        </button>
+        <button class="md-tab" data-step="4" role="tab" aria-selected="false">
+          <span class="md-tnum">04</span><b data-i18n="hiw.t4">Deal</b><span class="md-tname" data-i18n="hiw.t4s">Compare, connect, close</span>
+        </button>
+      </div>
+      <div class="md-progress" aria-hidden="true"><i id="mdProg"></i></div>
+
+      <div class="md-stage">
+        <!-- Step 1 — Post -->
+        <div class="md-step active" data-step="1">
+          <div class="md-s1">
+            <div class="md-postcard">
+              <span class="tag tag-blue"><span class="tdot"></span><span data-i18n="s1.tag">Buyer Requirement</span></span>
+              <h3 data-i18n="s1.title">Need 1,000 Custom T-Shirts</h3>
+              <p data-i18n="s1.desc">Cotton t-shirts with custom print — sizes S–XL, for a new retail line.</p>
+              <div class="md-chips">
+                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M12 22V12"/></svg><span data-i18n="lbl.qty">Quantity</span>&nbsp;<b data-i18n="s1.qty">1,000 pcs</b></span>
+                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg><span data-i18n="lbl.loc">Location</span>&nbsp;<b data-i18n="s1.loc">Dhaka</b></span>
+                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><span data-i18n="lbl.deadline">Deadline</span>&nbsp;<b data-i18n="s1.deadline">20 days</b></span>
+              </div>
+              <button type="button" class="btn btn-primary md-post-btn"><span data-i18n="s1.btn">Post Requirement</span>
+                <svg class="arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </button>
+            </div>
+            <div class="md-side">
+              <h4 data-i18n="s1.side">What happens next</h4>
+              <ol>
+                <li data-i18n="s1.a">Your requirement is published to relevant businesses</li>
+                <li data-i18n="s1.b">Ahoor matches on category, product, location, and quantity</li>
+                <li data-i18n="s1.c">Suppliers send you quotations — no endless searching</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 — Match -->
+        <div class="md-step" data-step="2">
+          <div class="md-s2">
+            <div class="md-match" id="mdMatch">
+              <svg viewBox="0 0 640 330" fill="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="mgl" x1="0" y1="0" x2="640" y2="330">
+                    <stop offset="0" stop-color="#5B8CFF" stop-opacity=".55"/>
+                    <stop offset="1" stop-color="#FF8A4C" stop-opacity=".4"/>
+                  </linearGradient>
+                </defs>
+                <g class="ml" stroke="url(#mgl)" stroke-width="1.8" stroke-linecap="round">
+                  <line x1="320" y1="150" x2="320" y2="34" style="animation-delay:.05s"/>
+                  <line x1="320" y1="150" x2="438" y2="86" style="animation-delay:.16s"/>
+                  <line x1="320" y1="150" x2="438" y2="214" style="animation-delay:.27s"/>
+                  <line x1="320" y1="150" x2="320" y2="266" style="animation-delay:.38s"/>
+                  <line x1="320" y1="150" x2="202" y2="214" style="animation-delay:.49s"/>
+                  <line x1="320" y1="150" x2="202" y2="86" style="animation-delay:.6s"/>
+                </g>
+                <g class="mn" style="animation-delay:.35s">
+                  <circle cx="320" cy="34" r="19" fill="rgba(255,255,255,.05)" stroke="rgba(91,140,255,.5)" stroke-width="1.4"/>
+                  <circle cx="320" cy="34" r="5.5" fill="#5B8CFF"/>
+                  <text x="320" y="74" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#8FA3CE">Dhaka Apparels</text>
+                </g>
+                <g class="mn" style="animation-delay:.45s">
+                  <circle cx="438" cy="86" r="19" fill="rgba(255,255,255,.05)" stroke="rgba(255,138,76,.5)" stroke-width="1.4"/>
+                  <circle cx="438" cy="86" r="5.5" fill="#FF8A4C"/>
+                  <text x="438" y="126" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#8FA3CE">NexTee Textiles</text>
+                </g>
+                <g class="mn" style="animation-delay:.55s">
+                  <circle cx="438" cy="214" r="19" fill="rgba(255,255,255,.05)" stroke="rgba(14,159,126,.5)" stroke-width="1.4"/>
+                  <circle cx="438" cy="214" r="5.5" fill="#0E9F7E"/>
+                  <text x="438" y="254" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#8FA3CE">Urban Knitwear</text>
+                </g>
+                <g class="mn" style="animation-delay:.65s">
+                  <circle cx="320" cy="266" r="19" fill="rgba(255,255,255,.05)" stroke="rgba(109,79,219,.5)" stroke-width="1.4"/>
+                  <circle cx="320" cy="266" r="5.5" fill="#6D4FDB"/>
+                  <text x="320" y="306" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#8FA3CE">Prime Garments</text>
+                </g>
+                <g class="mn" style="animation-delay:.75s">
+                  <circle cx="202" cy="214" r="19" fill="rgba(255,255,255,.05)" stroke="rgba(255,138,76,.5)" stroke-width="1.4"/>
+                  <circle cx="202" cy="214" r="5.5" fill="#FF8A4C"/>
+                  <text x="202" y="254" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#8FA3CE">Swift Stitch</text>
+                </g>
+                <g class="mn" style="animation-delay:.85s">
+                  <circle cx="202" cy="86" r="19" fill="rgba(255,255,255,.05)" stroke="rgba(91,140,255,.5)" stroke-width="1.4"/>
+                  <circle cx="202" cy="86" r="5.5" fill="#5B8CFF"/>
+                  <text x="202" y="126" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11.5" font-weight="600" fill="#8FA3CE">FabNest Fabrics</text>
+                </g>
+              </svg>
+              <div class="md-match-core"><span data-i18n="s2.core">Need 1,000 Custom T-Shirts</span><small data-i18n="s2.coresub">Buyer requirement · Dhaka</small></div>
+              <div class="md-match-badge"><span class="chip-dot"></span><span data-i18n="s2.badge">12 Relevant Suppliers Matched</span></div>
+            </div>
+            <p class="md-cap" data-i18n="s2.cap">Surfaced by category, product type, location, quantity, and business profile.</p>
+          </div>
+        </div>
+
+        <!-- Step 3 — Quote -->
+        <div class="md-step" data-step="3">
+          <div class="md-s3">
+            <div class="md-qgrid">
+              <div class="qcard qc-a">
+                <div class="qc-top">
+                  <span class="qc-av">A</span>
+                  <div><div class="qc-name">Dhaka Apparels</div><div class="qc-role" data-i18n="s3.roleD">Manufacturer · Dhaka</div></div>
+                </div>
+                <div class="qc-price">৳<span data-i18n="s3.pA">250</span><small data-i18n="s3.per"> / pcs</small></div>
+                <div class="qc-meta"><span data-i18n="s3.delivery">Delivery</span><b data-i18n="s3.d10">10 days</b></div>
+                <div class="qc-meta"><span data-i18n="s3.moq">MOQ</span><b data-i18n="s3.m500">500 pcs</b></div>
+              </div>
+              <div class="qcard qc-b">
+                <div class="qc-top">
+                  <span class="qc-av">B</span>
+                  <div><div class="qc-name">NexTee Textiles</div><div class="qc-role" data-i18n="s3.roleG">Manufacturer · Gazipur</div></div>
+                </div>
+                <div class="qc-price">৳<span data-i18n="s3.pB">230</span><small data-i18n="s3.per"> / pcs</small><span class="qc-flag" data-i18n="s3.best">Best price</span></div>
+                <div class="qc-meta"><span data-i18n="s3.delivery">Delivery</span><b data-i18n="s3.d15">15 days</b></div>
+                <div class="qc-meta"><span data-i18n="s3.moq">MOQ</span><b data-i18n="s3.m300">300 pcs</b></div>
+              </div>
+              <div class="qcard qc-c">
+                <div class="qc-top">
+                  <span class="qc-av">C</span>
+                  <div><div class="qc-name">Urban Knitwear</div><div class="qc-role" data-i18n="s3.roleD">Manufacturer · Dhaka</div></div>
+                </div>
+                <div class="qc-price">৳<span data-i18n="s3.pC">270</span><small data-i18n="s3.per"> / pcs</small><span class="qc-flag" data-i18n="s3.fast">Fastest</span></div>
+                <div class="qc-meta"><span data-i18n="s3.delivery">Delivery</span><b data-i18n="s3.d7">7 days</b></div>
+                <div class="qc-meta"><span data-i18n="s3.moq">MOQ</span><b data-i18n="s3.m200">200 pcs</b></div>
+              </div>
+            </div>
+            <p class="md-cap" data-i18n="s3.cap">Three quotations received for your requirement — compare price, delivery, and MOQ.</p>
+          </div>
+        </div>
+
+        <!-- Step 4 — Deal -->
+        <div class="md-step" data-step="4">
+          <div class="md-s4">
+            <div class="md-compare">
+              <div class="cmp-row head">
+                <span data-i18n="s4.col1">Supplier</span><span data-i18n="s4.col2">Price / pcs</span><span data-i18n="s4.col3">Delivery</span><span class="cmp-moq" data-i18n="s4.col4">MOQ</span>
+              </div>
+              <div class="cmp-row">
+                <span class="cmp-sup"><i class="cmp-i-a">A</i>Dhaka Apparels</span>
+                <span class="cmp-price">৳<span data-i18n="s3.pA">250</span></span><span data-i18n="s3.d10">10 days</span><span class="cmp-moq" data-i18n="s3.m500">500 pcs</span>
+              </div>
+              <div class="cmp-row best">
+                <span class="cmp-sup"><i class="cmp-i-b">B</i>NexTee Textiles <span class="cmp-tag" data-i18n="s4.tagBest">Best price</span></span>
+                <span class="cmp-price">৳<span data-i18n="s3.pB">230</span></span><span data-i18n="s3.d15">15 days</span><span class="cmp-moq" data-i18n="s3.m300">300 pcs</span>
+              </div>
+              <div class="cmp-row fast">
+                <span class="cmp-sup"><i class="cmp-i-c">C</i>Urban Knitwear <span class="cmp-tag fast" data-i18n="s4.tagFast">Fastest</span></span>
+                <span class="cmp-price">৳<span data-i18n="s3.pC">270</span></span><span data-i18n="s3.d7">7 days</span><span class="cmp-moq" data-i18n="s3.m200">200 pcs</span>
+              </div>
+            </div>
+            <div class="md-actions">
+              <a class="btn btn-outline" href="#join"><span data-i18n="s4.btn1">Compare Offers</span>
+                <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+              <a class="btn btn-outline" href="#join"><span data-i18n="s4.btn2">Start Conversation</span>
+                <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+              <a class="btn btn-primary" href="#join"><span data-i18n="s4.btn3">Make a Deal</span>
+                <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+            </div>
+            <p class="md-cap" data-i18n="s4.cap">Choose what fits your business — then take the conversation forward.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="md-foot"><span class="dot"></span><span data-i18n="hiw.foot">Auto-playing demo · hover to pause · click a step to jump</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OPPORTUNITIES ============ -->
+<section class="opps section-pad" id="opportunities">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow" data-i18n="opps.eyebrow">Business Opportunities</span>
+      <h2 class="h2" data-i18n="opps.title">Explore Business Opportunities</h2>
+      <p class="lead" data-i18n="opps.lead">Buy requests, manufacturing offers, and available capacity — posted by businesses like yours.</p>
+    </div>
+    <div class="opp-grid">
+      <article class="opp-card reveal" style="--d:.0s">
+        <div class="opp-top">
+          <span class="tag tag-blue"><span class="tdot"></span><span data-i18n="opp1.tag">Buy Request</span></span>
+          <span class="opp-arrow">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+          </span>
+        </div>
+        <h3 data-i18n="opp1.title">Need 5,000 Custom T-Shirts</h3>
+        <p class="opp-desc" data-i18n="opp1.desc">Regular-fit cotton T-shirts with custom printing, for a new product line.</p>
+        <div class="opp-meta">
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg><span data-i18n="lbl.loc">Location</span>&nbsp;<b data-i18n="opp1.loc">Dhaka, Bangladesh</b></div>
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg><span data-i18n="lbl.qty">Quantity</span>&nbsp;<b data-i18n="opp1.qty">5,000 pcs</b></div>
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><span data-i18n="lbl.deadline">Deadline</span>&nbsp;<b data-i18n="opp1.dead">30 days</b></div>
+        </div>
+        <a class="btn btn-primary" href="/signup.html"><span data-i18n="opp1.cta">Send Quote</span></a>
+      </article>
+      <article class="opp-card reveal" style="--d:.08s">
+        <div class="opp-top">
+          <span class="tag tag-teal"><span class="tdot"></span><span data-i18n="opp2.tag">Manufacturing Offer</span></span>
+          <span class="opp-arrow">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+          </span>
+        </div>
+        <h3 data-i18n="opp2.title">Custom Hoodie Manufacturing</h3>
+        <p class="opp-desc" data-i18n="opp2.desc">Fleece hoodies with custom branding — suitable for small and medium orders.</p>
+        <div class="opp-meta">
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg><span data-i18n="lbl.moq">MOQ</span>&nbsp;<b data-i18n="opp2.moq">100 pcs</b></div>
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><span data-i18n="lbl.prod">Production time</span>&nbsp;<b data-i18n="opp2.prod">7–14 days</b></div>
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 20h20"/><path d="M4 20V10l5 3v-3l5 3V4h6v16"/></svg><span data-i18n="lbl.sup">Supplier</span>&nbsp;<b data-i18n="opp2.sup">Verified factory</b></div>
+        </div>
+        <a class="btn btn-dark" href="#suppliers"><span data-i18n="opp2.cta">View Supplier</span></a>
+      </article>
+      <article class="opp-card reveal" style="--d:.16s">
+        <div class="opp-top">
+          <span class="tag tag-violet"><span class="tdot"></span><span data-i18n="opp3.tag">Available Capacity</span></span>
+          <span class="opp-arrow">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+          </span>
+        </div>
+        <h3 data-i18n="opp3.title">T-Shirt Factory Has Available Capacity</h3>
+        <p class="opp-desc" data-i18n="opp3.desc">Facility in Gazipur with spare monthly capacity for export-quality orders.</p>
+        <div class="opp-meta">
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg><span data-i18n="lbl.cap">Available production</span>&nbsp;<b data-i18n="opp3.cap">20,000 pcs / month</b></div>
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg><span data-i18n="lbl.loc">Location</span>&nbsp;<b data-i18n="opp3.loc">Gazipur, Dhaka</b></div>
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg><span data-i18n="lbl.ready">Ready to quote</span>&nbsp;<b data-i18n="opp3.ready">Within 24 hours</b></div>
+        </div>
+        <a class="btn btn-orange" href="/signup.html"><span data-i18n="opp3.cta">Contact Factory</span></a>
+      </article>
+    </div>
+    <p class="opp-note" data-i18n="opps.note">Sample opportunities shown for illustration.</p>
+    <div class="more reveal">
+      <a class="btn btn-outline btn-lg" href="#join"><span data-i18n="opps.more">Explore All Opportunities</span>
+        <svg class="arr" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="feat section-pad" id="features">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow" data-i18n="feat.eyebrow">Features</span>
+      <h2 class="h2" data-i18n="feat.title">Everything You Need to Find the Right Business</h2>
+      <p class="lead" data-i18n="feat.lead">Built for real B2B workflows — sourcing, quoting, and partnership building.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card reveal" style="--d:.0s">
+        <span class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        </span>
+        <h3 data-i18n="f1.t">Smart Business Matching</h3>
+        <p data-i18n="f1.d">Ahoor helps relevant buyers and suppliers find each other — so the right people discover your opportunity.</p>
+      </div>
+      <div class="feat-card reveal" style="--d:.06s">
+        <span class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 11v6"/><path d="M9 14h6"/></svg>
+        </span>
+        <h3 data-i18n="f2.t">Post Requirements</h3>
+        <p data-i18n="f2.d">Post exactly what you need — product, quantity, location, deadline — and receive offers from businesses that can deliver.</p>
+      </div>
+      <div class="feat-card reveal" style="--d:.12s">
+        <span class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg>
+        </span>
+        <h3 data-i18n="f3.t">Direct Business Communication</h3>
+        <p data-i18n="f3.d">Connect and discuss opportunities directly — clarify specs, negotiate terms, and build trust on your own terms.</p>
+      </div>
+      <div class="feat-card reveal" style="--d:.0s">
+        <span class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 20h20"/><path d="M4 20V10l5 3v-3l5 3V4h6v16"/></svg>
+        </span>
+        <h3 data-i18n="f4.t">Supplier &amp; Factory Profiles</h3>
+        <p data-i18n="f4.d">Explore what businesses manufacture, supply, and offer — from product ranges to production capacity.</p>
+      </div>
+      <div class="feat-card reveal" style="--d:.06s">
+        <span class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 4-4 4"/><path d="M4 7h16"/><path d="m16 21-4-4 4-4"/><path d="M20 17H4"/></svg>
+        </span>
+        <h3 data-i18n="f5.t">Compare Offers</h3>
+        <p data-i18n="f5.d">Compare quotations, MOQ, production time, and other details side by side — then choose what fits your business.</p>
+      </div>
+      <div class="feat-card reveal" style="--d:.12s">
+        <span class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        </span>
+        <h3 data-i18n="f6.t">Business Verification</h3>
+        <p data-i18n="f6.d">Clear verification levels help you understand how much business information is available before you engage.</p>
+      </div>
+      <div class="feat-card wide reveal" style="--d:.12s">
+        <span class="feat-icon">
+          <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+        </span>
+        <div>
+          <h3 data-i18n="f7.t">Smart Opportunity Matching</h3>
+          <p data-i18n="f7.d">When a business posts a requirement or offer, Ahoor intelligently surfaces it to the most relevant businesses — based on category, product type, location, quantity, and business profile.</p>
+        </div>
+        <div class="feat-wide-chip"><span data-i18n="f7.c1">Category</span><span data-i18n="f7.c2">Product</span><span data-i18n="f7.c3">Location</span><span data-i18n="f7.c4">Quantity</span><span data-i18n="f7.c5">Profile</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOR BUYERS ============ -->
+<section class="buyers section-pad" id="buyers">
+  <div class="container">
+    <div class="split">
+      <div class="reveal">
+        <span class="eyebrow" data-i18n="buy.eyebrow">For Buyers</span>
+        <h2 data-i18n="buy.title">Stop Searching Everywhere.</h2>
+        <p class="lead" data-i18n="buy.lead">Post your business requirement once and let relevant suppliers and manufacturers find you.</p>
+        <ul class="checks">
+          <li><span class="check-ic"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span data-i18n="buy.c1">Post once — reach every supplier who can actually deliver</span></li>
+          <li><span class="check-ic"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span data-i18n="buy.c2">Receive quotations with MOQ, pricing, and timelines</span></li>
+          <li><span class="check-ic"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span data-i18n="buy.c3">Compare offers and negotiate directly — no middlemen</span></li>
+        </ul>
+        <div class="cta-row">
+          <a class="btn btn-primary btn-lg" href="/signup.html?type=buyer"><span data-i18n="buy.cta1">Post a Requirement</span></a>
+          <a class="btn btn-outline" href="#how-it-works"><span data-i18n="buy.cta2">See How It Works</span></a>
+        </div>
+      </div>
+      <div class="mock-wrap reveal" style="--d:.15s">
+        <div class="mock-glow" aria-hidden="true"></div>
+        <div class="float-chip chip-1">
+          <span class="av-stack" aria-hidden="true"><i>R</i><i>A</i><i>M</i></span>
+          <div><b data-i18n="buy.chip1">3 new quotes received</b><small data-i18n="buy.chip1s">Suppliers responded to your post</small></div>
+        </div>
+        <div class="mock">
+          <div class="mock-head">
+            <h4 data-i18n="buy.mockHead">Post a Requirement</h4>
+            <span data-i18n="buy.mockSub">Buyer view</span>
+          </div>
+          <label class="mock-label" for="need" data-i18n="buy.l1">What do you need?</label>
+          <div class="mock-input" id="need" tabindex="0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.4 14.6 14 21l-8-8V4h9z"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor" stroke="none"/></svg>
+            <span data-i18n="buy.mockNeed">Custom T-Shirts</span>
+          </div>
+          <div class="mock-grid2">
+            <div>
+              <label class="mock-label" for="qty" data-i18n="buy.l2">Quantity</label>
+              <div class="mock-input" id="qty" tabindex="0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M12 22V12"/></svg>
+                <span data-i18n="buy.mockQty">1,000 pcs</span>
+              </div>
+            </div>
+            <div>
+              <label class="mock-label" for="loc" data-i18n="buy.l3">Location</label>
+              <div class="mock-input" id="loc" tabindex="0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span data-i18n="buy.mockLoc">Dhaka</span>
+              </div>
+            </div>
+          </div>
+          <a class="btn btn-primary" href="/signup.html?type=buyer"><span data-i18n="buy.mockBtn">Submit Requirement</span></a>
+          <div class="mock-foot">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span data-i18n="buy.mockFoot">Your requirement stays visible to relevant businesses</span>
+          </div>
+        </div>
+        <div class="float-chip chip-2">
+          <span class="chip-dot" aria-hidden="true"></span>
+          <div><b data-i18n="buy.chip2">Matched with 12 relevant suppliers</b><small data-i18n="buy.chip2s">Based on your requirement</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOR SUPPLIERS ============ -->
+<section class="suppliers section-pad" id="suppliers">
+  <div class="container">
+    <div class="split">
+      <div class="mock-wrap reveal">
+        <div class="mock-glow" aria-hidden="true" style="background:radial-gradient(60% 60% at 70% 30%,rgba(255,122,61,.4),transparent 70%),radial-gradient(50% 50% at 25% 75%,rgba(47,107,255,.45),transparent 70%)"></div>
+        <div class="float-chip chip-1" style="top:-20px;right:-8px">
+          <span class="chip-dot" aria-hidden="true"></span>
+          <div><b data-i18n="sup.chip">New buyer request</b><small data-i18n="sup.chips">5,000 pcs · polo shirts</small></div>
+        </div>
+        <div class="dash">
+          <div class="dash-bar">
+            <span class="dash-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="dash-title" data-i18n="dash.title">Ahoor · Supplier Dashboard</span>
+            <span class="dash-pill"><i></i><span data-i18n="dash.pill">Active</span></span>
+          </div>
+          <div class="dash-body">
+            <div class="dash-stats">
+              <div class="dstat">
+                <span class="dicon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg></span>
+                <b>3</b><span data-i18n="dash.s1">New Buyer Requests</span>
+              </div>
+              <div class="dstat">
+                <span class="dicon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+                <b>5</b><span data-i18n="dash.s2">Quotes Sent</span>
+              </div>
+              <div class="dstat">
+                <span class="dicon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg></span>
+                <b>12</b><span data-i18n="dash.s3">Available Opportunities</span>
+              </div>
+              <div class="dstat">
+                <span class="dicon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
+                <b>48</b><span data-i18n="dash.s4">Profile Views</span>
+              </div>
+            </div>
+            <div class="dash-req">
+              <span class="dreq-av" aria-hidden="true">R</span>
+              <div class="dreq-info">
+                <b data-i18n="dash.req">Buyer needs 5,000 custom polo shirts</b>
+                <span data-i18n="dash.reqsub">Gazipur, Dhaka · Quote by 20 Aug</span>
+              </div>
+              <span class="dreq-tag" data-i18n="dash.tag">Matches your capacity</span>
+              <a class="btn btn-primary btn-sm" href="/signup.html"><span data-i18n="dash.btn">Send Quote</span></a>
+            </div>
+            <a class="more-link" href="#join"><span data-i18n="dash.more">View all opportunities</span>
+              <svg class="arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="reveal" style="--d:.12s">
+        <span class="eyebrow on-orange" data-i18n="sup.eyebrow">For Suppliers &amp; Manufacturers</span>
+        <h2 data-i18n="sup.title">More Opportunities. Better Connections.</h2>
+        <p class="lead" data-i18n="sup.lead">Showcase what you manufacture or supply and discover businesses actively looking for your products.</p>
+        <ul class="checks">
+          <li><span class="check-ic"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span data-i18n="sup.c1">Present your products, services, and production capacity</span></li>
+          <li><span class="check-ic"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span data-i18n="sup.c2">Discover businesses actively looking for what you make</span></li>
+          <li><span class="check-ic"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span data-i18n="sup.c3">Respond to buyer requests and send quotations in minutes</span></li>
+        </ul>
+        <div class="cta-row">
+          <a class="btn btn-orange btn-lg" href="/signup.html?type=supplier"><span data-i18n="sup.cta1">Join as a Supplier</span></a>
+          <a class="btn btn-outline" href="#how-it-works"><span data-i18n="sup.cta2">How Matching Works</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CATEGORIES ============ -->
+<section class="cats section-pad" id="categories">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow" data-i18n="cats.eyebrow">Categories</span>
+      <h2 class="h2" data-i18n="cats.title">Explore Business Categories</h2>
+      <p class="lead" data-i18n="cats.lead">From garments to packaging — discover businesses across Bangladesh's key industries.</p>
+    </div>
+    <div class="cat-grid">
+      <a class="cat-card reveal" href="#opportunities" style="--d:.0s">
+        <span class="cat-ic ic-blue"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg></span>
+        <span data-i18n="cat1">Garments &amp; Apparel</span>
+      </a>
+      <a class="cat-card reveal" href="#opportunities" style="--d:.04s">
+        <span class="cat-ic ic-teal"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg></span>
+        <span data-i18n="cat2">Textile &amp; Fabric</span>
+      </a>
+      <a class="cat-card reveal" href="#opportunities" style="--d:.08s">
+        <span class="cat-ic ic-violet"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span>
+        <span data-i18n="cat3">Packaging</span>
+      </a>
+      <a class="cat-card reveal" href="#opportunities" style="--d:.12s">
+        <span class="cat-ic ic-orange"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"/><path d="M4 7h16a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><path d="M9 12h6"/></svg></span>
+        <span data-i18n="cat4">Leather Products</span>
+      </a>
+      <a class="cat-card reveal" href="#opportunities" style="--d:.16s">
+        <span class="cat-ic ic-green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10l-1.5 4.5c3.3 1 5 3.6 5 6.8C20.5 19 16.9 21.5 12 21.5S3.5 19 3.5 15.3c0-3.2 1.7-5.8 5-6.8z"/><path d="M9 4c.8 1.7 1.6 2.6 3 2.6s2.2-.9 3-2.6"/></svg></span>
+        <span data-i18n="cat5">Jute Products</span>
+      </a>
+      <a class="cat-card reveal" href="#opportunities" style="--d:.0s">
+        <span class="cat-ic ic-amber"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 20h10"/><path d="M10 20c0-4 1-7.5 2-11"/><path d="M10 9c-2 0-3.5 1.3-3.5 3 0 1 .8 2 3.5 2"/><path d="M13 9c2 0 3.5 1.3 3.5 3 0 1-.8 2-3.5 2"/><path d="M12 4c1.5 0 2.5 1 2.5 2.5S13.5 9 12 9s-2.5-1-2.5-2.5S10.5 4 12 4z"/></svg></span>
+        <span data-i18n="cat6">Food &amp; Agriculture</span>
+      </a>
+      <a class="cat-card reveal" href="#opportunities" style="--d:.04s">
+        <span class="cat-ic ic-blue"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+        <span data-i18n="cat7">Machinery</span>
+      </a>
+      <a class="cat-card reveal" href="#opportunities" style="--d:.08s">
+        <span class="cat-ic ic-teal"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/></svg></span>
+        <span data-i18n="cat8">Electronics</span>
+      </a>
+      <a class="cat-card reveal" href="#opportunities" style="--d:.12s">
+        <span class="cat-ic ic-orange"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18a8 8 0 0 1 16 0"/><path d="M2 18h20"/><path d="M12 10c-2.7 0-4.8 1.1-5.8 3h11.6c-1-1.9-3.1-3-5.8-3z"/></svg></span>
+        <span data-i18n="cat9">Construction Materials</span>
+      </a>
+      <a class="cat-card reveal" href="#opportunities" style="--d:.16s">
+        <span class="cat-ic ic-violet"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v6.3L4.6 17.8A2 2 0 0 0 6.4 21h11.2a2 2 0 0 0 1.8-3.2L14 8.3V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg></span>
+        <span data-i18n="cat10">Chemicals &amp; Raw Materials</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY AHOOR ============ -->
+<section class="why section-pad" id="why">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow on-dark" data-i18n="why.eyebrow">Why Ahoor</span>
+      <h2 class="h2" data-i18n="why.title">Business Is Better When the Right People Find Each Other.</h2>
+      <p class="lead" data-i18n="why.lead">Ahoor is building a simpler way for Bangladeshi businesses to discover opportunities, find reliable business partners, and grow together.</p>
+    </div>
+    <div class="netviz reveal" style="--d:.1s" aria-hidden="true">
+      <svg viewBox="0 0 760 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="core" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#5B8CFF"/><stop offset="100%" stop-color="#2F6BFF"/>
+          </radialGradient>
+          <linearGradient id="linkg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#5B8CFF" stop-opacity=".5"/><stop offset="100%" stop-color="#FF8A4C" stop-opacity=".35"/>
+          </linearGradient>
+        </defs>
+        <circle class="ring" cx="380" cy="200" r="150" stroke="rgba(255,255,255,.09)" stroke-width="1.5" stroke-dasharray="3 12"/>
+        <circle class="ring" cx="380" cy="200" r="210" stroke="rgba(255,255,255,.05)" stroke-width="1" stroke-dasharray="2 14" style="animation-direction:reverse;animation-duration:140s"/>
+        <g stroke="url(#linkg)" stroke-width="1.6" stroke-linecap="round">
+          <line x1="380" y1="200" x2="380" y2="50" stroke-dasharray="5 7"/>
+          <line x1="380" y1="200" x2="555" y2="125" stroke-dasharray="5 7"/>
+          <line x1="380" y1="200" x2="555" y2="275" stroke-dasharray="5 7"/>
+          <line x1="380" y1="200" x2="380" y2="350" stroke-dasharray="5 7"/>
+          <line x1="380" y1="200" x2="205" y2="275" stroke-dasharray="5 7"/>
+          <line x1="380" y1="200" x2="205" y2="125" stroke-dasharray="5 7"/>
+        </g>
+        <g>
+          <line x1="380" y1="200" x2="380" y2="50" stroke="#5B8CFF" stroke-width="1.6" stroke-dasharray="5 7" stroke-dashoffset="24"><animate attributeName="stroke-dashoffset" from="120" to="0" dur="14s" repeatCount="indefinite"/></line>
+          <line x1="380" y1="200" x2="555" y2="125" stroke="#FF8A4C" stroke-width="1.6" stroke-dasharray="5 7" stroke-dashoffset="24"><animate attributeName="stroke-dashoffset" from="120" to="0" dur="14s" repeatCount="indefinite"/></line>
+          <line x1="380" y1="200" x2="555" y2="275" stroke="#5B8CFF" stroke-width="1.6" stroke-dasharray="5 7" stroke-dashoffset="24"><animate attributeName="stroke-dashoffset" from="120" to="0" dur="14s" repeatCount="indefinite"/></line>
+          <line x1="380" y1="200" x2="380" y2="350" stroke="#FF8A4C" stroke-width="1.6" stroke-dasharray="5 7" stroke-dashoffset="24"><animate attributeName="stroke-dashoffset" from="120" to="0" dur="14s" repeatCount="indefinite"/></line>
+          <line x1="380" y1="200" x2="205" y2="275" stroke="#5B8CFF" stroke-width="1.6" stroke-dasharray="5 7" stroke-dashoffset="24"><animate attributeName="stroke-dashoffset" from="120" to="0" dur="14s" repeatCount="indefinite"/></line>
+          <line x1="380" y1="200" x2="205" y2="125" stroke="#FF8A4C" stroke-width="1.6" stroke-dasharray="5 7" stroke-dashoffset="24"><animate attributeName="stroke-dashoffset" from="120" to="0" dur="14s" repeatCount="indefinite"/></line>
+        </g>
+        <circle class="node-pulse" cx="380" cy="200" r="42" fill="rgba(47,107,255,.14)" stroke="rgba(91,140,255,.5)" stroke-width="1.5"/>
+        <circle cx="380" cy="200" r="12" fill="url(#core)"/>
+        <circle cx="380" cy="200" r="12" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="1"/>
+        <g font-family="Inter,system-ui,sans-serif" font-size="14" font-weight="600" fill="#C7D2EC" text-anchor="middle">
+          <g><circle cx="380" cy="50" r="17" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.22)" stroke-width="1.2"/><circle cx="380" cy="50" r="4.5" fill="#5B8CFF"/><text x="380" y="90" data-i18n="viz.buyers">Buyers</text></g>
+          <g><circle cx="555" cy="125" r="17" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.22)" stroke-width="1.2"/><circle cx="555" cy="125" r="4.5" fill="#FF8A4C"/><text x="575" y="118" data-i18n="viz.suppliers">Suppliers</text></g>
+          <g><circle cx="555" cy="275" r="17" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.22)" stroke-width="1.2"/><circle cx="555" cy="275" r="4.5" fill="#5B8CFF"/><text x="575" y="285" data-i18n="viz.mfrs">Manufacturers</text></g>
+          <g><circle cx="380" cy="350" r="17" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.22)" stroke-width="1.2"/><circle cx="380" cy="350" r="4.5" fill="#FF8A4C"/><text x="380" y="390" data-i18n="viz.factories">Factories</text></g>
+          <g><circle cx="205" cy="275" r="17" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.22)" stroke-width="1.2"/><circle cx="205" cy="275" r="4.5" fill="#5B8CFF"/><text x="185" y="285" data-i18n="viz.exporters">Exporters</text></g>
+          <g><circle cx="205" cy="125" r="17" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.22)" stroke-width="1.2"/><circle cx="205" cy="125" r="4.5" fill="#FF8A4C"/><text x="185" y="118" data-i18n="viz.traders">Traders</text></g>
+        </g>
+        <text x="380" y="242" font-family="Inter,system-ui,sans-serif" font-size="15" font-weight="700" fill="#F4F7FF" text-anchor="middle" data-i18n="viz.yours">Your Business</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="final" id="join">
+  <div class="container">
+    <div class="cta-panel reveal">
+      <div class="cta-inner">
+        <span class="cta-eyebrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span data-i18n="cta.eyebrow">Join the network</span>
+        </span>
+        <h2><span data-i18n="cta.t1">Your Next Business Opportunity Could Be</span> <span class="grad" data-i18n="cta.t2">One Connection Away.</span></h2>
+        <p data-i18n="cta.desc">Join Ahoor and start discovering new buyers, suppliers, manufacturers, and opportunities.</p>
+        <div class="cta-btns">
+          <a class="btn btn-primary btn-lg" href="/signup.html"><span data-i18n="cta.b1">Join Ahoor</span></a>
+          <a class="btn btn-ghost-dark btn-lg" href="#opportunities"><span data-i18n="cta.b2">Explore Opportunities</span></a>
+        </div>
+        <p class="cta-mini" data-i18n="cta.mini">Post what you need or show what you offer — it takes minutes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="#home" aria-label="Ahoor — home">
+          <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <rect width="32" height="32" rx="9" fill="url(#lg2)"/>
+            <path d="M16 8.5 9.6 23.5h12.8z" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/>
+            <circle cx="16" cy="8.5" r="2.7" fill="#fff"/>
+            <circle cx="9.6" cy="23.5" r="2.7" fill="#fff"/>
+            <circle cx="22.4" cy="23.5" r="2.7" fill="#FF8A4C"/>
+            <defs>
+              <linearGradient id="lg2" x1="0" y1="0" x2="32" y2="32">
+                <stop stop-color="#3B77FF"/><stop offset="1" stop-color="#1E4FD8"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="brand-name">Ahoor<em>.</em></span>
+        </a>
+        <p class="footer-desc" data-i18n="foot.desc">Connecting businesses. Creating opportunities. A B2B marketplace and opportunity network built for Bangladesh.</p>
+        <span class="footer-made">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span data-i18n="foot.made">Made in Bangladesh</span>
+        </span>
+      </div>
+      <div class="fcol">
+        <h4 data-i18n="foot.h1">Platform</h4>
+        <ul>
+          <li><a href="#how-it-works" data-i18n="foot.l1a">How It Works</a></li>
+          <li><a href="#opportunities" data-i18n="foot.l1b">Opportunities</a></li>
+          <li><a href="#categories" data-i18n="foot.l1c">Categories</a></li>
+          <li><a href="/marketplace.html" data-i18n="foot.l1d">Marketplace</a></li>
+        </ul>
+      </div>
+      <div class="fcol">
+        <h4 data-i18n="foot.h2">Business</h4>
+        <ul>
+          <li><a href="#suppliers" data-i18n="foot.l2a">Find Suppliers</a></li>
+          <li><a href="/signup.html?type=buyer" data-i18n="foot.l2b">Post Requirement</a></li>
+          <li><a href="/signup.html?type=supplier" data-i18n="foot.l2c">Join as Supplier</a></li>
+        </ul>
+      </div>
+      <div class="fcol">
+        <h4 data-i18n="foot.h3">Company</h4>
+        <ul>
+          <li><a href="#why" data-i18n="foot.l3a">About Ahoor</a></li>
+          <li><a href="#join" data-i18n="foot.l3b">Contact</a></li>
+          <li><a href="#join" data-i18n="foot.l3c">Privacy</a></li>
+          <li><a href="#join" data-i18n="foot.l3d">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="foot.cr">© 2026 Ahoor. All rights reserved.</span>
+      <span class="footer-flow"><span data-i18n="fl.1">POST</span> <i></i> <span data-i18n="fl.2">MATCH</span> <i></i> <span data-i18n="fl.3">QUOTE</span> <i></i> <span data-i18n="fl.4">CONNECT</span> <i></i> <span data-i18n="fl.5">DEAL</span></span>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body>

@@ -158,6 +158,14 @@ var D = {
  "err.generic":["Something went wrong. Please try again.","কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।"],
  "err.code":["Enter the 6-digit code.","৬ সংখ্যার কোডটি লিখুন।"],
  "err.type":["Please select an account type.","অনুগ্রহ করে অ্যাকাউন্টের ধরন নির্বাচন করুন।"],
+ "err.title":["Please enter a title (at least 4 characters).","শিরোনাম দিন (কমপক্ষে ৪ অক্ষর)।"],
+ "err.category":["Please select a category.","ক্যাটাগরি নির্বাচন করুন।"],
+ "err.location":["Please select a location.","অবস্থান নির্বাচন করুন।"],
+ "err.desc":["Please write a description (at least 10 characters).","বর্ণনা লিখুন (কমপক্ষে ১০ অক্ষর)।"],
+ "err.message":["Please write a short message.","একটি ছোট মেসেজ লিখুন।"],
+ "err.image":["Image is too large. Please choose a smaller image (max 400KB).","ছবিটি অনেক বড়। ছোট ছবি বাছাই করুন (সর্বোচ্চ ৪০০KB)।"],
+ "err.self_quote":["You cannot request a quote on your own post.","নিজের পোস্টে কোটেশন চাওয়া যাবে না।"],
+ "err.post_not_found":["Post not found.","পোস্টটি পাওয়া যায়নি।"],
  "ok.sent":["Code sent!","কোড পাঠানো হয়েছে!"],
  "ok.verified":["Verified!","যাচাই হয়েছে!"],
  "dev.note":["Demo mode — your code: {c} (in production it is sent by SMS/email)","ডেমো মোড — আপনার কোড: {c} (প্রকৃত পরিবেশে এটি এসএমএস/ইমেইলে যাবে)"],
@@ -205,6 +213,167 @@ document.querySelectorAll('.lang-btn').forEach(function(b){
 });
 window.__t = t;
 
+/* ---------------- marketplace dictionary extension ---------------- */
+var EXT = {
+ "nav.market":["Marketplace","মার্কেটপ্লেস"],
+ "nav.dash":["Dashboard","ড্যাশবোর্ড"],
+ "mp.title":["Ahoor Marketplace","Ahoor মার্কেটপ্লেস"],
+ "mp.sub":["Buyer requirements & supplier offers across Bangladesh","সারাদেশের ক্রেতার প্রয়োজন ও সরবরাহকারীর অফার"],
+ "mp.tabAll":["All","সব"],
+ "mp.tabBuyer":["Buyer Requirements","ক্রেতার প্রয়োজন"],
+ "mp.tabSupplier":["Supplier Products","সরবরাহকারীর পণ্য"],
+ "mp.searchPh":["Search products, requirements…","পণ্য বা প্রয়োজন খুঁজুন…"],
+ "mp.catAll":["All Categories","সব ক্যাটাগরি"],
+ "mp.locAll":["All Locations","সব জেলা"],
+ "mp.empty":["No posts found. Try changing filters.","কোনো পোস্ট পাওয়া যায়নি। ফিল্টার বদলে দেখুন।"],
+ "mp.newPost":["Create Post","নতুন পোস্ট"],
+ "mp.badgeBuyer":["BUYER REQUEST","ক্রেতার অনুরোধ"],
+ "mp.badgeSupplier":["SUPPLIER OFFER","সরবরাহকারীর অফার"],
+ "mp.open":["Open","খোলা"],
+ "mp.closed":["Closed","বন্ধ"],
+ "mp.getQuotes":["Get Quotes","কোটেশন পান"],
+ "mp.reqQuote":["Request Quote","কোটেশন চান"],
+ "mp.postedBy":["Posted by","পোস্ট করেছেন"],
+ "mp.postedOn":["Posted on","পোস্টের তারিখ"],
+ "mp.loginNeeded":["Please sign in to continue.","চালিয়ে যেতে সাইন ইন করুন।"],
+ "mp.quoteSent":["Your quote request was sent!","আপনার কোটেশন অনুরোধ পাঠানো হয়েছে!"],
+ "mp.qty":["Quantity","পরিমাণ"],
+ "mp.moq":["MOQ","MOQ"],
+ "mp.price":["Price","দাম"],
+ "mp.budget":["Budget","বাজেট"],
+ "mp.contactPrice":["Contact for Price","দামের জন্য যোগাযোগ করুন"],
+ "mp.deadline":["Deadline","সময়সীমা"],
+ "mp.quoteMsg":["Your message","আপনার মেসেজ"],
+ "mp.quoteMsgPh":["e.g. We can supply at ৳240/pcs, delivery 12 days","যেমন: আমরা ৳২৪০/পিসে সরবরাহ করতে পারি, ডেলিভারি ১২ দিন"],
+ "mp.send":["Send","পাঠান"],
+ "mp.cancel":["Cancel","বাতিল"],
+
+ "pp.title":["Complete Your Business Profile","আপনার ব্যবসার প্রোফাইল সম্পূর্ণ করুন"],
+ "pp.sub":["Help the right businesses find you.","সঠিক ব্যবসাগুলো যেন আপনাকে খুঁজে পায়।"],
+ "pp.role":["Business Role","ব্যবসার ভূমিকা"],
+ "pp.roleBuyer":["Buyer","ক্রেতা"],
+ "pp.roleSupplier":["Supplier / Manufacturer","সরবরাহকারী / প্রস্তুতকারক"],
+ "pp.roleBoth":["Both","দুটোই"],
+ "pp.name":["Full Name","সম্পূর্ণ নাম"],
+ "pp.biz":["Business Name","ব্যবসার নাম"],
+ "pp.bizPh":["e.g. Rahim Garments","যেমন: রহিম গার্মেন্টস"],
+ "pp.phone":["Phone Number","মোবাইল নম্বর"],
+ "pp.district":["District / Location","জেলা / অবস্থান"],
+ "pp.cat":["Business Category","ব্যবসার ক্যাটাগরি"],
+ "pp.desc":["Short Business Description","সংক্ষিপ্ত ব্যবসা বর্ণনা"],
+ "pp.descPh":["What do you make, supply, or buy?","আপনি কী তৈরি করেন, সরবরাহ করেন বা কিনে থাকেন?"],
+ "pp.image":["Profile Image / Company Logo (optional)","প্রোফাইল ছবি / কোম্পানি লোগো (ঐচ্ছিক)"],
+ "pp.upload":["Choose image","ছবি বাছাই করুন"],
+ "pp.removeImg":["Remove","মুছে ফেলুন"],
+ "pp.save":["Save Profile","প্রোফাইল সেভ করুন"],
+ "pp.saving":["Saving…","সেভ হচ্ছে…"],
+ "pp.saved":["Profile saved successfully!","প্রোফাইল সফলভাবে সেভ হয়েছে!"],
+ "pp.done":["Go to Dashboard","ড্যাশবোর্ডে যান"],
+ "pp.required":["Please fill in the required fields.","অনুগ্রহ করে প্রয়োজনীয় ঘরগুলো পূরণ করুন।"],
+ "pp.skip":["Skip for now","এখনই না"],
+ "pp.skipNote":["You can complete your profile anytime from the dashboard.","ড্যাশবোর্ড থেকে যেকোনো সময় প্রোফাইল সম্পূর্ণ করতে পারবেন।"],
+
+ "pt.titleNew":["Create New Post","নতুন পোস্ট তৈরি করুন"],
+ "pt.titleEdit":["Edit Post","পোস্ট সম্পাদনা করুন"],
+ "pt.sub":["Share your requirement or offer with the marketplace","মার্কেটপ্লেসে আপনার প্রয়োজন বা অফার শেয়ার করুন"],
+ "pt.kind":["Post Type","পোস্টের ধরন"],
+ "pt.kindBuyer":["I want to buy","আমি কিনতে চাই"],
+ "pt.kindSupplier":["I want to sell","আমি বিক্রি করতে চাই"],
+ "pt.title":["Title","শিরোনাম"],
+ "pt.titleBuyerPh":["e.g. Need 1000 PCS Premium Cotton T-Shirts","যেমন: ১০০০ পিস প্রিমিয়াম কটন টি-শার্ট প্রয়োজন"],
+ "pt.titleSupplierPh":["e.g. Premium Cotton T-Shirts — Custom Printing","যেমন: প্রিমিয়াম কটন টি-শার্ট — কাস্টম প্রিন্টিং"],
+ "pt.category":["Category","ক্যাটাগরি"],
+ "pt.qty":["Quantity / Capacity","পরিমাণ / ক্ষমতা"],
+ "pt.qtyPh":["e.g. 1000","যেমন: ১০০০"],
+ "pt.unit":["Unit","একক"],
+ "pt.budget":["Budget (optional)","বাজেট (ঐচ্ছিক)"],
+ "pt.budgetPh":["e.g. ৳250,000","যেমন: ৳২,৫০,০০০"],
+ "pt.moq":["Minimum Order Quantity (MOQ)","ন্যূনতম অর্ডার পরিমাণ (MOQ)"],
+ "pt.moqPh":["e.g. 100","যেমন: ১০০"],
+ "pt.price":["Price","দাম"],
+ "pt.pricePh":["e.g. ৳240 / pcs","যেমন: ৳২৪০ / পিস"],
+ "pt.contactPrice":["Contact for Price","দামের জন্য যোগাযোগ করুন"],
+ "pt.location":["Location","অবস্থান"],
+ "pt.deadline":["Deadline / Required Date","সময়সীমা / প্রয়োজনীয় তারিখ"],
+ "pt.desc":["Detailed Requirements / Description","বিস্তারিত প্রয়োজন / বিবরণ"],
+ "pt.descPh":["Mention quality, size, color, delivery terms…","মান, সাইজ, রং, ডেলিভারির শর্ত উল্লেখ করুন…"],
+ "pt.image":["Product / Reference Image (optional)","পণ্য / রেফারেন্স ছবি (ঐচ্ছিক)"],
+ "pt.publish":["Publish Post","পোস্ট প্রকাশ করুন"],
+ "pt.saveEdit":["Save Changes","পরিবর্তন সেভ করুন"],
+ "pt.publishing":["Publishing…","প্রকাশ হচ্ছে…"],
+ "pt.savingE":["Saving…","সেভ হচ্ছে…"],
+ "pt.published":["Post published!","পোস্ট প্রকাশিত হয়েছে!"],
+ "pt.updated":["Post updated!","পোস্ট আপডেট হয়েছে!"],
+ "pt.errTitle":["Please enter a title (at least 4 characters).","শিরোনাম দিন (কমপক্ষে ৪ অক্ষর)।"],
+ "pt.errCat":["Please select a category.","ক্যাটাগরি নির্বাচন করুন।"],
+ "pt.errLoc":["Please select a location.","অবস্থান নির্বাচন করুন।"],
+ "pt.errDesc":["Please write a description (at least 10 characters).","বর্ণনা লিখুন (কমপক্ষে ১০ অক্ষর)।"],
+ "pt.goMarket":["View in Marketplace","মার্কেটপ্লেসে দেখুন"],
+
+ "db.posts":["My Posts","আমার পোস্ট"],
+ "db.postsD":["Your requirements & offers","আপনার প্রয়োজন ও অফার"],
+ "db.newPost":["Create New Post","নতুন পোস্ট তৈরি করুন"],
+ "db.received":["Received Quotes","প্রাপ্ত কোটেশন"],
+ "db.receivedD":["Inquiries on your posts","আপনার পোস্টে আসা অনুসন্ধান"],
+ "db.noPosts":["You haven't posted anything yet.","আপনি এখনো কোনো পোস্ট করেননি।"],
+ "db.noQuotes":["No quotes received yet.","এখনো কোনো কোটেশন আসেনি।"],
+ "db.edit":["Edit","সম্পাদনা"],
+ "db.delete":["Delete","মুছে ফেলুন"],
+ "db.delConfirm":["Delete this post?","এই পোস্টটি মুছে ফেলবেন?"],
+ "db.deleted":["Post deleted.","পোস্ট মুছে ফেলা হয়েছে।"],
+ "db.closed":["Closed","বন্ধ"],
+ "db.reopen":["Reopen","আবার খুলুন"],
+ "db.completeProfile":["Complete Your Profile","প্রোফাইল সম্পূর্ণ করুন"],
+ "db.profileDone":["Profile complete","প্রোফাইল সম্পূর্ণ"],
+ "db.viewMarket":["View Marketplace","মার্কেটপ্লেস দেখুন"],
+ "db.business":["Business","ব্যবসা"],
+ "db.from":["From","থেকে"],
+ "db.quoteOn":["Quote on","কোটেশন"],
+ "db.msgPlaceholder":["Messages system is coming soon.","মেসেজ সিস্টেম শীঘ্রই আসছে।"],
+ "db.quotesPlaceholder":["When businesses ask for quotes on your posts, they will appear here.","আপনার পোস্টে ব্যবসাগুলো কোটেশন চাইলে সেগুলো এখানে দেখাবে।"]
+};
+for (var k in EXT) { D[k] = EXT[k]; }
+
+/* shared data: categories, districts, units (bn/en) */
+var DATA = {
+ categories: [
+  ["Garments & Apparel","গার্মেন্টস ও পোশাক"],["Textile & Fabric","টেক্সটাইল ও ফেব্রিক"],["Packaging","প্যাকেজিং"],
+  ["Leather Products","চামড়াজাত পণ্য"],["Jute Products","পাটজাত পণ্য"],["Food & Agriculture","খাদ্য ও কৃষি"],
+  ["Machinery","মেশিনারি"],["Electronics","ইলেকট্রনিক্স"],["Construction Materials","নির্মাণ সামগ্রী"],
+  ["Chemicals & Raw Materials","রাসায়নিক ও কাঁচামাল"]
+ ],
+ districts: [
+  ["Dhaka","ঢাকা"],["Gazipur","গাজীপুর"],["Narayanganj","নারায়ণগঞ্জ"],["Tangail","টাঙ্গাইল"],["Narsingdi","নরসিংদী"],
+  ["Manikganj","মানিকগঞ্জ"],["Munshiganj","মুন্সিগঞ্জ"],["Faridpur","ফরিদপুর"],["Rajbari","রাজবাড়ী"],["Gopalganj","গোপালগঞ্জ"],
+  ["Madaripur","মাদারীপুর"],["Shariatpur","শরীয়তপুর"],["Kishoreganj","কিশোরগঞ্জ"],["Chattogram","চট্টগ্রাম"],["Cox's Bazar","কক্সবাজার"],
+  ["Cumilla","কুমিল্লা"],["Noakhali","নোয়াখালী"],["Feni","ফেনী"],["Lakshmipur","লক্ষ্মীপুর"],["Chandpur","চাঁদপুর"],
+  ["Brahmanbaria","ব্রাহ্মণবাড়িয়া"],["Khagrachhari","খাগড়াছড়ি"],["Rangamati","রাঙ্গামাটি"],["Bandarban","বান্দরবান"],
+  ["Sylhet","সিলেট"],["Moulvibazar","মৌলভীবাজার"],["Habiganj","হবিগঞ্জ"],["Sunamganj","সুনামগঞ্জ"],["Rajshahi","রাজশাহী"],
+  ["Bogura","বগুড়া"],["Naogaon","নওগাঁ"],["Natore","নাটোর"],["Chapainawabganj","চাঁপাইনবাবগঞ্জ"],["Pabna","পাবনা"],
+  ["Sirajganj","সিরাজগঞ্জ"],["Joypurhat","জয়পুরহাট"],["Khulna","খুলনা"],["Bagerhat","বাগেরহাট"],["Satkhira","সাতক্ষীরা"],
+  ["Jashore","যশোর"],["Jhenaidah","ঝিনাইদহ"],["Magura","মাগুরা"],["Narail","নড়াইল"],["Kushtia","কুষ্টিয়া"],
+  ["Chuadanga","চুয়াডাঙ্গা"],["Meherpur","মেহেরপুর"],["Barishal","বরিশাল"],["Bhola","ভোলা"],["Patuakhali","পটুয়াখালী"],
+  ["Barguna","বরগুনা"],["Pirojpur","পিরোজপুর"],["Jhalokathi","ঝালকাঠি"],["Rangpur","রংপুর"],["Dinajpur","দিনাজপুর"],
+  ["Gaibandha","গাইবান্ধা"],["Kurigram","কুড়িগ্রাম"],["Lalmonirhat","লালমনিরহাট"],["Nilphamari","নীলফামারী"],
+  ["Panchagarh","পঞ্চগড়"],["Thakurgaon","ঠাকুরগাঁও"],["Mymensingh","ময়মনসিংহ"],["Jamalpur","জামালপুর"],
+  ["Sherpur","শেরপুর"],["Netrokona","নেত্রকোনা"]
+ ],
+ units: [["PCS","পিস"],["KG","কেজি"],["Ton","টন"],["Meter","মিটার"],["Dozen","ডজন"],["Set","সেট"],["Liter","লিটার"],["Bag","ব্যাগ"],["Carton","কার্টন"]]
+};
+function locName(arr, val){ for(var i=0;i<arr.length;i++){ if(arr[i][0]===val||arr[i][1]===val) return LANG==='bn'?arr[i][1]:arr[i][0]; } return val; }
+window.AhoorData = { categories: DATA.categories, districts: DATA.districts, units: DATA.units, locName: locName };
+function fillSelect(sel, list, selected){
+  var cur = LANG==='bn'?1:0;
+  sel.innerHTML = '';
+  list.forEach(function(item){
+    var o = document.createElement('option');
+    o.value = item[0];
+    o.textContent = item[cur];
+    if(selected && item[0]===selected) o.selected = true;
+    sel.appendChild(o);
+  });
+}
+
 /* ---------------- helpers ---------------- */
 function $(s, c){ return (c||document).querySelector(s); }
 function $all(s, c){ return Array.prototype.slice.call((c||document).querySelectorAll(s)); }
@@ -222,7 +391,7 @@ function api(path, body){
       .catch(function(){ return { status:r.status, data:{ error:'bad_response' } }; });
   }).catch(function(){ return { status:0, data:{ error:'offline' } }; });
 }
-var ERR_CODES = ['email_exists','phone_exists','invalid','not_found','weak','unverified','invalid_code','expired','too_many','network','offline','bad_response','missing','no_session','route','method','purpose','forbidden','email','phone','name','mismatch','required','type','code','locked','generic'];
+var ERR_CODES = ['email_exists','phone_exists','invalid','not_found','weak','unverified','invalid_code','expired','too_many','network','offline','bad_response','missing','no_session','route','method','purpose','forbidden','email','phone','name','mismatch','required','type','code','locked','generic','title','category','location','desc','message','image','self_quote','post_not_found'];
 function errMsg(e){
   e = e || 'generic';
   if(ERR_CODES.indexOf(e) >= 0) return t('err.'+e);
@@ -395,11 +564,20 @@ function probeServer(){
 if(document.readyState === 'complete'){ probeServer(); }
 else { window.addEventListener('load', probeServer); }
 
+document.addEventListener('langchange', function(){
+  document.querySelectorAll('[data-fill="category"]').forEach(function(s){ fillSelect(s, DATA.categories, s.value); });
+  document.querySelectorAll('[data-fill="district"]').forEach(function(s){ fillSelect(s, DATA.districts, s.value); });
+  document.querySelectorAll('[data-fill="unit"]').forEach(function(s){ fillSelect(s, DATA.units, s.value); });
+});
+
 window.Ahoor = {
   t:t, applyLang:applyLang, api:api, errMsg:errMsg, showMsg:showMsg, hideMsg:hideMsg,
   toast:toast, setLoading:setLoading, validEmail:validEmail, validPhone:validPhone,
   initStrength:initStrength, initPwToggles:initPwToggles, initOtp:initOtp,
-  startCountdown:startCountdown, fieldErr:fieldErr, clearFieldErr:clearFieldErr, esc:esc
+  startCountdown:startCountdown, fieldErr:fieldErr, clearFieldErr:clearFieldErr, esc:esc,
+  fillSelect:fillSelect, locName:locName
 };
+window.Ahoor.AhoorData = window.AhoorData;
+window.Ahoor.fillSelect = fillSelect;
 applyLang();
 })();

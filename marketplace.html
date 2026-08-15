@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ahoor — আমার অ্যাকাউন্ট</title>
+<title>Ahoor — Marketplace</title>
 <meta name="theme-color" content="#0A1122">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1430'/%3E%3Cpath d='M16 8.5 9.6 23.5h12.8z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='9.6' cy='23.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='22.4' cy='23.5' r='2.6' fill='%23FF8A4C'/%3E%3C/svg%3E">
 <style>
@@ -390,9 +390,13 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 .btn-orange{background:linear-gradient(135deg,#FF9456 0%,#FF7A3D 55%,#F2642B 100%);color:#fff;box-shadow:0 12px 28px -10px rgba(255,122,61,.5),inset 0 1px 0 rgba(255,255,255,.28)}
 .btn-orange:hover{transform:translateY(-2px);box-shadow:0 18px 36px -12px rgba(255,122,61,.55)}
 
+.mp-wrap{max-width:1120px;margin:0 auto;padding:0 clamp(16px,4vw,32px)}
+.mp-body{min-height:60vh}
+@media(max-width:700px){.mp-navlinks{display:none!important}}
+@media(max-width:420px){.auth-nav .container{flex-wrap:wrap;gap:8px}.auth-nav-right{margin-left:auto}}
 </style>
 </head>
-<body data-meta="meta.dash">
+<body data-meta="mp.title">
 
 <header class="auth-nav">
   <div class="container">
@@ -405,81 +409,50 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
       </svg>
       <span class="brand-name">Ahoor<em>.</em></span>
     </a>
+    <nav class="mp-navlinks" style="display:flex;gap:4px;align-items:center">
+      <a href="/index.html" style="font-size:.88rem;font-weight:600;color:#57627A;padding:8px 13px;border-radius:9px" data-i18n="nav.home">Home</a>
+      <a href="/marketplace.html" style="font-size:.88rem;font-weight:700;color:#2F6BFF;padding:8px 13px;border-radius:9px;background:#EBF1FF" data-i18n="nav.market">Marketplace</a>
+    </nav>
     <div class="auth-nav-right">
-      <a class="back-home" href="/index.html">
-        <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-        <span data-i18n="db.home">Back to Home</span>
-      </a>
       <div class="lang-switch" role="group" aria-label="Language">
         <button type="button" class="lang-btn on" data-lang="bn" aria-pressed="true">বাংলা</button>
         <span class="lsep" aria-hidden="true">|</span>
         <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
       </div>
+      <a class="btn btn-primary btn-sm" id="navCta" href="/signup.html"><span data-i18n="nav.join">Join Ahoor</span></a>
     </div>
   </div>
 </header>
 
-<main class="auth-main">
-  <div class="auth-card wide">
-    <div id="loadingBox" style="text-align:center;padding:30px 0">
-      <span class="spinner" style="display:inline-block;border-color:rgba(47,107,255,.25);border-top-color:#2F6BFF;width:26px;height:26px"></span>
-      <p style="margin-top:12px;color:#8A95AC;font-size:.88rem" data-i18n="ui.loading">Loading…</p>
-    </div>
-
-    <div id="dashBody" style="display:none">
-      <div class="dash-head" style="margin-bottom:20px">
-        <span class="avatar" id="avatar">A</span>
-        <h1 id="welcome">Welcome to Ahoor</h1>
-        <p id="memberSince"></p>
-      </div>
-
-      <div id="profileWarn" style="display:none">
-        <div class="warn-strip">
-          <span>⚠️</span>
-          <span><span data-i18n="pp.skipNote">You can complete your profile anytime from the dashboard.</span> <a href="/profile-setup.html" data-i18n="db.completeProfile">Complete Your Profile</a></span>
+<main class="mp-body">
+  <div class="mp-head">
+    <div class="mp-wrap">
+      <h1 data-i18n="mp.title">Ahoor Marketplace</h1>
+      <p data-i18n="mp.sub">Buyer requirements &amp; supplier offers across Bangladesh</p>
+      <div class="mp-controls">
+        <div class="select-wrap" style="grid-column:1">
+          <input type="text" id="mpQ" data-i18n-ph="mp.searchPh" placeholder="Search products, requirements…" style="width:100%;background:#F6F8FC;border:1px solid #E4E9F2;border-radius:12px;padding:13px 16px;font-size:.92rem;font-family:inherit;outline:none;color:#101828">
         </div>
-      </div>
-
-      <div class="profile-summary" id="profileSum">
-        <span class="ps-av" id="psAv">A</span>
-        <div class="ps-info">
-          <b id="psBiz">—</b>
-          <span id="psMeta"></span>
+        <div class="select-wrap">
+          <select id="mpCat" data-fill="category"></select>
         </div>
-        <a class="btn btn-outline btn-sm" href="/profile-setup.html"><span data-i18n="db.profile">My Profile</span></a>
+        <div class="select-wrap">
+          <select id="mpLoc" data-fill="district"></select>
+        </div>
+        <a class="btn btn-primary" id="mpNew" href="/post.html"><span data-i18n="mp.newPost">Create Post</span></a>
       </div>
-
-      <div class="dash-quick">
-        <a class="dash-card" href="/post.html">
-          <span class="di">➕</span><b data-i18n="db.newPost">Create New Post</b><span data-i18n="mp.newPost">Create Post</span>
-        </a>
-        <a class="dash-card" href="/marketplace.html">
-          <span class="di">🌐</span><b data-i18n="db.viewMarket">View Marketplace</b><span data-i18n="nav.market">Marketplace</span>
-        </a>
-        <a class="dash-card" href="#quotesSec">
-          <span class="di">📩</span><b data-i18n="db.received">Received Quotes</b><span data-i18n="db.receivedD">Inquiries on your posts</span>
-        </a>
-        <a class="dash-card" href="#msgSec">
-          <span class="di">💬</span><b data-i18n="db.msgs">Messages</b><span data-i18n="db.msgsD">Business conversations</span>
-        </a>
-      </div>
-
-      <h3 style="font-size:1.02rem;font-weight:750;margin-bottom:12px" data-i18n="db.posts">My Posts</h3>
-      <div class="dash-list" id="myPosts"></div>
-      <div class="empty-box" id="noPosts" style="display:none" data-i18n="db.noPosts">You haven't posted anything yet.</div>
-
-      <h3 style="font-size:1.02rem;font-weight:750;margin-bottom:12px" id="quotesSec" data-i18n="db.received">Received Quotes</h3>
-      <div id="quotesList"></div>
-      <div class="empty-box" id="noQuotes" data-i18n="db.quotesPlaceholder">When businesses ask for quotes on your posts, they will appear here.</div>
-
-      <h3 style="font-size:1.02rem;font-weight:750;margin-bottom:12px" id="msgSec" data-i18n="db.msgs">Messages</h3>
-      <div class="empty-box" data-i18n="db.msgPlaceholder">Messages system is coming soon.</div>
-
-      <div class="dash-actions" style="margin-top:24px">
-        <a class="btn btn-outline" href="/index.html"><span data-i18n="db.home">Back to Home</span></a>
-        <button type="button" class="btn btn-ghost" id="btnSignout"><span class="spinner"></span><span class="btn-label" data-i18n="db.signout">Sign Out</span></button>
+      <div class="tabs">
+        <button class="tab on" data-t="all" data-i18n="mp.tabAll">All</button>
+        <button class="tab" data-t="buyer" data-i18n="mp.tabBuyer">Buyer Requirements</button>
+        <button class="tab" data-t="supplier" data-i18n="mp.tabSupplier">Supplier Products</button>
       </div>
     </div>
+  </div>
+
+  <div class="mp-wrap">
+    <div class="mp-grid" id="mpGrid"></div>
+    <div class="mp-empty" id="mpEmpty" style="display:none" data-i18n="mp.empty">No posts found. Try changing filters.</div>
+    <div class="mp-empty" id="mpLoad" data-i18n="ui.loading">Loading…</div>
   </div>
 </main>
 
@@ -489,6 +462,23 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
     <p style="margin-top:6px" data-i18n="foot.cr">© 2026 Ahoor. All rights reserved.</p>
   </div>
 </footer>
+
+<!-- quote modal -->
+<div class="modal-bg" id="quoteModal">
+  <div class="modal">
+    <h3 id="qmTitle">Request Quote</h3>
+    <p class="sub" id="qmSub"></p>
+    <div class="msg" id="qmMsg"></div>
+    <div class="field">
+      <label class="flabel" data-i18n="mp.quoteMsg">Your message</label>
+      <textarea id="qmText" data-i18n-ph="mp.quoteMsgPh" placeholder="e.g. We can supply at ৳240/pcs, delivery 12 days"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" id="qmCancel"><span data-i18n="mp.cancel">Cancel</span></button>
+      <button type="button" class="btn btn-primary" id="qmSend"><span class="spinner"></span><span class="btn-label" data-i18n="mp.send">Send</span></button>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ============================================================
@@ -1078,97 +1068,146 @@ applyLang();
 (function(){
   'use strict';
   var A = window.Ahoor;
-  var user = null;
+  var grid = document.getElementById('mpGrid');
+  var empty = document.getElementById('mpEmpty');
+  var loadEl = document.getElementById('mpLoad');
+  var current = { type:'all', q:'', cat:'', loc:'' };
+  var me = null;
+  var targetPost = null;
 
+  /* nav state */
   A.api('/api/session').then(function(r){
-    if(!r.data || !r.data.user){ location.href = '/login.html?next=/dashboard.html'; return; }
-    user = r.data.user;
-    document.getElementById('loadingBox').style.display = 'none';
-    document.getElementById('dashBody').style.display = '';
-    render();
-    loadPosts();
-    loadQuotes();
+    if(r.data && r.data.user){
+      me = r.data.user;
+      var cta = document.getElementById('navCta');
+      cta.href = '/dashboard.html';
+      cta.innerHTML = '<span data-i18n="nav.dash">Dashboard</span>';
+      applyNav();
+    }
+  });
+  function applyNav(){ document.querySelectorAll('[data-i18n]').forEach(function(el){ var v = window.Ahoor && A.t(el.getAttribute('data-i18n')); if(v) el.innerHTML = v; }); }
+  document.addEventListener('langchange', applyNav);
+
+  /* selects */
+  A.fillSelect(document.getElementById('mpCat'), A.AhoorData.categories, '');
+  var catSel = document.getElementById('mpCat');
+  var firstCat = document.createElement('option');
+  firstCat.value = ''; firstCat.textContent = A.t('mp.catAll');
+  catSel.prepend(firstCat);
+  A.fillSelect(document.getElementById('mpLoc'), A.AhoorData.districts, '');
+  var locSel = document.getElementById('mpLoc');
+  var firstLoc = document.createElement('option');
+  firstLoc.value = ''; firstLoc.textContent = A.t('mp.locAll');
+  locSel.prepend(firstLoc);
+
+  /* tabs */
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      document.querySelectorAll('.tab').forEach(function(x){ x.classList.remove('on'); });
+      t.classList.add('on');
+      current.type = t.getAttribute('data-t');
+      load();
+    });
   });
 
-  function render(){
-    var initial = (user.name || 'A').charAt(0).toUpperCase();
-    document.getElementById('avatar').textContent = initial;
-    document.getElementById('welcome').textContent = A.t('db.welcome', {name: user.name});
-    document.getElementById('memberSince').textContent = A.t('db.member', {d: new Date(user.createdAt).toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'})});
-    var psAv = document.getElementById('psAv');
-    if(user.image){ psAv.innerHTML = '<img src="' + user.image + '" alt="">'; } else { psAv.textContent = initial; }
-    document.getElementById('psBiz').textContent = user.businessName || user.name;
-    var parts = [];
-    if(user.district) parts.push(A.locName(A.AhoorData.districts, user.district));
-    if(user.category) parts.push(A.locName(A.AhoorData.categories, user.category));
-    if(user.type) parts.push(A.t('db.type.' + user.type));
-    document.getElementById('psMeta').textContent = parts.join(' · ');
-    if(!user.profileComplete) document.getElementById('profileWarn').style.display = '';
-    document.addEventListener('langchange', render);
-  }
-
-  function loadPosts(){
-    A.api('/api/my-posts').then(function(r){
-      var list = document.getElementById('myPosts');
-      var noPosts = document.getElementById('noPosts');
-      list.innerHTML = '';
-      if(!r.data || !r.data.posts || r.data.posts.length === 0){ noPosts.style.display = ''; return; }
-      noPosts.style.display = 'none';
-      r.data.posts.forEach(function(p){
-        var el = document.createElement('div');
-        el.className = 'dash-post';
-        el.innerHTML =
-          '<span class="dp-badge ' + p.type + '">' + (p.type === 'buyer' ? '🛒 ' : '🏭 ') + A.t(p.type === 'buyer' ? 'mp.badgeBuyer' : 'mp.badgeSupplier') + '</span>' +
-          '<div class="dp-main"><b>' + A.esc(p.title) + '</b><span>' +
-            A.locName(A.AhoorData.districts, p.location) + ' · ' +
-            (p.qty ? p.qty + (p.unit ? ' ' + p.unit : '') : '') +
-            ' · ' + A.t(p.status === 'open' ? 'mp.open' : 'mp.closed') +
-            ' · ' + new Date(p.createdAt).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) +
-          '</span></div>' +
-          '<div class="dp-actions">' +
-            '<button class="dp-link" data-act="toggle">' + A.t(p.status === 'open' ? 'db.closed' : 'db.reopen') + '</button>' +
-            '<a class="dp-link" href="/post.html?id=' + p.id + '">' + A.t('db.edit') + '</a>' +
-            '<button class="dp-link danger" data-act="delete">' + A.t('db.delete') + '</button>' +
-          '</div>';
-        el.querySelector('[data-act="toggle"]').addEventListener('click', function(){
-          A.api('/api/posts/' + p.id + '/toggle', {}).then(loadPosts);
-        });
-        el.querySelector('[data-act="delete"]').addEventListener('click', function(){
-          if(!confirm(A.t('db.delConfirm'))) return;
-          A.api('/api/posts/' + p.id + '/delete', {}).then(function(r){
-            if(r.status === 200){ A.toast(A.t('db.deleted'), 'ok'); loadPosts(); }
-            else A.toast(A.errMsg(r.data.error), 'er');
-          });
-        });
-        list.appendChild(el);
-      });
-    });
-  }
-
-  function loadQuotes(){
-    A.api('/api/quotes/received').then(function(r){
-      var box = document.getElementById('quotesList');
-      var noQuotes = document.getElementById('noQuotes');
-      box.innerHTML = '';
-      if(!r.data || !r.data.quotes || r.data.quotes.length === 0){ noQuotes.style.display = ''; return; }
-      noQuotes.style.display = 'none';
-      r.data.quotes.forEach(function(q){
-        var el = document.createElement('div');
-        el.className = 'quote-row';
-        el.innerHTML =
-          '<b>' + A.esc((q.sender && (q.sender.businessName || q.sender.name)) || '—') + '</b>' +
-          '<p>' + A.esc(q.message) + '</p>' +
-          '<div class="q-sub">' + A.t('db.quoteOn') + ': ' + A.esc(q.post ? q.post.title : '') + ' · ' + new Date(q.createdAt).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) + '</div>';
-        box.appendChild(el);
-      });
-    });
-  }
-
-  document.getElementById('btnSignout').addEventListener('click', function(){
-    var b = this;
-    A.setLoading(b, true, 'db.signingout');
-    A.api('/api/logout', {}).then(function(){ location.href = '/login.html'; });
+  /* filters */
+  var debounce = null;
+  document.getElementById('mpQ').addEventListener('input', function(){
+    clearTimeout(debounce);
+    debounce = setTimeout(function(){ current.q = this.value.trim(); load(); }.bind(this), 350);
   });
+  catSel.addEventListener('change', function(){ current.cat = this.value; load(); });
+  locSel.addEventListener('change', function(){ current.loc = this.value; load(); });
+
+  /* load posts */
+  function load(){
+    grid.innerHTML = '';
+    empty.style.display = 'none';
+    loadEl.style.display = '';
+    var params = new URLSearchParams();
+    if(current.type !== 'all') params.set('type', current.type);
+    if(current.q) params.set('q', current.q);
+    if(current.cat) params.set('category', current.cat);
+    if(current.loc) params.set('location', current.loc);
+    fetch('/api/posts?' + params.toString(), { credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        loadEl.style.display = 'none';
+        if(!d.posts || d.posts.length === 0){ empty.style.display = ''; return; }
+        d.posts.forEach(function(p){ grid.appendChild(card(p)); });
+      })
+      .catch(function(){ loadEl.textContent = A.t('err.network'); });
+  }
+
+  function card(p){
+    var el = document.createElement('article');
+    el.className = 'post-card';
+    var isBuyer = p.type === 'buyer';
+    var biz = (p.owner && p.owner.businessName) || (p.owner && p.owner.name) || '';
+    var img = p.image ? '<img class="post-img" src="' + p.image + '" alt="">' : '';
+    var meta = '';
+    if(p.qty) meta += '<span>' + A.t('mp.qty') + ': <b>' + A.esc(p.qty) + (p.unit ? ' ' + A.esc(p.unit) : '') + '</b></span>';
+    if(isBuyer && p.budget) meta += '<span>' + A.t('mp.budget') + ': <b>' + A.esc(p.budget) + '</b></span>';
+    if(!isBuyer && p.moq) meta += '<span>' + A.t('mp.moq') + ': <b>' + A.esc(p.moq) + '</b></span>';
+    if(!isBuyer && p.price) meta += '<span>' + A.t('mp.price') + ': <b>' + A.esc(p.price) + '</b></span>';
+    if(!isBuyer && !p.price) meta += '<span>' + A.t('mp.contactPrice') + '</span>';
+    if(p.deadline && isBuyer) meta += '<span>' + A.t('mp.deadline') + ': <b>' + A.esc(p.deadline) + '</b></span>';
+    meta += '<span>' + A.locName(A.AhoorData.districts, p.location) + '</span>';
+    var dateTxt = new Date(p.createdAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+    var btn = isBuyer
+      ? '<button class="btn btn-primary btn-sm" data-quote="' + p.id + '">' + A.t('mp.getQuotes') + '</button>'
+      : '<button class="btn btn-orange btn-sm" data-quote="' + p.id + '">' + A.t('mp.reqQuote') + '</button>';
+    el.innerHTML =
+      (img ? img : '') +
+      '<div class="post-top">' +
+        '<span class="post-badge ' + (isBuyer ? 'buyer' : 'supplier') + '">' + (isBuyer ? '🛒 ' : '🏭 ') + A.t(isBuyer ? 'mp.badgeBuyer' : 'mp.badgeSupplier') + '</span>' +
+        '<span class="post-status ' + p.status + '">' + A.t(p.status === 'open' ? 'mp.open' : 'mp.closed') + '</span>' +
+      '</div>' +
+      '<h3>' + A.esc(p.title) + '</h3>' +
+      '<div class="post-meta">' + meta + '</div>' +
+      (p.desc ? '<p class="post-desc">' + A.esc(p.desc) + '</p>' : '') +
+      '<div class="post-owner">' +
+        '<span class="po-av">' + (p.owner && p.owner.image ? '<img src="' + p.owner.image + '" alt="">' : (biz ? A.esc(biz.charAt(0).toUpperCase()) : '?')) + '</span>' +
+        '<span class="po-info"><b>' + A.esc(biz) + '</b>' + A.t('mp.postedOn') + ': ' + dateTxt + '</span>' +
+      '</div>' +
+      btn;
+    el.querySelector('[data-quote]').addEventListener('click', function(){ openQuote(p); });
+    return el;
+  }
+
+  /* quote modal */
+  var modal = document.getElementById('quoteModal');
+  function openQuote(p){
+    targetPost = p;
+    document.getElementById('qmSub').textContent = p.title;
+    document.getElementById('qmText').value = '';
+    A.hideMsg(document.getElementById('qmMsg'));
+    if(!me){ A.toast(A.t('mp.loginNeeded'), 'er'); location.href = '/login.html?next=/marketplace.html'; return; }
+    modal.classList.add('on');
+  }
+  document.getElementById('qmCancel').addEventListener('click', function(){ modal.classList.remove('on'); });
+  modal.addEventListener('click', function(e){ if(e.target === modal) modal.classList.remove('on'); });
+  document.getElementById('qmSend').addEventListener('click', function(){
+    var msgEl = document.getElementById('qmMsg');
+    var text = document.getElementById('qmText').value.trim();
+    if(text.length < 5){ A.showMsg(msgEl, 'error', A.t('err.required')); return; }
+    var btn = document.getElementById('qmSend');
+    A.setLoading(btn, true);
+    A.api('/api/quotes', { postId: targetPost.id, message: text }).then(function(r){
+      A.setLoading(btn, false);
+      if(r.status === 201){
+        A.toast(A.t('mp.quoteSent'), 'ok');
+        modal.classList.remove('on');
+      } else if(r.status === 401){
+        location.href = '/login.html?next=/marketplace.html';
+      } else {
+        A.showMsg(msgEl, 'error', A.errMsg(r.data.error));
+      }
+    });
+  });
+
+  /* orange button variant (used in cards) */
+  load();
 })();
 </script>
 </body>

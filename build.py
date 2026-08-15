@@ -15,6 +15,8 @@ T = {
  "nav.opps": ("Opportunities", "ব্যবসার সুযোগ"),
  "nav.suppliers": ("Suppliers", "সরবরাহকারী"),
  "nav.cats": ("Categories", "ক্যাটাগরি"),
+ "nav.market": ("Marketplace", "মার্কেটপ্লেস"),
+ "foot.l1d": ("Marketplace", "মার্কেটপ্লেস"),
  "nav.signin": ("Sign In", "সাইন ইন"),
  "nav.join": ("Join Ahoor", "Ahoor-এ যোগ দিন"),
 

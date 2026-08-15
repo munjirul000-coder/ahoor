@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ahoor — অ্যাকাউন্ট প্রস্তুত</title>
+<title>Ahoor — Business Profile</title>
 <meta name="theme-color" content="#0A1122">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1430'/%3E%3Cpath d='M16 8.5 9.6 23.5h12.8z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='9.6' cy='23.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='22.4' cy='23.5' r='2.6' fill='%23FF8A4C'/%3E%3C/svg%3E">
 <style>
@@ -13,9 +13,17 @@
 html[lang="bn"]{--font:'Noto Sans Bengali','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
 html[lang="bn"] body{line-height:1.72}
 __CSS__
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media(max-width:520px){.grid2{grid-template-columns:1fr}}
+.pp-role{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:20px}
+.pp-role button{display:flex;flex-direction:column;gap:5px;align-items:center;text-align:center;background:#FBFCFE;border:1.5px solid #E4E9F2;border-radius:14px;padding:13px 8px;cursor:pointer;font-family:inherit;transition:all .25s}
+.pp-role button .ri{font-size:1.25rem}
+.pp-role button b{font-size:.82rem;font-weight:750;color:#101828}
+.pp-role button.on{border-color:#2F6BFF;background:#F2F6FF;box-shadow:0 0 0 3px rgba(47,107,255,.1)}
+@media(max-width:420px){.pp-role{grid-template-columns:1fr}}
 </style>
 </head>
-<body data-meta="meta.profile">
+<body data-meta="pp.title">
 
 <header class="auth-nav">
   <div class="container">
@@ -29,9 +37,9 @@ __CSS__
       <span class="brand-name">Ahoor<em>.</em></span>
     </a>
     <div class="auth-nav-right">
-      <a class="back-home" href="/index.html">
+      <a class="back-home" href="/dashboard.html">
         <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-        <span data-i18n="db.home">Back to Home</span>
+        <span data-i18n="nav.dash">Dashboard</span>
       </a>
       <div class="lang-switch" role="group" aria-label="Language">
         <button type="button" class="lang-btn on" data-lang="bn" aria-pressed="true">বাংলা</button>
@@ -43,21 +51,80 @@ __CSS__
 </header>
 
 <main class="auth-main">
-  <div class="auth-card">
-    <div style="text-align:center">
-      <span class="success-ic check-pulse">
-        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+  <div class="auth-card wide">
+    <div class="auth-head">
+      <span class="logo-ic">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </span>
-      <p style="font-size:.85rem;font-weight:700;color:#0E9F7E;margin-bottom:10px" data-i18n="ps.thanks">Thanks for joining Ahoor!</p>
-      <h1 style="font-size:1.45rem;font-weight:800;letter-spacing:-.025em;color:#101828;line-height:1.35" data-i18n="ps.title">Your Ahoor account is ready.</h1>
-      <p style="margin-top:12px;color:#57627A;font-size:.95rem;line-height:1.7" data-i18n="ps.sub">Next, complete your business profile to start finding opportunities and connecting with businesses.</p>
+      <h1 data-i18n="pp.title">Complete Your Business Profile</h1>
+      <p data-i18n="pp.sub">Help the right businesses find you.</p>
     </div>
-    <div style="margin-top:28px;display:grid;gap:11px">
-      <button type="button" class="btn btn-primary btn-block" id="btnProfile">
-        <span class="btn-label" data-i18n="ps.btn">Complete Profile</span>
+
+    <div class="msg" id="ppMsg"></div>
+
+    <div class="field">
+      <label class="flabel" data-i18n="pp.role">Business Role</label>
+      <div class="pp-role">
+        <button type="button" data-role="buyer"><span class="ri">🛒</span><b data-i18n="pp.roleBuyer">Buyer</b></button>
+        <button type="button" data-role="supplier"><span class="ri">🏭</span><b data-i18n="pp.roleSupplier">Supplier / Manufacturer</b></button>
+        <button type="button" data-role="both"><span class="ri">🔄</span><b data-i18n="pp.roleBoth">Both</b></button>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label class="flabel" data-i18n="pp.name">Full Name</label>
+        <input type="text" id="ppName" autocomplete="name">
+        <p class="field-err"></p>
+      </div>
+      <div class="field">
+        <label class="flabel" data-i18n="pp.biz">Business Name</label>
+        <input type="text" id="ppBiz" data-i18n-ph="pp.bizPh" placeholder="e.g. Rahim Garments">
+        <p class="field-err"></p>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label class="flabel" data-i18n="pp.phone">Phone Number</label>
+        <input type="tel" id="ppPhone" inputmode="tel" placeholder="01XXXXXXXXX">
+        <p class="field-err"></p>
+      </div>
+      <div class="field">
+        <label class="flabel" data-i18n="pp.district">District / Location</label>
+        <div class="select-wrap">
+          <select id="ppDistrict" data-fill="district"></select>
+        </div>
+        <p class="field-err"></p>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="flabel" data-i18n="pp.cat">Business Category</label>
+      <div class="select-wrap">
+        <select id="ppCat" data-fill="category"></select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="flabel" data-i18n="pp.desc">Short Business Description</label>
+      <textarea id="ppDesc" maxlength="600" data-i18n-ph="pp.descPh" placeholder="What do you make, supply, or buy?"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="flabel" data-i18n="pp.image">Profile Image / Company Logo (optional)</label>
+      <button type="button" class="btn btn-outline btn-sm" id="ppImgBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.5-3.5L8 21"/></svg>
+        <span data-i18n="pp.upload">Choose image</span>
       </button>
-      <a class="btn btn-outline btn-block" href="/dashboard.html"><span data-i18n="ps.dash">Go to Dashboard</span></a>
+      <input type="file" id="ppImgFile" accept="image/*" style="display:none">
+      <img id="ppImgPrev" class="img-preview" style="display:none" alt="">
     </div>
+
+    <button type="button" class="btn btn-primary btn-block" id="ppSave">
+      <span class="spinner"></span><span class="btn-label" data-i18n="pp.save">Save Profile</span>
+    </button>
+    <a class="btn btn-ghost btn-block" href="/dashboard.html" style="margin-top:8px"><span data-i18n="pp.skip">Skip for now</span></a>
   </div>
 </main>
 
@@ -73,11 +140,78 @@ __JS__
 (function(){
   'use strict';
   var A = window.Ahoor;
+  var role = 'buyer';
+  var imgData = '';
+  var me = null;
+
   A.api('/api/session').then(function(r){
-    if(!r.data.user){ location.href='/login?next=/profile-setup'; return; }
+    if(!r.data || !r.data.user){ location.href = '/login.html?next=/profile-setup.html'; return; }
+    me = r.data.user;
+    fillForm();
   });
-  document.getElementById('btnProfile').addEventListener('click', function(){
-    A.toast(A.t('ps.btnSoon'),'ok');
+
+  function fillForm(){
+    A.fillSelect(document.getElementById('ppDistrict'), A.AhoorData.districts, me.district || '');
+    A.fillSelect(document.getElementById('ppCat'), A.AhoorData.categories, me.category || '');
+    document.getElementById('ppName').value = me.name || '';
+    document.getElementById('ppBiz').value = me.businessName || '';
+    document.getElementById('ppPhone').value = me.phone || '';
+    document.getElementById('ppDesc').value = me.description || '';
+    if(me.image){ imgData = me.image; var pr = document.getElementById('ppImgPrev'); pr.src = me.image; pr.style.display = ''; }
+    if(me.type){ role = me.type; }
+    document.querySelectorAll('.pp-role button').forEach(function(b){
+      b.classList.toggle('on', b.getAttribute('data-role') === role);
+    });
+  }
+
+  document.querySelectorAll('.pp-role button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.pp-role button').forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      role = b.getAttribute('data-role');
+    });
+  });
+
+  document.getElementById('ppImgBtn').addEventListener('click', function(){ document.getElementById('ppImgFile').click(); });
+  document.getElementById('ppImgFile').addEventListener('change', function(){
+    var f = this.files[0];
+    if(!f) return;
+    if(f.size > 400000){ A.toast(A.t('err.image'), 'er'); return; }
+    var rd = new FileReader();
+    rd.onload = function(e){
+      imgData = e.target.result;
+      var pr = document.getElementById('ppImgPrev');
+      pr.src = imgData; pr.style.display = '';
+    };
+    rd.readAsDataURL(f);
+  });
+
+  document.getElementById('ppSave').addEventListener('click', function(){
+    var name = document.getElementById('ppName').value.trim();
+    var biz = document.getElementById('ppBiz').value.trim();
+    var phone = document.getElementById('ppPhone').value.trim();
+    var dist = document.getElementById('ppDistrict').value;
+    var ok = true;
+    if(name.length < 2){ A.fieldErr(document.getElementById('ppName'), 'err.name'); ok = false; }
+    if(!A.validPhone(phone)){ A.fieldErr(document.getElementById('ppPhone'), 'err.phone'); ok = false; }
+    if(!dist){ A.fieldErr(document.getElementById('ppDistrict'), 'err.required'); ok = false; }
+    if(!ok) return;
+    var btn = document.getElementById('ppSave');
+    A.setLoading(btn, true, 'pp.saving');
+    A.api('/api/profile', {
+      name: name, businessName: biz, phone: phone,
+      district: dist, category: document.getElementById('ppCat').value,
+      description: document.getElementById('ppDesc').value.trim(),
+      image: imgData
+    }).then(function(r){
+      A.setLoading(btn, false);
+      if(r.status === 200){
+        A.toast(A.t('pp.saved'), 'ok');
+        setTimeout(function(){ location.href = '/dashboard.html'; }, 1000);
+      } else {
+        A.showMsg(document.getElementById('ppMsg'), 'error', A.errMsg(r.data.error));
+      }
+    });
   });
 })();
 </script>

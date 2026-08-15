@@ -2,7 +2,7 @@
   "name": "ahoor",
   "version": "1.0.0",
   "private": true,
-  "description": "Ahoor \u2014 B2B marketplace for Bangladesh (bilingual landing + auth system)",
+  "description": "Ahoor — B2B marketplace for Bangladesh (bilingual landing + auth system)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -13,6 +13,6 @@
     "node": ">=18"
   },
   "dependencies": {
-    "nodemailer": "^6.9.15"
+    "nodemailer": "^6.10.1"
   }
 }

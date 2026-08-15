@@ -74,7 +74,7 @@ function load() {
   try {
     db = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
   } catch (e) {
-    db = { users: [], sessions: {}, codes: {}, fails: {} };
+    db = { users: [], sessions: {}, codes: {}, fails: {}, posts: [], quotes: [] };
   }
   return db;
 }
@@ -221,7 +221,7 @@ function readBody(req) {
     let data = '';
     req.on('data', c => {
       data += c;
-      if (data.length > 100000) { reject(new Error('too large')); req.destroy(); }
+      if (data.length > 2000000) { reject(new Error('too large')); req.destroy(); }
     });
     req.on('end', () => {
       try {
@@ -265,8 +265,8 @@ async function handle(req, res) {
 
   /* --- protected pages (server-side guard) --- */
   if (req.method === 'GET') {
-    const target = p === '/dashboard' ? '/dashboard.html' : p === '/profile-setup' ? '/profile-setup.html' : p;
-    if ((target === '/dashboard.html' || target === '/profile-setup.html') && !getSession(req)) {
+    const target = p === '/dashboard' ? '/dashboard.html' : p === '/profile-setup' ? '/profile-setup.html' : p === '/post' ? '/post.html' : p;
+    if ((target === '/dashboard.html' || target === '/profile-setup.html' || target === '/post.html') && !getSession(req)) {
       res.writeHead(302, { Location: '/login?next=' + encodeURIComponent(target) });
       return res.end();
     }
@@ -274,7 +274,9 @@ async function handle(req, res) {
 
   /* --- API --- */
   if (p.startsWith('/api/')) {
-    if (req.method !== 'POST') return json(res, 405, { error: 'method' });
+    if (req.method !== 'POST' && !(p === '/api/posts' && req.method === 'GET')) {
+      return json(res, 405, { error: 'method' });
+    }
     let body;
     try { body = await readBody(req); }
     catch (e) { return json(res, 400, { error: 'bad_request' }); }
@@ -424,6 +426,162 @@ async function handle(req, res) {
       return json(res, 200, { ok: true });
     }
 
+    /* ---- profile ---- */
+    if (p === '/api/profile') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const user = db.users.find(u => u.id === sess.userId);
+      if (!user) return json(res, 401, { error: 'no_session' });
+      if (req.method !== 'POST') return json(res, 405, { error: 'method' });
+      const { name, businessName, phone, district, category, description, image } = body;
+      if (name !== undefined) {
+        if (String(name || '').trim().length < 2) return json(res, 400, { error: 'name' });
+        user.name = String(name).trim();
+      }
+      if (phone !== undefined) {
+        if (validatePhone(phone)) return json(res, 400, { error: 'phone' });
+        user.phone = String(phone).trim();
+      }
+      if (businessName !== undefined) user.businessName = String(businessName || '').trim().slice(0, 120);
+      if (district !== undefined) user.district = String(district || '').trim().slice(0, 60);
+      if (category !== undefined) user.category = String(category || '').trim().slice(0, 80);
+      if (description !== undefined) user.description = String(description || '').trim().slice(0, 600);
+      if (image !== undefined) {
+        if (String(image).length > 400000) return json(res, 400, { error: 'image' });
+        user.image = String(image || '');
+      }
+      save();
+      return json(res, 200, { user: publicUser(user) });
+    }
+
+    /* ---- posts ---- */
+    if (p === '/api/posts' && req.method === 'POST') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const user = db.users.find(u => u.id === sess.userId);
+      if (!user) return json(res, 401, { error: 'no_session' });
+      const { type, title, category, qty, unit, budget, location, deadline, desc, image, moq, price } = body;
+      if (type !== 'buyer' && type !== 'supplier') return json(res, 400, { error: 'type' });
+      if (String(title || '').trim().length < 4) return json(res, 400, { error: 'title' });
+      if (String(category || '').trim().length < 2) return json(res, 400, { error: 'category' });
+      if (String(location || '').trim().length < 2) return json(res, 400, { error: 'location' });
+      if (String(desc || '').trim().length < 10) return json(res, 400, { error: 'desc' });
+      if (image !== undefined && String(image).length > 400000) return json(res, 400, { error: 'image' });
+      const post = {
+        id: uid(), ownerId: user.id, type,
+        title: String(title).trim().slice(0, 160),
+        category: String(category).trim(),
+        qty: String(qty || '').trim(), unit: String(unit || '').trim(),
+        budget: String(budget || '').trim(), location: String(location).trim(),
+        deadline: String(deadline || '').trim(), desc: String(desc).trim().slice(0, 2000),
+        image: String(image || ''), moq: String(moq || '').trim(), price: String(price || '').trim(),
+        status: 'open', createdAt: new Date().toISOString()
+      };
+      db.posts.push(post);
+      save();
+      return json(res, 201, { post: publicPost(post) });
+    }
+
+    if (p === '/api/posts' && req.method === 'GET') {
+      const url2 = new URL(req.url, 'http://x');
+      const typeF = url2.searchParams.get('type') || '';
+      const q = (url2.searchParams.get('q') || '').toLowerCase().trim();
+      const cat = url2.searchParams.get('category') || '';
+      const loc = url2.searchParams.get('location') || '';
+      let list = db.posts.filter(pst => {
+        if (typeF && typeF !== 'all' && pst.type !== typeF) return false;
+        if (cat && pst.category !== cat) return false;
+        if (loc && pst.location !== loc) return false;
+        if (q) {
+          const hay = (pst.title + ' ' + pst.desc + ' ' + pst.category + ' ' + pst.location).toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+      list.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+      list = list.slice(0, 60);
+      return json(res, 200, { posts: list.map(publicPost) });
+    }
+
+    if (p === '/api/my-posts') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const list = db.posts.filter(pt => pt.ownerId === sess.userId)
+        .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+      return json(res, 200, { posts: list.map(publicPost) });
+    }
+
+    const postMatch = p.match(/^\/api\/posts\/([0-9a-f-]{36})\/(edit|delete|toggle)$/);
+    if (postMatch && (req.method === 'POST' || req.method === 'PUT' || req.method === 'DELETE')) {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const post = db.posts.find(pt => pt.id === postMatch[1]);
+      if (!post) return json(res, 404, { error: 'post_not_found' });
+      if (post.ownerId !== sess.userId) return json(res, 403, { error: 'forbidden' });
+      const action = postMatch[2];
+      if (action === 'delete') {
+        db.posts = db.posts.filter(pt => pt.id !== post.id);
+        db.quotes = db.quotes.filter(qq => qq.postId !== post.id);
+        save();
+        return json(res, 200, { ok: true });
+      }
+      if (action === 'toggle') {
+        post.status = post.status === 'open' ? 'closed' : 'open';
+        post.updatedAt = new Date().toISOString();
+        save();
+        return json(res, 200, { post: publicPost(post) });
+      }
+      if (action === 'edit') {
+        const { title, category, qty, unit, budget, location, deadline, desc, image, moq, price } = body;
+        if (title !== undefined) { if (String(title).trim().length < 4) return json(res, 400, { error: 'title' }); post.title = String(title).trim(); }
+        if (category !== undefined) post.category = String(category).trim();
+        if (qty !== undefined) post.qty = String(qty).trim();
+        if (unit !== undefined) post.unit = String(unit).trim();
+        if (budget !== undefined) post.budget = String(budget).trim();
+        if (location !== undefined) post.location = String(location).trim();
+        if (deadline !== undefined) post.deadline = String(deadline).trim();
+        if (desc !== undefined) post.desc = String(desc).trim();
+        if (moq !== undefined) post.moq = String(moq).trim();
+        if (price !== undefined) post.price = String(price).trim();
+        if (image !== undefined) post.image = String(image).slice(0, 400000);
+        post.updatedAt = new Date().toISOString();
+        save();
+        return json(res, 200, { post: publicPost(post) });
+      }
+    }
+
+    /* ---- quotes ---- */
+    if (p === '/api/quotes' && req.method === 'POST') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const { postId, message } = body;
+      const post = db.posts.find(pt => pt.id === postId);
+      if (!post) return json(res, 404, { error: 'post_not_found' });
+      if (post.ownerId === sess.userId) return json(res, 400, { error: 'self_quote' });
+      if (String(message || '').trim().length < 5) return json(res, 400, { error: 'message' });
+      const quote = {
+        id: uid(), postId, senderId: sess.userId, message: String(message).trim().slice(0, 1000),
+        createdAt: new Date().toISOString()
+      };
+      db.quotes.push(quote);
+      save();
+      return json(res, 201, { quote });
+    }
+
+    if (p === '/api/quotes/received') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const myPostIds = new Set(db.posts.filter(pt => pt.ownerId === sess.userId).map(pt => pt.id));
+      const list = db.quotes.filter(qq => myPostIds.has(qq.postId))
+        .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+      const full = list.map(qq => {
+        const pt = db.posts.find(x => x.id === qq.postId);
+        const sender = db.users.find(u => u.id === qq.senderId);
+        return { ...qq, post: pt ? publicPost(pt) : null, sender: sender ? { name: sender.name, businessName: sender.businessName || '', phone: sender.phone } : null };
+      });
+      return json(res, 200, { quotes: full });
+    }
+
     return json(res, 404, { error: 'route' });
   }
 
@@ -451,7 +609,24 @@ function setCookie(res, s) {
   res.setHeader('Set-Cookie', `ahoor_sid=${s.t}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}`);
 }
 function publicUser(u) {
-  return { id: u.id, name: u.name, email: u.email, phone: u.phone, type: u.type, createdAt: u.createdAt };
+  return {
+    id: u.id, name: u.name, email: u.email, phone: u.phone, type: u.type, createdAt: u.createdAt,
+    businessName: u.businessName || '', district: u.district || '', category: u.category || '',
+    description: u.description || '', image: u.image || '', profileComplete: !!(u.businessName && u.district)
+  };
+}
+function publicPost(p) {
+  const owner = db.users.find(u => u.id === p.ownerId);
+  return {
+    id: p.id, type: p.type, title: p.title, category: p.category, qty: p.qty || '', unit: p.unit || '',
+    budget: p.budget || '', location: p.location || '', deadline: p.deadline || '',
+    desc: p.desc || '', image: p.image || '', moq: p.moq || '', price: p.price || '',
+    status: p.status || 'open', createdAt: p.createdAt, updatedAt: p.updatedAt || p.createdAt,
+    owner: owner ? {
+      id: owner.id, name: owner.name, businessName: owner.businessName || '',
+      district: owner.district || '', image: owner.image || ''
+    } : null
+  };
 }
 
 /* periodic session/code cleanup */

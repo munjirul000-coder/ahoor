@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ahoor — অ্যাকাউন্ট প্রস্তুত</title>
+<title>Ahoor — Business Profile</title>
 <meta name="theme-color" content="#0A1122">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1430'/%3E%3Cpath d='M16 8.5 9.6 23.5h12.8z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='9.6' cy='23.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='22.4' cy='23.5' r='2.6' fill='%23FF8A4C'/%3E%3C/svg%3E">
 <style>
@@ -298,9 +298,109 @@ html[lang="bn"] .auth-foot .flow{letter-spacing:.01em}
   .brand-name{font-size:1.15rem}
 }
 
+/* ============ Marketplace + posts ============ */
+select,textarea{font-family:inherit;font-size:.95rem;color:#101828;width:100%;background:#F6F8FC;border:1px solid #E4E9F2;border-radius:12px;padding:13px 14px;outline:none;transition:border-color .25s,box-shadow .25s,background .25s}
+select:focus,textarea:focus{border-color:#2F6BFF;box-shadow:0 0 0 4px rgba(47,107,255,.12);background:#fff}
+textarea{min-height:120px;resize:vertical;line-height:1.6}
+.select-wrap{position:relative}
+.select-wrap::after{content:'';position:absolute;right:15px;top:50%;width:8px;height:8px;border-right:2px solid #8B98B2;border-bottom:2px solid #8B98B2;transform:translateY(-70%) rotate(45deg);pointer-events:none}
+.select-wrap select{appearance:none;-webkit-appearance:none;padding-right:36px}
+
+/* marketplace header */
+.mp-head{background:#fff;border-bottom:1px solid #E4E9F2;padding:26px 0 20px}
+.mp-head h1{font-size:clamp(1.4rem,3.2vw,1.8rem);font-weight:800;letter-spacing:-.025em;color:#101828;text-align:center}
+.mp-head p{text-align:center;color:#57627A;font-size:.9rem;margin-top:6px}
+.mp-controls{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;margin-top:18px}
+.mp-controls .btn{white-space:nowrap}
+@media(max-width:860px){.mp-controls{grid-template-columns:1fr 1fr}.mp-controls .btn{grid-column:1/-1}}
+@media(max-width:520px){.mp-controls{grid-template-columns:1fr}}
+.tabs{display:flex;gap:8px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.tab{font-family:inherit;font-size:.88rem;font-weight:650;color:#57627A;background:#fff;border:1.5px solid #E4E9F2;border-radius:999px;padding:9px 20px;cursor:pointer;transition:all .25s}
+.tab:hover{border-color:#C9D8F2;color:#101828}
+.tab.on{background:linear-gradient(135deg,#4C84FF,#2F6BFF);color:#fff;border-color:transparent;box-shadow:0 8px 20px -8px rgba(47,107,255,.5)}
+.mp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;padding:26px 0 10px}
+@media(max-width:480px){.mp-grid{grid-template-columns:1fr}}
+.post-card{background:#fff;border:1px solid #E4E9F2;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:11px;box-shadow:0 4px 16px -10px rgba(10,17,34,.08);transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s,border-color .3s;position:relative;overflow:hidden}
+.post-card:hover{transform:translateY(-4px);box-shadow:0 18px 36px -18px rgba(10,17,34,.2);border-color:#C9D8F2}
+.post-img{width:100%;height:170px;object-fit:cover;border-radius:12px;background:#F0F3F9}
+.post-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.post-badge{display:inline-flex;align-items:center;gap:6px;font-size:.62rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;padding:5px 11px;border-radius:999px;border:1px solid}
+.post-badge.buyer{color:#1E4FD8;background:#EBF1FF;border-color:#CBD9F8}
+.post-badge.supplier{color:#B45309;background:#FFF1E7;border-color:#FFD7B8}
+.post-status{font-size:.66rem;font-weight:700;padding:4px 10px;border-radius:999px}
+.post-status.open{color:#0B7A5E;background:#E6F7F0}
+.post-status.closed{color:#8A95AC;background:#F0F3F9}
+.post-card h3{font-size:1.06rem;font-weight:750;letter-spacing:-.015em;line-height:1.35;color:#101828}
+.post-meta{display:flex;flex-wrap:wrap;gap:7px 14px;font-size:.78rem;color:#57627A;font-weight:550}
+.post-meta b{color:#101828;font-weight:700}
+.post-desc{font-size:.84rem;color:#57627A;line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.post-owner{display:flex;align-items:center;gap:9px;margin-top:2px}
+.po-av{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:.72rem;font-weight:800;color:#fff;background:linear-gradient(135deg,#4C84FF,#2F6BFF);flex-shrink:0;overflow:hidden}
+.po-av img{width:100%;height:100%;object-fit:cover}
+.po-info{font-size:.76rem;color:#8A95AC;line-height:1.35;min-width:0}
+.po-info b{display:block;font-size:.82rem;color:#2A3550;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.post-card .btn{margin-top:auto}
+.mp-empty{text-align:center;padding:50px 16px;color:#8A95AC;font-size:.92rem;grid-column:1/-1}
+
+/* quote modal */
+.modal-bg{position:fixed;inset:0;background:rgba(10,17,34,.55);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center;padding:18px}
+.modal-bg.on{display:flex;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:#fff;border-radius:20px;max-width:460px;width:100%;padding:26px;box-shadow:0 40px 90px -30px rgba(10,17,34,.5);animation:cardIn .4s cubic-bezier(.16,1,.3,1)}
+.modal h3{font-size:1.1rem;font-weight:750;color:#101828;margin-bottom:4px}
+.modal p.sub{font-size:.82rem;color:#8A95AC;margin-bottom:16px}
+.modal .field{margin-bottom:12px}
+.modal-actions{display:flex;gap:10px;margin-top:16px}
+.modal-actions .btn{flex:1}
+
+/* dashboard lists */
+.dash-list{display:grid;gap:12px;margin-bottom:26px}
+.dash-post{display:flex;gap:14px;align-items:center;background:#FBFCFE;border:1.5px solid #E4E9F2;border-radius:16px;padding:14px 16px;flex-wrap:wrap}
+.dash-post .dp-badge{font-size:.6rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.dash-post .dp-badge.buyer{color:#1E4FD8;background:#EBF1FF}
+.dash-post .dp-badge.supplier{color:#B45309;background:#FFF1E7}
+.dash-post .dp-main{flex:1;min-width:180px}
+.dash-post .dp-main b{display:block;font-size:.92rem;font-weight:750;color:#101828}
+.dash-post .dp-main span{font-size:.76rem;color:#8A95AC}
+.dash-post .dp-actions{display:flex;gap:8px;align-items:center}
+.dp-link{font-size:.8rem;font-weight:650;color:#2F6BFF;background:none;border:none;padding:6px 10px;border-radius:9px;cursor:pointer}
+.dp-link:hover{background:#EBF1FF}
+.dp-link.danger{color:#C03221}
+.dp-link.danger:hover{background:#FDECEC}
+.quote-row{background:#FBFCFE;border:1.5px solid #E4E9F2;border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.quote-row b{font-size:.9rem;color:#101828}
+.quote-row p{font-size:.84rem;color:#57627A;margin-top:5px;line-height:1.6}
+.quote-row .q-sub{font-size:.72rem;color:#8A95AC;margin-top:5px}
+.empty-box{text-align:center;padding:34px 16px;background:#FBFCFE;border:1.5px dashed #DDE3EE;border-radius:16px;color:#8A95AC;font-size:.86rem;margin-bottom:22px}
+.profile-summary{display:flex;gap:16px;align-items:center;background:#FBFCFE;border:1.5px solid #E4E9F2;border-radius:16px;padding:18px;margin-bottom:24px;flex-wrap:wrap}
+.profile-summary .ps-av{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;font-size:1.3rem;font-weight:800;color:#fff;background:linear-gradient(135deg,#4C84FF,#2F6BFF);overflow:hidden;flex-shrink:0}
+.profile-summary .ps-av img{width:100%;height:100%;object-fit:cover}
+.profile-summary .ps-info{flex:1;min-width:180px}
+.profile-summary .ps-info b{display:block;font-size:1rem;color:#101828}
+.profile-summary .ps-info span{font-size:.78rem;color:#8A95AC}
+.warn-strip{display:flex;gap:10px;align-items:center;background:#FFF7F0;border:1.5px dashed #FFC49E;border-radius:14px;padding:13px 16px;font-size:.84rem;color:#8a4b1f;margin-bottom:20px;line-height:1.6}
+.warn-strip a{font-weight:700;color:#EA5E1F;text-decoration:underline}
+.img-preview{width:100%;max-height:190px;object-fit:cover;border-radius:14px;border:1px solid #E4E9F2;margin-top:9px;display:block}
+.dash-quick{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.dash-quick .dash-card{display:flex;flex-direction:column;gap:8px;background:#FBFCFE;border:1.5px solid #E4E9F2;border-radius:16px;padding:18px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit}
+.dash-quick .dash-card:hover{transform:translateY(-3px);box-shadow:0 16px 32px -18px rgba(10,17,34,.2);border-color:#C9D8F2}
+.dash-quick .di{font-size:1.4rem}
+.dash-quick b{font-size:.88rem;font-weight:750;color:#101828}
+.dash-quick span{font-size:.72rem;color:#8A95AC;line-height:1.45}
+.btn-orange{background:linear-gradient(135deg,#FF9456 0%,#FF7A3D 55%,#F2642B 100%);color:#fff;box-shadow:0 12px 28px -10px rgba(255,122,61,.5),inset 0 1px 0 rgba(255,255,255,.28)}
+.btn-orange:hover{transform:translateY(-2px);box-shadow:0 18px 36px -12px rgba(255,122,61,.55)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media(max-width:520px){.grid2{grid-template-columns:1fr}}
+.pp-role{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:20px}
+.pp-role button{display:flex;flex-direction:column;gap:5px;align-items:center;text-align:center;background:#FBFCFE;border:1.5px solid #E4E9F2;border-radius:14px;padding:13px 8px;cursor:pointer;font-family:inherit;transition:all .25s}
+.pp-role button .ri{font-size:1.25rem}
+.pp-role button b{font-size:.82rem;font-weight:750;color:#101828}
+.pp-role button.on{border-color:#2F6BFF;background:#F2F6FF;box-shadow:0 0 0 3px rgba(47,107,255,.1)}
+@media(max-width:420px){.pp-role{grid-template-columns:1fr}}
 </style>
 </head>
-<body data-meta="meta.profile">
+<body data-meta="pp.title">
 
 <header class="auth-nav">
   <div class="container">
@@ -314,9 +414,9 @@ html[lang="bn"] .auth-foot .flow{letter-spacing:.01em}
       <span class="brand-name">Ahoor<em>.</em></span>
     </a>
     <div class="auth-nav-right">
-      <a class="back-home" href="/index.html">
+      <a class="back-home" href="/dashboard.html">
         <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-        <span data-i18n="db.home">Back to Home</span>
+        <span data-i18n="nav.dash">Dashboard</span>
       </a>
       <div class="lang-switch" role="group" aria-label="Language">
         <button type="button" class="lang-btn on" data-lang="bn" aria-pressed="true">বাংলা</button>
@@ -328,21 +428,80 @@ html[lang="bn"] .auth-foot .flow{letter-spacing:.01em}
 </header>
 
 <main class="auth-main">
-  <div class="auth-card">
-    <div style="text-align:center">
-      <span class="success-ic check-pulse">
-        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+  <div class="auth-card wide">
+    <div class="auth-head">
+      <span class="logo-ic">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </span>
-      <p style="font-size:.85rem;font-weight:700;color:#0E9F7E;margin-bottom:10px" data-i18n="ps.thanks">Thanks for joining Ahoor!</p>
-      <h1 style="font-size:1.45rem;font-weight:800;letter-spacing:-.025em;color:#101828;line-height:1.35" data-i18n="ps.title">Your Ahoor account is ready.</h1>
-      <p style="margin-top:12px;color:#57627A;font-size:.95rem;line-height:1.7" data-i18n="ps.sub">Next, complete your business profile to start finding opportunities and connecting with businesses.</p>
+      <h1 data-i18n="pp.title">Complete Your Business Profile</h1>
+      <p data-i18n="pp.sub">Help the right businesses find you.</p>
     </div>
-    <div style="margin-top:28px;display:grid;gap:11px">
-      <button type="button" class="btn btn-primary btn-block" id="btnProfile">
-        <span class="btn-label" data-i18n="ps.btn">Complete Profile</span>
+
+    <div class="msg" id="ppMsg"></div>
+
+    <div class="field">
+      <label class="flabel" data-i18n="pp.role">Business Role</label>
+      <div class="pp-role">
+        <button type="button" data-role="buyer"><span class="ri">🛒</span><b data-i18n="pp.roleBuyer">Buyer</b></button>
+        <button type="button" data-role="supplier"><span class="ri">🏭</span><b data-i18n="pp.roleSupplier">Supplier / Manufacturer</b></button>
+        <button type="button" data-role="both"><span class="ri">🔄</span><b data-i18n="pp.roleBoth">Both</b></button>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label class="flabel" data-i18n="pp.name">Full Name</label>
+        <input type="text" id="ppName" autocomplete="name">
+        <p class="field-err"></p>
+      </div>
+      <div class="field">
+        <label class="flabel" data-i18n="pp.biz">Business Name</label>
+        <input type="text" id="ppBiz" data-i18n-ph="pp.bizPh" placeholder="e.g. Rahim Garments">
+        <p class="field-err"></p>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label class="flabel" data-i18n="pp.phone">Phone Number</label>
+        <input type="tel" id="ppPhone" inputmode="tel" placeholder="01XXXXXXXXX">
+        <p class="field-err"></p>
+      </div>
+      <div class="field">
+        <label class="flabel" data-i18n="pp.district">District / Location</label>
+        <div class="select-wrap">
+          <select id="ppDistrict" data-fill="district"></select>
+        </div>
+        <p class="field-err"></p>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="flabel" data-i18n="pp.cat">Business Category</label>
+      <div class="select-wrap">
+        <select id="ppCat" data-fill="category"></select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="flabel" data-i18n="pp.desc">Short Business Description</label>
+      <textarea id="ppDesc" maxlength="600" data-i18n-ph="pp.descPh" placeholder="What do you make, supply, or buy?"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="flabel" data-i18n="pp.image">Profile Image / Company Logo (optional)</label>
+      <button type="button" class="btn btn-outline btn-sm" id="ppImgBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.5-3.5L8 21"/></svg>
+        <span data-i18n="pp.upload">Choose image</span>
       </button>
-      <a class="btn btn-outline btn-block" href="/dashboard.html"><span data-i18n="ps.dash">Go to Dashboard</span></a>
+      <input type="file" id="ppImgFile" accept="image/*" style="display:none">
+      <img id="ppImgPrev" class="img-preview" style="display:none" alt="">
     </div>
+
+    <button type="button" class="btn btn-primary btn-block" id="ppSave">
+      <span class="spinner"></span><span class="btn-label" data-i18n="pp.save">Save Profile</span>
+    </button>
+    <a class="btn btn-ghost btn-block" href="/dashboard.html" style="margin-top:8px"><span data-i18n="pp.skip">Skip for now</span></a>
   </div>
 </main>
 
@@ -514,6 +673,14 @@ var D = {
  "err.generic":["Something went wrong. Please try again.","কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।"],
  "err.code":["Enter the 6-digit code.","৬ সংখ্যার কোডটি লিখুন।"],
  "err.type":["Please select an account type.","অনুগ্রহ করে অ্যাকাউন্টের ধরন নির্বাচন করুন।"],
+ "err.title":["Please enter a title (at least 4 characters).","শিরোনাম দিন (কমপক্ষে ৪ অক্ষর)।"],
+ "err.category":["Please select a category.","ক্যাটাগরি নির্বাচন করুন।"],
+ "err.location":["Please select a location.","অবস্থান নির্বাচন করুন।"],
+ "err.desc":["Please write a description (at least 10 characters).","বর্ণনা লিখুন (কমপক্ষে ১০ অক্ষর)।"],
+ "err.message":["Please write a short message.","একটি ছোট মেসেজ লিখুন।"],
+ "err.image":["Image is too large. Please choose a smaller image (max 400KB).","ছবিটি অনেক বড়। ছোট ছবি বাছাই করুন (সর্বোচ্চ ৪০০KB)।"],
+ "err.self_quote":["You cannot request a quote on your own post.","নিজের পোস্টে কোটেশন চাওয়া যাবে না।"],
+ "err.post_not_found":["Post not found.","পোস্টটি পাওয়া যায়নি।"],
  "ok.sent":["Code sent!","কোড পাঠানো হয়েছে!"],
  "ok.verified":["Verified!","যাচাই হয়েছে!"],
  "dev.note":["Demo mode — your code: {c} (in production it is sent by SMS/email)","ডেমো মোড — আপনার কোড: {c} (প্রকৃত পরিবেশে এটি এসএমএস/ইমেইলে যাবে)"],
@@ -561,6 +728,167 @@ document.querySelectorAll('.lang-btn').forEach(function(b){
 });
 window.__t = t;
 
+/* ---------------- marketplace dictionary extension ---------------- */
+var EXT = {
+ "nav.market":["Marketplace","মার্কেটপ্লেস"],
+ "nav.dash":["Dashboard","ড্যাশবোর্ড"],
+ "mp.title":["Ahoor Marketplace","Ahoor মার্কেটপ্লেস"],
+ "mp.sub":["Buyer requirements & supplier offers across Bangladesh","সারাদেশের ক্রেতার প্রয়োজন ও সরবরাহকারীর অফার"],
+ "mp.tabAll":["All","সব"],
+ "mp.tabBuyer":["Buyer Requirements","ক্রেতার প্রয়োজন"],
+ "mp.tabSupplier":["Supplier Products","সরবরাহকারীর পণ্য"],
+ "mp.searchPh":["Search products, requirements…","পণ্য বা প্রয়োজন খুঁজুন…"],
+ "mp.catAll":["All Categories","সব ক্যাটাগরি"],
+ "mp.locAll":["All Locations","সব জেলা"],
+ "mp.empty":["No posts found. Try changing filters.","কোনো পোস্ট পাওয়া যায়নি। ফিল্টার বদলে দেখুন।"],
+ "mp.newPost":["Create Post","নতুন পোস্ট"],
+ "mp.badgeBuyer":["BUYER REQUEST","ক্রেতার অনুরোধ"],
+ "mp.badgeSupplier":["SUPPLIER OFFER","সরবরাহকারীর অফার"],
+ "mp.open":["Open","খোলা"],
+ "mp.closed":["Closed","বন্ধ"],
+ "mp.getQuotes":["Get Quotes","কোটেশন পান"],
+ "mp.reqQuote":["Request Quote","কোটেশন চান"],
+ "mp.postedBy":["Posted by","পোস্ট করেছেন"],
+ "mp.postedOn":["Posted on","পোস্টের তারিখ"],
+ "mp.loginNeeded":["Please sign in to continue.","চালিয়ে যেতে সাইন ইন করুন।"],
+ "mp.quoteSent":["Your quote request was sent!","আপনার কোটেশন অনুরোধ পাঠানো হয়েছে!"],
+ "mp.qty":["Quantity","পরিমাণ"],
+ "mp.moq":["MOQ","MOQ"],
+ "mp.price":["Price","দাম"],
+ "mp.budget":["Budget","বাজেট"],
+ "mp.contactPrice":["Contact for Price","দামের জন্য যোগাযোগ করুন"],
+ "mp.deadline":["Deadline","সময়সীমা"],
+ "mp.quoteMsg":["Your message","আপনার মেসেজ"],
+ "mp.quoteMsgPh":["e.g. We can supply at ৳240/pcs, delivery 12 days","যেমন: আমরা ৳২৪০/পিসে সরবরাহ করতে পারি, ডেলিভারি ১২ দিন"],
+ "mp.send":["Send","পাঠান"],
+ "mp.cancel":["Cancel","বাতিল"],
+
+ "pp.title":["Complete Your Business Profile","আপনার ব্যবসার প্রোফাইল সম্পূর্ণ করুন"],
+ "pp.sub":["Help the right businesses find you.","সঠিক ব্যবসাগুলো যেন আপনাকে খুঁজে পায়।"],
+ "pp.role":["Business Role","ব্যবসার ভূমিকা"],
+ "pp.roleBuyer":["Buyer","ক্রেতা"],
+ "pp.roleSupplier":["Supplier / Manufacturer","সরবরাহকারী / প্রস্তুতকারক"],
+ "pp.roleBoth":["Both","দুটোই"],
+ "pp.name":["Full Name","সম্পূর্ণ নাম"],
+ "pp.biz":["Business Name","ব্যবসার নাম"],
+ "pp.bizPh":["e.g. Rahim Garments","যেমন: রহিম গার্মেন্টস"],
+ "pp.phone":["Phone Number","মোবাইল নম্বর"],
+ "pp.district":["District / Location","জেলা / অবস্থান"],
+ "pp.cat":["Business Category","ব্যবসার ক্যাটাগরি"],
+ "pp.desc":["Short Business Description","সংক্ষিপ্ত ব্যবসা বর্ণনা"],
+ "pp.descPh":["What do you make, supply, or buy?","আপনি কী তৈরি করেন, সরবরাহ করেন বা কিনে থাকেন?"],
+ "pp.image":["Profile Image / Company Logo (optional)","প্রোফাইল ছবি / কোম্পানি লোগো (ঐচ্ছিক)"],
+ "pp.upload":["Choose image","ছবি বাছাই করুন"],
+ "pp.removeImg":["Remove","মুছে ফেলুন"],
+ "pp.save":["Save Profile","প্রোফাইল সেভ করুন"],
+ "pp.saving":["Saving…","সেভ হচ্ছে…"],
+ "pp.saved":["Profile saved successfully!","প্রোফাইল সফলভাবে সেভ হয়েছে!"],
+ "pp.done":["Go to Dashboard","ড্যাশবোর্ডে যান"],
+ "pp.required":["Please fill in the required fields.","অনুগ্রহ করে প্রয়োজনীয় ঘরগুলো পূরণ করুন।"],
+ "pp.skip":["Skip for now","এখনই না"],
+ "pp.skipNote":["You can complete your profile anytime from the dashboard.","ড্যাশবোর্ড থেকে যেকোনো সময় প্রোফাইল সম্পূর্ণ করতে পারবেন।"],
+
+ "pt.titleNew":["Create New Post","নতুন পোস্ট তৈরি করুন"],
+ "pt.titleEdit":["Edit Post","পোস্ট সম্পাদনা করুন"],
+ "pt.sub":["Share your requirement or offer with the marketplace","মার্কেটপ্লেসে আপনার প্রয়োজন বা অফার শেয়ার করুন"],
+ "pt.kind":["Post Type","পোস্টের ধরন"],
+ "pt.kindBuyer":["I want to buy","আমি কিনতে চাই"],
+ "pt.kindSupplier":["I want to sell","আমি বিক্রি করতে চাই"],
+ "pt.title":["Title","শিরোনাম"],
+ "pt.titleBuyerPh":["e.g. Need 1000 PCS Premium Cotton T-Shirts","যেমন: ১০০০ পিস প্রিমিয়াম কটন টি-শার্ট প্রয়োজন"],
+ "pt.titleSupplierPh":["e.g. Premium Cotton T-Shirts — Custom Printing","যেমন: প্রিমিয়াম কটন টি-শার্ট — কাস্টম প্রিন্টিং"],
+ "pt.category":["Category","ক্যাটাগরি"],
+ "pt.qty":["Quantity / Capacity","পরিমাণ / ক্ষমতা"],
+ "pt.qtyPh":["e.g. 1000","যেমন: ১০০০"],
+ "pt.unit":["Unit","একক"],
+ "pt.budget":["Budget (optional)","বাজেট (ঐচ্ছিক)"],
+ "pt.budgetPh":["e.g. ৳250,000","যেমন: ৳২,৫০,০০০"],
+ "pt.moq":["Minimum Order Quantity (MOQ)","ন্যূনতম অর্ডার পরিমাণ (MOQ)"],
+ "pt.moqPh":["e.g. 100","যেমন: ১০০"],
+ "pt.price":["Price","দাম"],
+ "pt.pricePh":["e.g. ৳240 / pcs","যেমন: ৳২৪০ / পিস"],
+ "pt.contactPrice":["Contact for Price","দামের জন্য যোগাযোগ করুন"],
+ "pt.location":["Location","অবস্থান"],
+ "pt.deadline":["Deadline / Required Date","সময়সীমা / প্রয়োজনীয় তারিখ"],
+ "pt.desc":["Detailed Requirements / Description","বিস্তারিত প্রয়োজন / বিবরণ"],
+ "pt.descPh":["Mention quality, size, color, delivery terms…","মান, সাইজ, রং, ডেলিভারির শর্ত উল্লেখ করুন…"],
+ "pt.image":["Product / Reference Image (optional)","পণ্য / রেফারেন্স ছবি (ঐচ্ছিক)"],
+ "pt.publish":["Publish Post","পোস্ট প্রকাশ করুন"],
+ "pt.saveEdit":["Save Changes","পরিবর্তন সেভ করুন"],
+ "pt.publishing":["Publishing…","প্রকাশ হচ্ছে…"],
+ "pt.savingE":["Saving…","সেভ হচ্ছে…"],
+ "pt.published":["Post published!","পোস্ট প্রকাশিত হয়েছে!"],
+ "pt.updated":["Post updated!","পোস্ট আপডেট হয়েছে!"],
+ "pt.errTitle":["Please enter a title (at least 4 characters).","শিরোনাম দিন (কমপক্ষে ৪ অক্ষর)।"],
+ "pt.errCat":["Please select a category.","ক্যাটাগরি নির্বাচন করুন।"],
+ "pt.errLoc":["Please select a location.","অবস্থান নির্বাচন করুন।"],
+ "pt.errDesc":["Please write a description (at least 10 characters).","বর্ণনা লিখুন (কমপক্ষে ১০ অক্ষর)।"],
+ "pt.goMarket":["View in Marketplace","মার্কেটপ্লেসে দেখুন"],
+
+ "db.posts":["My Posts","আমার পোস্ট"],
+ "db.postsD":["Your requirements & offers","আপনার প্রয়োজন ও অফার"],
+ "db.newPost":["Create New Post","নতুন পোস্ট তৈরি করুন"],
+ "db.received":["Received Quotes","প্রাপ্ত কোটেশন"],
+ "db.receivedD":["Inquiries on your posts","আপনার পোস্টে আসা অনুসন্ধান"],
+ "db.noPosts":["You haven't posted anything yet.","আপনি এখনো কোনো পোস্ট করেননি।"],
+ "db.noQuotes":["No quotes received yet.","এখনো কোনো কোটেশন আসেনি।"],
+ "db.edit":["Edit","সম্পাদনা"],
+ "db.delete":["Delete","মুছে ফেলুন"],
+ "db.delConfirm":["Delete this post?","এই পোস্টটি মুছে ফেলবেন?"],
+ "db.deleted":["Post deleted.","পোস্ট মুছে ফেলা হয়েছে।"],
+ "db.closed":["Closed","বন্ধ"],
+ "db.reopen":["Reopen","আবার খুলুন"],
+ "db.completeProfile":["Complete Your Profile","প্রোফাইল সম্পূর্ণ করুন"],
+ "db.profileDone":["Profile complete","প্রোফাইল সম্পূর্ণ"],
+ "db.viewMarket":["View Marketplace","মার্কেটপ্লেস দেখুন"],
+ "db.business":["Business","ব্যবসা"],
+ "db.from":["From","থেকে"],
+ "db.quoteOn":["Quote on","কোটেশন"],
+ "db.msgPlaceholder":["Messages system is coming soon.","মেসেজ সিস্টেম শীঘ্রই আসছে।"],
+ "db.quotesPlaceholder":["When businesses ask for quotes on your posts, they will appear here.","আপনার পোস্টে ব্যবসাগুলো কোটেশন চাইলে সেগুলো এখানে দেখাবে।"]
+};
+for (var k in EXT) { D[k] = EXT[k]; }
+
+/* shared data: categories, districts, units (bn/en) */
+var DATA = {
+ categories: [
+  ["Garments & Apparel","গার্মেন্টস ও পোশাক"],["Textile & Fabric","টেক্সটাইল ও ফেব্রিক"],["Packaging","প্যাকেজিং"],
+  ["Leather Products","চামড়াজাত পণ্য"],["Jute Products","পাটজাত পণ্য"],["Food & Agriculture","খাদ্য ও কৃষি"],
+  ["Machinery","মেশিনারি"],["Electronics","ইলেকট্রনিক্স"],["Construction Materials","নির্মাণ সামগ্রী"],
+  ["Chemicals & Raw Materials","রাসায়নিক ও কাঁচামাল"]
+ ],
+ districts: [
+  ["Dhaka","ঢাকা"],["Gazipur","গাজীপুর"],["Narayanganj","নারায়ণগঞ্জ"],["Tangail","টাঙ্গাইল"],["Narsingdi","নরসিংদী"],
+  ["Manikganj","মানিকগঞ্জ"],["Munshiganj","মুন্সিগঞ্জ"],["Faridpur","ফরিদপুর"],["Rajbari","রাজবাড়ী"],["Gopalganj","গোপালগঞ্জ"],
+  ["Madaripur","মাদারীপুর"],["Shariatpur","শরীয়তপুর"],["Kishoreganj","কিশোরগঞ্জ"],["Chattogram","চট্টগ্রাম"],["Cox's Bazar","কক্সবাজার"],
+  ["Cumilla","কুমিল্লা"],["Noakhali","নোয়াখালী"],["Feni","ফেনী"],["Lakshmipur","লক্ষ্মীপুর"],["Chandpur","চাঁদপুর"],
+  ["Brahmanbaria","ব্রাহ্মণবাড়িয়া"],["Khagrachhari","খাগড়াছড়ি"],["Rangamati","রাঙ্গামাটি"],["Bandarban","বান্দরবান"],
+  ["Sylhet","সিলেট"],["Moulvibazar","মৌলভীবাজার"],["Habiganj","হবিগঞ্জ"],["Sunamganj","সুনামগঞ্জ"],["Rajshahi","রাজশাহী"],
+  ["Bogura","বগুড়া"],["Naogaon","নওগাঁ"],["Natore","নাটোর"],["Chapainawabganj","চাঁপাইনবাবগঞ্জ"],["Pabna","পাবনা"],
+  ["Sirajganj","সিরাজগঞ্জ"],["Joypurhat","জয়পুরহাট"],["Khulna","খুলনা"],["Bagerhat","বাগেরহাট"],["Satkhira","সাতক্ষীরা"],
+  ["Jashore","যশোর"],["Jhenaidah","ঝিনাইদহ"],["Magura","মাগুরা"],["Narail","নড়াইল"],["Kushtia","কুষ্টিয়া"],
+  ["Chuadanga","চুয়াডাঙ্গা"],["Meherpur","মেহেরপুর"],["Barishal","বরিশাল"],["Bhola","ভোলা"],["Patuakhali","পটুয়াখালী"],
+  ["Barguna","বরগুনা"],["Pirojpur","পিরোজপুর"],["Jhalokathi","ঝালকাঠি"],["Rangpur","রংপুর"],["Dinajpur","দিনাজপুর"],
+  ["Gaibandha","গাইবান্ধা"],["Kurigram","কুড়িগ্রাম"],["Lalmonirhat","লালমনিরহাট"],["Nilphamari","নীলফামারী"],
+  ["Panchagarh","পঞ্চগড়"],["Thakurgaon","ঠাকুরগাঁও"],["Mymensingh","ময়মনসিংহ"],["Jamalpur","জামালপুর"],
+  ["Sherpur","শেরপুর"],["Netrokona","নেত্রকোনা"]
+ ],
+ units: [["PCS","পিস"],["KG","কেজি"],["Ton","টন"],["Meter","মিটার"],["Dozen","ডজন"],["Set","সেট"],["Liter","লিটার"],["Bag","ব্যাগ"],["Carton","কার্টন"]]
+};
+function locName(arr, val){ for(var i=0;i<arr.length;i++){ if(arr[i][0]===val||arr[i][1]===val) return LANG==='bn'?arr[i][1]:arr[i][0]; } return val; }
+window.AhoorData = { categories: DATA.categories, districts: DATA.districts, units: DATA.units, locName: locName };
+function fillSelect(sel, list, selected){
+  var cur = LANG==='bn'?1:0;
+  sel.innerHTML = '';
+  list.forEach(function(item){
+    var o = document.createElement('option');
+    o.value = item[0];
+    o.textContent = item[cur];
+    if(selected && item[0]===selected) o.selected = true;
+    sel.appendChild(o);
+  });
+}
+
 /* ---------------- helpers ---------------- */
 function $(s, c){ return (c||document).querySelector(s); }
 function $all(s, c){ return Array.prototype.slice.call((c||document).querySelectorAll(s)); }
@@ -578,7 +906,7 @@ function api(path, body){
       .catch(function(){ return { status:r.status, data:{ error:'bad_response' } }; });
   }).catch(function(){ return { status:0, data:{ error:'offline' } }; });
 }
-var ERR_CODES = ['email_exists','phone_exists','invalid','not_found','weak','unverified','invalid_code','expired','too_many','network','offline','bad_response','missing','no_session','route','method','purpose','forbidden','email','phone','name','mismatch','required','type','code','locked','generic'];
+var ERR_CODES = ['email_exists','phone_exists','invalid','not_found','weak','unverified','invalid_code','expired','too_many','network','offline','bad_response','missing','no_session','route','method','purpose','forbidden','email','phone','name','mismatch','required','type','code','locked','generic','title','category','location','desc','message','image','self_quote','post_not_found'];
 function errMsg(e){
   e = e || 'generic';
   if(ERR_CODES.indexOf(e) >= 0) return t('err.'+e);
@@ -751,23 +1079,99 @@ function probeServer(){
 if(document.readyState === 'complete'){ probeServer(); }
 else { window.addEventListener('load', probeServer); }
 
+document.addEventListener('langchange', function(){
+  document.querySelectorAll('[data-fill="category"]').forEach(function(s){ fillSelect(s, DATA.categories, s.value); });
+  document.querySelectorAll('[data-fill="district"]').forEach(function(s){ fillSelect(s, DATA.districts, s.value); });
+  document.querySelectorAll('[data-fill="unit"]').forEach(function(s){ fillSelect(s, DATA.units, s.value); });
+});
+
 window.Ahoor = {
   t:t, applyLang:applyLang, api:api, errMsg:errMsg, showMsg:showMsg, hideMsg:hideMsg,
   toast:toast, setLoading:setLoading, validEmail:validEmail, validPhone:validPhone,
   initStrength:initStrength, initPwToggles:initPwToggles, initOtp:initOtp,
-  startCountdown:startCountdown, fieldErr:fieldErr, clearFieldErr:clearFieldErr, esc:esc
+  startCountdown:startCountdown, fieldErr:fieldErr, clearFieldErr:clearFieldErr, esc:esc,
+  fillSelect:fillSelect, locName:locName
 };
+window.Ahoor.AhoorData = window.AhoorData;
+window.Ahoor.fillSelect = fillSelect;
 applyLang();
 })();
 
 (function(){
   'use strict';
   var A = window.Ahoor;
+  var role = 'buyer';
+  var imgData = '';
+  var me = null;
+
   A.api('/api/session').then(function(r){
-    if(!r.data.user){ location.href='/login?next=/profile-setup'; return; }
+    if(!r.data || !r.data.user){ location.href = '/login.html?next=/profile-setup.html'; return; }
+    me = r.data.user;
+    fillForm();
   });
-  document.getElementById('btnProfile').addEventListener('click', function(){
-    A.toast(A.t('ps.btnSoon'),'ok');
+
+  function fillForm(){
+    A.fillSelect(document.getElementById('ppDistrict'), A.AhoorData.districts, me.district || '');
+    A.fillSelect(document.getElementById('ppCat'), A.AhoorData.categories, me.category || '');
+    document.getElementById('ppName').value = me.name || '';
+    document.getElementById('ppBiz').value = me.businessName || '';
+    document.getElementById('ppPhone').value = me.phone || '';
+    document.getElementById('ppDesc').value = me.description || '';
+    if(me.image){ imgData = me.image; var pr = document.getElementById('ppImgPrev'); pr.src = me.image; pr.style.display = ''; }
+    if(me.type){ role = me.type; }
+    document.querySelectorAll('.pp-role button').forEach(function(b){
+      b.classList.toggle('on', b.getAttribute('data-role') === role);
+    });
+  }
+
+  document.querySelectorAll('.pp-role button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.pp-role button').forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      role = b.getAttribute('data-role');
+    });
+  });
+
+  document.getElementById('ppImgBtn').addEventListener('click', function(){ document.getElementById('ppImgFile').click(); });
+  document.getElementById('ppImgFile').addEventListener('change', function(){
+    var f = this.files[0];
+    if(!f) return;
+    if(f.size > 400000){ A.toast(A.t('err.image'), 'er'); return; }
+    var rd = new FileReader();
+    rd.onload = function(e){
+      imgData = e.target.result;
+      var pr = document.getElementById('ppImgPrev');
+      pr.src = imgData; pr.style.display = '';
+    };
+    rd.readAsDataURL(f);
+  });
+
+  document.getElementById('ppSave').addEventListener('click', function(){
+    var name = document.getElementById('ppName').value.trim();
+    var biz = document.getElementById('ppBiz').value.trim();
+    var phone = document.getElementById('ppPhone').value.trim();
+    var dist = document.getElementById('ppDistrict').value;
+    var ok = true;
+    if(name.length < 2){ A.fieldErr(document.getElementById('ppName'), 'err.name'); ok = false; }
+    if(!A.validPhone(phone)){ A.fieldErr(document.getElementById('ppPhone'), 'err.phone'); ok = false; }
+    if(!dist){ A.fieldErr(document.getElementById('ppDistrict'), 'err.required'); ok = false; }
+    if(!ok) return;
+    var btn = document.getElementById('ppSave');
+    A.setLoading(btn, true, 'pp.saving');
+    A.api('/api/profile', {
+      name: name, businessName: biz, phone: phone,
+      district: dist, category: document.getElementById('ppCat').value,
+      description: document.getElementById('ppDesc').value.trim(),
+      image: imgData
+    }).then(function(r){
+      A.setLoading(btn, false);
+      if(r.status === 200){
+        A.toast(A.t('pp.saved'), 'ok');
+        setTimeout(function(){ location.href = '/dashboard.html'; }, 1000);
+      } else {
+        A.showMsg(document.getElementById('ppMsg'), 'error', A.errMsg(r.data.error));
+      }
+    });
   });
 })();
 </script>

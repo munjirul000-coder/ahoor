@@ -50,39 +50,55 @@ __CSS__
     </div>
 
     <div id="dashBody" style="display:none">
-      <div class="dash-head">
+      <div class="dash-head" style="margin-bottom:20px">
         <span class="avatar" id="avatar">A</span>
         <h1 id="welcome">Welcome to Ahoor</h1>
         <p id="memberSince"></p>
-        <span class="chip-type" id="typeChip"></span>
       </div>
-      <div class="dash-grid">
-        <div class="dash-card" onclick="Ahoor.toast(Ahoor.t('db.soon'),'ok')">
-          <span class="soon-tag" data-i18n="db.soon">Coming soon</span>
-          <span class="dico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
-          <b data-i18n="db.profile">My Profile</b>
-          <span data-i18n="db.profileD">Your business information</span>
-        </div>
-        <div class="dash-card" onclick="Ahoor.toast(Ahoor.t('db.soon'),'ok')">
-          <span class="soon-tag" data-i18n="db.soon">Coming soon</span>
-          <span class="dico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1.5"/><path d="M12 11v6"/><path d="M9 14h6"/></svg></span>
-          <b data-i18n="db.opps">My Opportunities</b>
-          <span data-i18n="db.oppsD">Requirements &amp; offers you posted</span>
-        </div>
-        <div class="dash-card" onclick="Ahoor.toast(Ahoor.t('db.soon'),'ok')">
-          <span class="soon-tag" data-i18n="db.soon">Coming soon</span>
-          <span class="dico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg></span>
-          <b data-i18n="db.msgs">Messages</b>
-          <span data-i18n="db.msgsD">Business conversations</span>
-        </div>
-        <div class="dash-card" onclick="Ahoor.toast(Ahoor.t('db.soon'),'ok')">
-          <span class="soon-tag" data-i18n="db.soon">Coming soon</span>
-          <span class="dico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
-          <b data-i18n="db.settings">Account Settings</b>
-          <span data-i18n="db.settingsD">Security &amp; preferences</span>
+
+      <div id="profileWarn" style="display:none">
+        <div class="warn-strip">
+          <span>⚠️</span>
+          <span><span data-i18n="pp.skipNote">You can complete your profile anytime from the dashboard.</span> <a href="/profile-setup.html" data-i18n="db.completeProfile">Complete Your Profile</a></span>
         </div>
       </div>
-      <div class="dash-actions">
+
+      <div class="profile-summary" id="profileSum">
+        <span class="ps-av" id="psAv">A</span>
+        <div class="ps-info">
+          <b id="psBiz">—</b>
+          <span id="psMeta"></span>
+        </div>
+        <a class="btn btn-outline btn-sm" href="/profile-setup.html"><span data-i18n="db.profile">My Profile</span></a>
+      </div>
+
+      <div class="dash-quick">
+        <a class="dash-card" href="/post.html">
+          <span class="di">➕</span><b data-i18n="db.newPost">Create New Post</b><span data-i18n="mp.newPost">Create Post</span>
+        </a>
+        <a class="dash-card" href="/marketplace.html">
+          <span class="di">🌐</span><b data-i18n="db.viewMarket">View Marketplace</b><span data-i18n="nav.market">Marketplace</span>
+        </a>
+        <a class="dash-card" href="#quotesSec">
+          <span class="di">📩</span><b data-i18n="db.received">Received Quotes</b><span data-i18n="db.receivedD">Inquiries on your posts</span>
+        </a>
+        <a class="dash-card" href="#msgSec">
+          <span class="di">💬</span><b data-i18n="db.msgs">Messages</b><span data-i18n="db.msgsD">Business conversations</span>
+        </a>
+      </div>
+
+      <h3 style="font-size:1.02rem;font-weight:750;margin-bottom:12px" data-i18n="db.posts">My Posts</h3>
+      <div class="dash-list" id="myPosts"></div>
+      <div class="empty-box" id="noPosts" style="display:none" data-i18n="db.noPosts">You haven't posted anything yet.</div>
+
+      <h3 style="font-size:1.02rem;font-weight:750;margin-bottom:12px" id="quotesSec" data-i18n="db.received">Received Quotes</h3>
+      <div id="quotesList"></div>
+      <div class="empty-box" id="noQuotes" data-i18n="db.quotesPlaceholder">When businesses ask for quotes on your posts, they will appear here.</div>
+
+      <h3 style="font-size:1.02rem;font-weight:750;margin-bottom:12px" id="msgSec" data-i18n="db.msgs">Messages</h3>
+      <div class="empty-box" data-i18n="db.msgPlaceholder">Messages system is coming soon.</div>
+
+      <div class="dash-actions" style="margin-top:24px">
         <a class="btn btn-outline" href="/index.html"><span data-i18n="db.home">Back to Home</span></a>
         <button type="button" class="btn btn-ghost" id="btnSignout"><span class="spinner"></span><span class="btn-label" data-i18n="db.signout">Sign Out</span></button>
       </div>
@@ -102,27 +118,96 @@ __JS__
 (function(){
   'use strict';
   var A = window.Ahoor;
+  var user = null;
+
   A.api('/api/session').then(function(r){
-    if(!r.data.user){ location.href='/login?next=/dashboard'; return; }
-    var u = r.data.user;
-    document.getElementById('loadingBox').style.display='none';
-    document.getElementById('dashBody').style.display='';
-    var initial = (u.name||'A').trim().charAt(0).toUpperCase();
-    document.getElementById('avatar').textContent = initial;
-    document.getElementById('welcome').textContent = A.t('db.welcome',{name:u.name});
-    document.getElementById('memberSince').textContent = A.t('db.member',{d:new Date(u.createdAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})});
-    document.getElementById('typeChip').textContent = A.t('db.type.'+(u.type||'buyer'));
-    document.addEventListener('langchange', function(){
-      document.getElementById('welcome').textContent = A.t('db.welcome',{name:u.name});
-      document.getElementById('typeChip').textContent = A.t('db.type.'+(u.type||'buyer'));
-    });
+    if(!r.data || !r.data.user){ location.href = '/login.html?next=/dashboard.html'; return; }
+    user = r.data.user;
+    document.getElementById('loadingBox').style.display = 'none';
+    document.getElementById('dashBody').style.display = '';
+    render();
+    loadPosts();
+    loadQuotes();
   });
-  document.getElementById('btnSignout').addEventListener('click', function(){
-    var b=this;
-    A.setLoading(b,true,'db.signingout');
-    A.api('/api/logout',{}).then(function(){
-      location.href='/login.html';
+
+  function render(){
+    var initial = (user.name || 'A').charAt(0).toUpperCase();
+    document.getElementById('avatar').textContent = initial;
+    document.getElementById('welcome').textContent = A.t('db.welcome', {name: user.name});
+    document.getElementById('memberSince').textContent = A.t('db.member', {d: new Date(user.createdAt).toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'})});
+    var psAv = document.getElementById('psAv');
+    if(user.image){ psAv.innerHTML = '<img src="' + user.image + '" alt="">'; } else { psAv.textContent = initial; }
+    document.getElementById('psBiz').textContent = user.businessName || user.name;
+    var parts = [];
+    if(user.district) parts.push(A.locName(A.AhoorData.districts, user.district));
+    if(user.category) parts.push(A.locName(A.AhoorData.categories, user.category));
+    if(user.type) parts.push(A.t('db.type.' + user.type));
+    document.getElementById('psMeta').textContent = parts.join(' · ');
+    if(!user.profileComplete) document.getElementById('profileWarn').style.display = '';
+    document.addEventListener('langchange', render);
+  }
+
+  function loadPosts(){
+    A.api('/api/my-posts').then(function(r){
+      var list = document.getElementById('myPosts');
+      var noPosts = document.getElementById('noPosts');
+      list.innerHTML = '';
+      if(!r.data || !r.data.posts || r.data.posts.length === 0){ noPosts.style.display = ''; return; }
+      noPosts.style.display = 'none';
+      r.data.posts.forEach(function(p){
+        var el = document.createElement('div');
+        el.className = 'dash-post';
+        el.innerHTML =
+          '<span class="dp-badge ' + p.type + '">' + (p.type === 'buyer' ? '🛒 ' : '🏭 ') + A.t(p.type === 'buyer' ? 'mp.badgeBuyer' : 'mp.badgeSupplier') + '</span>' +
+          '<div class="dp-main"><b>' + A.esc(p.title) + '</b><span>' +
+            A.locName(A.AhoorData.districts, p.location) + ' · ' +
+            (p.qty ? p.qty + (p.unit ? ' ' + p.unit : '') : '') +
+            ' · ' + A.t(p.status === 'open' ? 'mp.open' : 'mp.closed') +
+            ' · ' + new Date(p.createdAt).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) +
+          '</span></div>' +
+          '<div class="dp-actions">' +
+            '<button class="dp-link" data-act="toggle">' + A.t(p.status === 'open' ? 'db.closed' : 'db.reopen') + '</button>' +
+            '<a class="dp-link" href="/post.html?id=' + p.id + '">' + A.t('db.edit') + '</a>' +
+            '<button class="dp-link danger" data-act="delete">' + A.t('db.delete') + '</button>' +
+          '</div>';
+        el.querySelector('[data-act="toggle"]').addEventListener('click', function(){
+          A.api('/api/posts/' + p.id + '/toggle', {}).then(loadPosts);
+        });
+        el.querySelector('[data-act="delete"]').addEventListener('click', function(){
+          if(!confirm(A.t('db.delConfirm'))) return;
+          A.api('/api/posts/' + p.id + '/delete', {}).then(function(r){
+            if(r.status === 200){ A.toast(A.t('db.deleted'), 'ok'); loadPosts(); }
+            else A.toast(A.errMsg(r.data.error), 'er');
+          });
+        });
+        list.appendChild(el);
+      });
     });
+  }
+
+  function loadQuotes(){
+    A.api('/api/quotes/received').then(function(r){
+      var box = document.getElementById('quotesList');
+      var noQuotes = document.getElementById('noQuotes');
+      box.innerHTML = '';
+      if(!r.data || !r.data.quotes || r.data.quotes.length === 0){ noQuotes.style.display = ''; return; }
+      noQuotes.style.display = 'none';
+      r.data.quotes.forEach(function(q){
+        var el = document.createElement('div');
+        el.className = 'quote-row';
+        el.innerHTML =
+          '<b>' + A.esc((q.sender && (q.sender.businessName || q.sender.name)) || '—') + '</b>' +
+          '<p>' + A.esc(q.message) + '</p>' +
+          '<div class="q-sub">' + A.t('db.quoteOn') + ': ' + A.esc(q.post ? q.post.title : '') + ' · ' + new Date(q.createdAt).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) + '</div>';
+        box.appendChild(el);
+      });
+    });
+  }
+
+  document.getElementById('btnSignout').addEventListener('click', function(){
+    var b = this;
+    A.setLoading(b, true, 'db.signingout');
+    A.api('/api/logout', {}).then(function(){ location.href = '/login.html'; });
   });
 })();
 </script>

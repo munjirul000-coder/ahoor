@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ahoor — আমার অ্যাকাউন্ট</title>
+<title>Ahoor — Create Post</title>
 <meta name="theme-color" content="#0A1122">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1430'/%3E%3Cpath d='M16 8.5 9.6 23.5h12.8z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='9.6' cy='23.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='22.4' cy='23.5' r='2.6' fill='%23FF8A4C'/%3E%3C/svg%3E">
 <style>
@@ -390,9 +390,18 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 .btn-orange{background:linear-gradient(135deg,#FF9456 0%,#FF7A3D 55%,#F2642B 100%);color:#fff;box-shadow:0 12px 28px -10px rgba(255,122,61,.5),inset 0 1px 0 rgba(255,255,255,.28)}
 .btn-orange:hover{transform:translateY(-2px);box-shadow:0 18px 36px -12px rgba(255,122,61,.55)}
 
+.kind-toggle{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.kind-card{display:flex;align-items:center;gap:11px;text-align:left;background:#FBFCFE;border:1.5px solid #E4E9F2;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;transition:all .25s}
+.kind-card .ki{font-size:1.15rem}
+.kind-card b{font-size:.9rem;font-weight:750;color:#101828}
+.kind-card.on{border-color:#2F6BFF;background:#F2F6FF;box-shadow:0 0 0 3px rgba(47,107,255,.1)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media(max-width:520px){.grid2{grid-template-columns:1fr}}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 14px}
+@media(max-width:600px){.row3{grid-template-columns:1fr}}
 </style>
 </head>
-<body data-meta="meta.dash">
+<body data-meta="pt.titleNew">
 
 <header class="auth-nav">
   <div class="container">
@@ -406,9 +415,9 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
       <span class="brand-name">Ahoor<em>.</em></span>
     </a>
     <div class="auth-nav-right">
-      <a class="back-home" href="/index.html">
+      <a class="back-home" href="/marketplace.html">
         <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-        <span data-i18n="db.home">Back to Home</span>
+        <span data-i18n="nav.market">Marketplace</span>
       </a>
       <div class="lang-switch" role="group" aria-label="Language">
         <button type="button" class="lang-btn on" data-lang="bn" aria-pressed="true">বাংলা</button>
@@ -421,64 +430,98 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 
 <main class="auth-main">
   <div class="auth-card wide">
-    <div id="loadingBox" style="text-align:center;padding:30px 0">
-      <span class="spinner" style="display:inline-block;border-color:rgba(47,107,255,.25);border-top-color:#2F6BFF;width:26px;height:26px"></span>
-      <p style="margin-top:12px;color:#8A95AC;font-size:.88rem" data-i18n="ui.loading">Loading…</p>
+    <div class="auth-head">
+      <span class="logo-ic">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+      </span>
+      <h1 id="ptTitle" data-i18n="pt.titleNew">Create New Post</h1>
+      <p data-i18n="pt.sub">Share your requirement or offer with the marketplace</p>
     </div>
 
-    <div id="dashBody" style="display:none">
-      <div class="dash-head" style="margin-bottom:20px">
-        <span class="avatar" id="avatar">A</span>
-        <h1 id="welcome">Welcome to Ahoor</h1>
-        <p id="memberSince"></p>
+    <div class="msg" id="ptMsg"></div>
+
+    <div id="ptForm">
+      <div class="kind-toggle">
+        <button type="button" class="kind-card on" data-kind="buyer">
+          <span class="ki">🛒</span><b data-i18n="pt.kindBuyer">I want to buy</b>
+        </button>
+        <button type="button" class="kind-card" data-kind="supplier">
+          <span class="ki">🏭</span><b data-i18n="pt.kindSupplier">I want to sell</b>
+        </button>
       </div>
 
-      <div id="profileWarn" style="display:none">
-        <div class="warn-strip">
-          <span>⚠️</span>
-          <span><span data-i18n="pp.skipNote">You can complete your profile anytime from the dashboard.</span> <a href="/profile-setup.html" data-i18n="db.completeProfile">Complete Your Profile</a></span>
+      <div class="field">
+        <label class="flabel" data-i18n="pt.title">Title</label>
+        <input type="text" id="ptTitleF" data-i18n-ph="pt.titleBuyerPh" placeholder="e.g. Need 1000 PCS Premium Cotton T-Shirts">
+        <p class="field-err"></p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" data-i18n="pt.category">Category</label>
+        <div class="select-wrap">
+          <select id="ptCat" data-fill="category"></select>
+        </div>
+        <p class="field-err"></p>
+      </div>
+
+      <div class="row3" id="qtyRow">
+        <div class="field">
+          <label class="flabel" data-i18n="pt.qty">Quantity / Capacity</label>
+          <input type="text" id="ptQty" data-i18n-ph="pt.qtyPh" placeholder="e.g. 1000">
+        </div>
+        <div class="field">
+          <label class="flabel" data-i18n="pt.unit">Unit</label>
+          <div class="select-wrap">
+            <select id="ptUnit" data-fill="unit"></select>
+          </div>
+        </div>
+        <div class="field" id="budgetWrap">
+          <label class="flabel" data-i18n="pt.budget">Budget (optional)</label>
+          <input type="text" id="ptBudget" data-i18n-ph="pt.budgetPh" placeholder="e.g. ৳250,000">
+        </div>
+        <div class="field" id="moqWrap" style="display:none">
+          <label class="flabel" data-i18n="pt.moq">Minimum Order Quantity (MOQ)</label>
+          <input type="text" id="ptMoq" data-i18n-ph="pt.moqPh" placeholder="e.g. 100">
+        </div>
+        <div class="field" id="priceWrap" style="display:none">
+          <label class="flabel" data-i18n="pt.price">Price</label>
+          <input type="text" id="ptPrice" data-i18n-ph="pt.pricePh" placeholder="e.g. ৳240 / pcs">
         </div>
       </div>
 
-      <div class="profile-summary" id="profileSum">
-        <span class="ps-av" id="psAv">A</span>
-        <div class="ps-info">
-          <b id="psBiz">—</b>
-          <span id="psMeta"></span>
+      <div class="grid2">
+        <div class="field">
+          <label class="flabel" data-i18n="pt.location">Location</label>
+          <div class="select-wrap">
+            <select id="ptLoc" data-fill="district"></select>
+          </div>
+          <p class="field-err"></p>
         </div>
-        <a class="btn btn-outline btn-sm" href="/profile-setup.html"><span data-i18n="db.profile">My Profile</span></a>
+        <div class="field" id="deadlineWrap">
+          <label class="flabel" data-i18n="pt.deadline">Deadline / Required Date</label>
+          <input type="date" id="ptDeadline">
+        </div>
       </div>
 
-      <div class="dash-quick">
-        <a class="dash-card" href="/post.html">
-          <span class="di">➕</span><b data-i18n="db.newPost">Create New Post</b><span data-i18n="mp.newPost">Create Post</span>
-        </a>
-        <a class="dash-card" href="/marketplace.html">
-          <span class="di">🌐</span><b data-i18n="db.viewMarket">View Marketplace</b><span data-i18n="nav.market">Marketplace</span>
-        </a>
-        <a class="dash-card" href="#quotesSec">
-          <span class="di">📩</span><b data-i18n="db.received">Received Quotes</b><span data-i18n="db.receivedD">Inquiries on your posts</span>
-        </a>
-        <a class="dash-card" href="#msgSec">
-          <span class="di">💬</span><b data-i18n="db.msgs">Messages</b><span data-i18n="db.msgsD">Business conversations</span>
-        </a>
+      <div class="field">
+        <label class="flabel" data-i18n="pt.desc">Detailed Requirements / Description</label>
+        <textarea id="ptDesc" data-i18n-ph="pt.descPh" placeholder="Mention quality, size, color, delivery terms…"></textarea>
+        <p class="field-err"></p>
       </div>
 
-      <h3 style="font-size:1.02rem;font-weight:750;margin-bottom:12px" data-i18n="db.posts">My Posts</h3>
-      <div class="dash-list" id="myPosts"></div>
-      <div class="empty-box" id="noPosts" style="display:none" data-i18n="db.noPosts">You haven't posted anything yet.</div>
-
-      <h3 style="font-size:1.02rem;font-weight:750;margin-bottom:12px" id="quotesSec" data-i18n="db.received">Received Quotes</h3>
-      <div id="quotesList"></div>
-      <div class="empty-box" id="noQuotes" data-i18n="db.quotesPlaceholder">When businesses ask for quotes on your posts, they will appear here.</div>
-
-      <h3 style="font-size:1.02rem;font-weight:750;margin-bottom:12px" id="msgSec" data-i18n="db.msgs">Messages</h3>
-      <div class="empty-box" data-i18n="db.msgPlaceholder">Messages system is coming soon.</div>
-
-      <div class="dash-actions" style="margin-top:24px">
-        <a class="btn btn-outline" href="/index.html"><span data-i18n="db.home">Back to Home</span></a>
-        <button type="button" class="btn btn-ghost" id="btnSignout"><span class="spinner"></span><span class="btn-label" data-i18n="db.signout">Sign Out</span></button>
+      <div class="field">
+        <label class="flabel" data-i18n="pt.image">Product / Reference Image (optional)</label>
+        <button type="button" class="btn btn-outline btn-sm" id="ptImgBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.5-3.5L8 21"/></svg>
+          <span data-i18n="pp.upload">Choose image</span>
+        </button>
+        <input type="file" id="ptImgFile" accept="image/*" style="display:none">
+        <img id="ptImgPrev" class="img-preview" style="display:none" alt="">
       </div>
+
+      <button type="button" class="btn btn-primary btn-block" id="ptSubmit">
+        <span class="spinner"></span><span class="btn-label" data-i18n="pt.publish">Publish Post</span>
+      </button>
     </div>
   </div>
 </main>
@@ -1078,96 +1121,128 @@ applyLang();
 (function(){
   'use strict';
   var A = window.Ahoor;
-  var user = null;
+  var kind = 'buyer';
+  var editId = new URLSearchParams(location.search).get('id');
+  var imgData = '';
 
+  /* session guard (server already protects, but UI needs user) */
+  var me = null;
   A.api('/api/session').then(function(r){
-    if(!r.data || !r.data.user){ location.href = '/login.html?next=/dashboard.html'; return; }
-    user = r.data.user;
-    document.getElementById('loadingBox').style.display = 'none';
-    document.getElementById('dashBody').style.display = '';
-    render();
-    loadPosts();
-    loadQuotes();
+    if(!r.data || !r.data.user){ location.href = '/login.html?next=' + encodeURIComponent(location.pathname + location.search); return; }
+    me = r.data.user;
+    if(editId) loadPost();
   });
 
-  function render(){
-    var initial = (user.name || 'A').charAt(0).toUpperCase();
-    document.getElementById('avatar').textContent = initial;
-    document.getElementById('welcome').textContent = A.t('db.welcome', {name: user.name});
-    document.getElementById('memberSince').textContent = A.t('db.member', {d: new Date(user.createdAt).toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'})});
-    var psAv = document.getElementById('psAv');
-    if(user.image){ psAv.innerHTML = '<img src="' + user.image + '" alt="">'; } else { psAv.textContent = initial; }
-    document.getElementById('psBiz').textContent = user.businessName || user.name;
-    var parts = [];
-    if(user.district) parts.push(A.locName(A.AhoorData.districts, user.district));
-    if(user.category) parts.push(A.locName(A.AhoorData.categories, user.category));
-    if(user.type) parts.push(A.t('db.type.' + user.type));
-    document.getElementById('psMeta').textContent = parts.join(' · ');
-    if(!user.profileComplete) document.getElementById('profileWarn').style.display = '';
-    document.addEventListener('langchange', render);
-  }
+  /* kind toggle */
+  document.querySelectorAll('.kind-card').forEach(function(c){
+    c.addEventListener('click', function(){
+      document.querySelectorAll('.kind-card').forEach(function(x){ x.classList.remove('on'); });
+      c.classList.add('on');
+      kind = c.getAttribute('data-kind');
+      document.getElementById('budgetWrap').style.display = kind === 'buyer' ? '' : 'none';
+      document.getElementById('moqWrap').style.display = kind === 'supplier' ? '' : 'none';
+      document.getElementById('priceWrap').style.display = kind === 'supplier' ? '' : 'none';
+      document.getElementById('deadlineWrap').style.display = kind === 'buyer' ? '' : 'none';
+      var tf = document.getElementById('ptTitleF');
+      tf.setAttribute('data-i18n-ph', kind === 'buyer' ? 'pt.titleBuyerPh' : 'pt.titleSupplierPh');
+      tf.placeholder = A.t(kind === 'buyer' ? 'pt.titleBuyerPh' : 'pt.titleSupplierPh');
+    });
+  });
 
-  function loadPosts(){
+  /* selects */
+  A.fillSelect(document.getElementById('ptCat'), A.AhoorData.categories, '');
+  A.fillSelect(document.getElementById('ptLoc'), A.AhoorData.districts, '');
+  A.fillSelect(document.getElementById('ptUnit'), A.AhoorData.units, '');
+
+  /* image */
+  document.getElementById('ptImgBtn').addEventListener('click', function(){ document.getElementById('ptImgFile').click(); });
+  document.getElementById('ptImgFile').addEventListener('change', function(){
+    var f = this.files[0];
+    if(!f) return;
+    if(f.size > 400000){ A.toast(A.t('err.image'), 'er'); return; }
+    var rd = new FileReader();
+    rd.onload = function(e){
+      imgData = e.target.result;
+      var prev = document.getElementById('ptImgPrev');
+      prev.src = imgData;
+      prev.style.display = '';
+    };
+    rd.readAsDataURL(f);
+  });
+
+  /* edit mode */
+  function loadPost(){
     A.api('/api/my-posts').then(function(r){
-      var list = document.getElementById('myPosts');
-      var noPosts = document.getElementById('noPosts');
-      list.innerHTML = '';
-      if(!r.data || !r.data.posts || r.data.posts.length === 0){ noPosts.style.display = ''; return; }
-      noPosts.style.display = 'none';
-      r.data.posts.forEach(function(p){
-        var el = document.createElement('div');
-        el.className = 'dash-post';
-        el.innerHTML =
-          '<span class="dp-badge ' + p.type + '">' + (p.type === 'buyer' ? '🛒 ' : '🏭 ') + A.t(p.type === 'buyer' ? 'mp.badgeBuyer' : 'mp.badgeSupplier') + '</span>' +
-          '<div class="dp-main"><b>' + A.esc(p.title) + '</b><span>' +
-            A.locName(A.AhoorData.districts, p.location) + ' · ' +
-            (p.qty ? p.qty + (p.unit ? ' ' + p.unit : '') : '') +
-            ' · ' + A.t(p.status === 'open' ? 'mp.open' : 'mp.closed') +
-            ' · ' + new Date(p.createdAt).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) +
-          '</span></div>' +
-          '<div class="dp-actions">' +
-            '<button class="dp-link" data-act="toggle">' + A.t(p.status === 'open' ? 'db.closed' : 'db.reopen') + '</button>' +
-            '<a class="dp-link" href="/post.html?id=' + p.id + '">' + A.t('db.edit') + '</a>' +
-            '<button class="dp-link danger" data-act="delete">' + A.t('db.delete') + '</button>' +
-          '</div>';
-        el.querySelector('[data-act="toggle"]').addEventListener('click', function(){
-          A.api('/api/posts/' + p.id + '/toggle', {}).then(loadPosts);
-        });
-        el.querySelector('[data-act="delete"]').addEventListener('click', function(){
-          if(!confirm(A.t('db.delConfirm'))) return;
-          A.api('/api/posts/' + p.id + '/delete', {}).then(function(r){
-            if(r.status === 200){ A.toast(A.t('db.deleted'), 'ok'); loadPosts(); }
-            else A.toast(A.errMsg(r.data.error), 'er');
-          });
-        });
-        list.appendChild(el);
+      if(!r.data || !r.data.posts) return;
+      var p = r.data.posts.find(function(x){ return x.id === editId; });
+      if(!p){ location.href = '/dashboard.html'; return; }
+      kind = p.type;
+      document.querySelectorAll('.kind-card').forEach(function(c){
+        c.classList.toggle('on', c.getAttribute('data-kind') === kind);
       });
+      document.getElementById('budgetWrap').style.display = kind === 'buyer' ? '' : 'none';
+      document.getElementById('moqWrap').style.display = kind === 'supplier' ? '' : 'none';
+      document.getElementById('priceWrap').style.display = kind === 'supplier' ? '' : 'none';
+      document.getElementById('deadlineWrap').style.display = kind === 'buyer' ? '' : 'none';
+      document.getElementById('ptTitle').textContent = A.t('pt.titleEdit');
+      document.getElementById('ptTitleF').value = p.title;
+      document.getElementById('ptCat').value = p.category;
+      document.getElementById('ptQty').value = p.qty || '';
+      document.getElementById('ptUnit').value = p.unit || '';
+      document.getElementById('ptBudget').value = p.budget || '';
+      document.getElementById('ptMoq').value = p.moq || '';
+      document.getElementById('ptPrice').value = p.price || '';
+      document.getElementById('ptLoc').value = p.location;
+      document.getElementById('ptDeadline').value = p.deadline || '';
+      document.getElementById('ptDesc').value = p.desc || '';
+      if(p.image){ imgData = p.image; var pr = document.getElementById('ptImgPrev'); pr.src = p.image; pr.style.display = ''; }
+      var lbl = document.querySelector('#ptSubmit .btn-label');
+      lbl.textContent = A.t('pt.saveEdit');
     });
   }
 
-  function loadQuotes(){
-    A.api('/api/quotes/received').then(function(r){
-      var box = document.getElementById('quotesList');
-      var noQuotes = document.getElementById('noQuotes');
-      box.innerHTML = '';
-      if(!r.data || !r.data.quotes || r.data.quotes.length === 0){ noQuotes.style.display = ''; return; }
-      noQuotes.style.display = 'none';
-      r.data.quotes.forEach(function(q){
-        var el = document.createElement('div');
-        el.className = 'quote-row';
-        el.innerHTML =
-          '<b>' + A.esc((q.sender && (q.sender.businessName || q.sender.name)) || '—') + '</b>' +
-          '<p>' + A.esc(q.message) + '</p>' +
-          '<div class="q-sub">' + A.t('db.quoteOn') + ': ' + A.esc(q.post ? q.post.title : '') + ' · ' + new Date(q.createdAt).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) + '</div>';
-        box.appendChild(el);
-      });
+  /* submit */
+  document.getElementById('ptSubmit').addEventListener('click', function(){
+    var title = document.getElementById('ptTitleF').value.trim();
+    var cat = document.getElementById('ptCat').value;
+    var loc = document.getElementById('ptLoc').value;
+    var desc = document.getElementById('ptDesc').value.trim();
+    var ok = true;
+    if(title.length < 4){ A.fieldErr(document.getElementById('ptTitleF'), 'pt.errTitle'); ok = false; }
+    if(!cat){ A.fieldErr(document.getElementById('ptCat'), 'pt.errCat'); ok = false; }
+    if(!loc){ A.fieldErr(document.getElementById('ptLoc'), 'pt.errLoc'); ok = false; }
+    if(desc.length < 10){ A.fieldErr(document.getElementById('ptDesc'), 'pt.errDesc'); ok = false; }
+    if(!ok) return;
+    var body = {
+      type: kind,
+      title: title,
+      category: cat,
+      qty: document.getElementById('ptQty').value.trim(),
+      unit: document.getElementById('ptUnit').value,
+      budget: kind === 'buyer' ? document.getElementById('ptBudget').value.trim() : '',
+      moq: kind === 'supplier' ? document.getElementById('ptMoq').value.trim() : '',
+      price: kind === 'supplier' ? document.getElementById('ptPrice').value.trim() : '',
+      location: loc,
+      deadline: kind === 'buyer' ? document.getElementById('ptDeadline').value : '',
+      desc: desc,
+      image: imgData
+    };
+    var btn = document.getElementById('ptSubmit');
+    A.setLoading(btn, true, editId ? 'pt.savingE' : 'pt.publishing');
+    var req = editId
+      ? A.api('/api/posts/' + editId + '/edit', body)
+      : A.api('/api/posts', body);
+    req.then(function(r){
+      A.setLoading(btn, false);
+      if(r.status === 201 || r.status === 200){
+        A.toast(A.t(editId ? 'pt.updated' : 'pt.published'), 'ok');
+        setTimeout(function(){ location.href = '/dashboard.html'; }, 900);
+      } else if(r.status === 401){
+        location.href = '/login.html?next=/post.html';
+      } else {
+        A.showMsg(document.getElementById('ptMsg'), 'error', A.errMsg(r.data.error));
+      }
     });
-  }
-
-  document.getElementById('btnSignout').addEventListener('click', function(){
-    var b = this;
-    A.setLoading(b, true, 'db.signingout');
-    A.api('/api/logout', {}).then(function(){ location.href = '/login.html'; });
   });
 })();
 </script>
