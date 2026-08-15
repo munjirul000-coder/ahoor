@@ -968,6 +968,8 @@ var EXT = {
  "pt.errLoc":["Please select a location.","অবস্থান নির্বাচন করুন।"],
  "pt.errDesc":["Please write a description (at least 10 characters).","বর্ণনা লিখুন (কমপক্ষে ১০ অক্ষর)।"],
  "pt.goMarket":["View in Marketplace","মার্কেটপ্লেসে দেখুন"],
+ "pt.selCat":["Select category…","ক্যাটাগরি নির্বাচন করুন…"],
+ "pt.selLoc":["Select district…","জেলা নির্বাচন করুন…"],
 
  "db.posts":["My Posts","আমার পোস্ট"],
  "db.postsD":["Your requirements & offers","আপনার প্রয়োজন ও অফার"],
@@ -1282,6 +1284,22 @@ applyLang();
   A.fillSelect(document.getElementById('ptCat'), A.AhoorData.categories, '');
   A.fillSelect(document.getElementById('ptLoc'), A.AhoorData.districts, '');
   A.fillSelect(document.getElementById('ptUnit'), A.AhoorData.units, '');
+  (function(){
+    var cat = document.getElementById('ptCat');
+    var o1 = document.createElement('option');
+    o1.value = ''; o1.textContent = A.t('pt.selCat');
+    cat.prepend(o1);
+    cat.value = '';
+    var loc = document.getElementById('ptLoc');
+    var o2 = document.createElement('option');
+    o2.value = ''; o2.textContent = A.t('pt.selLoc');
+    loc.prepend(o2);
+    loc.value = '';
+    document.addEventListener('langchange', function(){
+      o1.textContent = A.t('pt.selCat');
+      o2.textContent = A.t('pt.selLoc');
+    });
+  })();
 
   /* image */
   document.getElementById('ptImgBtn').addEventListener('click', function(){ document.getElementById('ptImgFile').click(); });
@@ -1337,11 +1355,29 @@ applyLang();
     var loc = document.getElementById('ptLoc').value;
     var desc = document.getElementById('ptDesc').value.trim();
     var ok = true;
-    if(title.length < 4){ A.fieldErr(document.getElementById('ptTitleF'), 'pt.errTitle'); ok = false; }
-    if(!cat){ A.fieldErr(document.getElementById('ptCat'), 'pt.errCat'); ok = false; }
-    if(!loc){ A.fieldErr(document.getElementById('ptLoc'), 'pt.errLoc'); ok = false; }
-    if(desc.length < 10){ A.fieldErr(document.getElementById('ptDesc'), 'pt.errDesc'); ok = false; }
-    if(!ok) return;
+    var firstBad = null;
+    function bad(id, key){
+      var el = document.getElementById(id);
+      A.fieldErr(el, key);
+      if(!firstBad) firstBad = el;
+      ok = false;
+    }
+    if(title.length < 4) bad('ptTitleF', 'pt.errTitle');
+    if(!cat) bad('ptCat', 'pt.errCat');
+    if(!loc) bad('ptLoc', 'pt.errLoc');
+    if(desc.length < 10) bad('ptDesc', 'pt.errDesc');
+    if(!ok){
+      // show a big, unmissable summary + scroll to first invalid field
+      var msgEl = document.getElementById('ptMsg');
+      var missing = [];
+      if(title.length < 4) missing.push(A.t('pt.title'));
+      if(!cat) missing.push(A.t('pt.category'));
+      if(!loc) missing.push(A.t('pt.location'));
+      if(desc.length < 10) missing.push(A.t('pt.desc'));
+      A.showMsg(msgEl, 'error', A.t('pp.required') + ' ' + missing.join(', '));
+      if(firstBad) firstBad.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
     var body = {
       type: kind,
       title: title,

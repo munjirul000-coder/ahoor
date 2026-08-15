@@ -79,6 +79,7 @@ if (process.env.DATABASE_URL) {
   } catch (e) { console.error('[Ahoor] pg unavailable:', e.message); }
 }
 function pgInit() {
+  if (!pgPool) return Promise.resolve();
   if (pgReady) return Promise.resolve();
   if (pgInitPromise) return pgInitPromise;
   pgInitPromise = (async () => {
