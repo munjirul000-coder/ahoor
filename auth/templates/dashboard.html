@@ -29,6 +29,14 @@ __CSS__
       <span class="brand-name">Ahoor<em>.</em></span>
     </a>
     <div class="auth-nav-right">
+      <div class="nt-bell" id="ntBell" title="Notifications">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="nt-count" id="ntCount" style="display:none">0</span>
+      </div>
+      <div class="nt-panel" id="ntPanel">
+        <div class="nt-head"><b data-i18n="nt.unread">Notifications</b><button id="ntMarkAll" data-i18n="nt.markAll">Mark all as read</button></div>
+        <div class="nt-list" id="ntList"></div>
+      </div>
       <a class="back-home" href="/index.html">
         <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
         <span data-i18n="db.home">Back to Home</span>
@@ -95,6 +103,10 @@ __CSS__
       <div id="quotesList"></div>
       <div class="empty-box" id="noQuotes" data-i18n="db.quotesPlaceholder">When businesses ask for quotes on your posts, they will appear here.</div>
 
+      <h3 style="font-size:1.02rem;font-weight:750;margin-bottom:12px" data-i18n="qt.sentQuotes">My Sent Quotes</h3>
+      <div id="sentList"></div>
+      <div class="empty-box" id="noSent" data-i18n="qt.noSent">You haven't sent any quotes yet.</div>
+
       <h3 style="font-size:1.02rem;font-weight:750;margin-bottom:12px" id="msgSec" data-i18n="db.msgs">Messages</h3>
       <div class="empty-box" data-i18n="db.msgPlaceholder">Messages system is coming soon.</div>
 
@@ -128,6 +140,8 @@ __JS__
     render();
     loadPosts();
     loadQuotes();
+    loadSent();
+    loadNotifs();
   });
 
   function render(){
@@ -185,6 +199,9 @@ __JS__
     });
   }
 
+  function statusPill(st){
+    return '<span class="qstatus ' + st + '">' + A.t('qt.status' + st.charAt(0).toUpperCase() + st.slice(1)) + '</span>';
+  }
   function loadQuotes(){
     A.api('/api/quotes/received').then(function(r){
       var box = document.getElementById('quotesList');
@@ -194,15 +211,153 @@ __JS__
       noQuotes.style.display = 'none';
       r.data.quotes.forEach(function(q){
         var el = document.createElement('div');
-        el.className = 'quote-row';
+        el.className = 'qcard';
+        var biz = (q.sender && (q.sender.businessName || q.sender.name)) || '—';
+        var date = new Date(q.createdAt).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+        var rows = '';
+        if(q.kind === 'quote'){
+          if(q.pricePerUnit) rows += '<div>' + A.t('qt.pricePer') + '<b>৳' + A.esc(Number(q.pricePerUnit).toLocaleString('en-US')) + '</b></div>';
+          if(q.totalPrice) rows += '<div>' + A.t('qt.total') + '<b>৳' + A.esc(Number(q.totalPrice).toLocaleString('en-US')) + '</b></div>';
+          if(q.availableQty) rows += '<div>' + A.t('qt.availQty') + '<b>' + A.esc(q.availableQty) + '</b></div>';
+          if(q.moq) rows += '<div>' + A.t('qt.moq') + '<b>' + A.esc(q.moq) + '</b></div>';
+          if(q.deliveryTime) rows += '<div>' + A.t('qt.delivery') + '<b>' + A.esc(q.deliveryTime) + '</b></div>';
+        } else {
+          if(q.reqQty) rows += '<div>' + A.t('qt.reqQty') + '<b>' + A.esc(q.reqQty) + '</b></div>';
+          if(q.preferredDelivery) rows += '<div>' + A.t('qt.prefDel') + '<b>' + A.esc(q.preferredDelivery) + '</b></div>';
+          if(q.budget) rows += '<div>' + A.t('qt.budget') + '<b>' + A.esc(q.budget) + '</b></div>';
+        }
         el.innerHTML =
-          '<b>' + A.esc((q.sender && (q.sender.businessName || q.sender.name)) || '—') + '</b>' +
-          '<p>' + A.esc(q.message) + '</p>' +
-          '<div class="q-sub">' + A.t('db.quoteOn') + ': ' + A.esc(q.post ? q.post.title : '') + ' · ' + new Date(q.createdAt).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) + '</div>';
+          '<div class="qcard-top">' +
+            '<div class="qcard-biz"><span class="qb-av">' + (q.sender && q.sender.image ? '<img src="' + q.sender.image + '" alt="">' : A.esc((biz).charAt(0).toUpperCase())) + '</span>' +
+              '<div><b>' + A.esc(biz) + '</b><span>' + (q.sender && q.sender.district ? A.locName(A.AhoorData.districts, q.sender.district) : '') + ' · ' + date + '</span></div>' +
+            '</div>' + statusPill(q.status) +
+          '</div>' +
+          '<div class="qcard-rows">' + rows + '</div>' +
+          (q.message ? '<div class="qcard-msg">' + A.esc(q.message) + '</div>' : '') +
+          '<div class="qcard-actions">' +
+            (q.status === 'pending'
+              ? '<button class="btn btn-primary btn-sm" data-acc="' + q.id + '">' + A.t('qt.accept') + '</button>' +
+                '<button class="btn btn-outline btn-sm" data-rej="' + q.id + '">' + A.t('qt.reject') + '</button>'
+              : '') +
+            '<a class="quote-link" href="/marketplace.html">' + A.t('qt.contact') + '</a>' +
+          '</div>';
+        var acc = el.querySelector('[data-acc]');
+        if(acc) acc.addEventListener('click', function(){ respondQuote(q.id, 'accept'); });
+        var rej = el.querySelector('[data-rej]');
+        if(rej) rej.addEventListener('click', function(){ respondQuote(q.id, 'reject'); });
         box.appendChild(el);
       });
     });
   }
+  function respondQuote(id, action){
+    A.api('/api/quotes/' + id + '/respond', { action: action }).then(function(r){
+      if(r.status === 200){
+        A.toast(A.t(action === 'accept' ? 'qt.acceptedOk' : 'qt.rejectedOk'), 'ok');
+        loadQuotes();
+      } else {
+        A.toast(A.errMsg(r.data.error), 'er');
+      }
+    });
+  }
+  function loadSent(){
+    A.api('/api/quotes/sent').then(function(r){
+      var box = document.getElementById('sentList');
+      var noSent = document.getElementById('noSent');
+      box.innerHTML = '';
+      if(!r.data || !r.data.quotes || r.data.quotes.length === 0){ noSent.style.display = ''; return; }
+      noSent.style.display = 'none';
+      r.data.quotes.forEach(function(q){
+        var el = document.createElement('div');
+        el.className = 'qcard';
+        var title = (q.post && q.post.title) || '—';
+        var recipient = (q.recipient && (q.recipient.businessName || q.recipient.name)) || '—';
+        var date = new Date(q.createdAt).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+        var rows = '';
+        if(q.kind === 'quote'){
+          if(q.pricePerUnit) rows += '<div>' + A.t('qt.pricePer') + '<b>৳' + A.esc(Number(q.pricePerUnit).toLocaleString('en-US')) + '</b></div>';
+          if(q.totalPrice) rows += '<div>' + A.t('qt.total') + '<b>৳' + A.esc(Number(q.totalPrice).toLocaleString('en-US')) + '</b></div>';
+          if(q.deliveryTime) rows += '<div>' + A.t('qt.delivery') + '<b>' + A.esc(q.deliveryTime) + '</b></div>';
+        } else {
+          if(q.reqQty) rows += '<div>' + A.t('qt.reqQty') + '<b>' + A.esc(q.reqQty) + '</b></div>';
+          if(q.budget) rows += '<div>' + A.t('qt.budget') + '<b>' + A.esc(q.budget) + '</b></div>';
+        }
+        el.innerHTML =
+          '<div class="qcard-top">' +
+            '<div class="qcard-biz"><span class="qb-av">' + A.esc(title.charAt(0).toUpperCase()) + '</span>' +
+              '<div><b>' + A.esc(title) + '</b><span>' + A.t('db.from') + ' ' + A.esc(recipient) + ' · ' + date + '</span></div>' +
+            '</div>' + statusPill(q.status) +
+          '</div>' +
+          '<div class="qcard-rows">' + rows + '</div>' +
+          (q.message ? '<div class="qcard-msg">' + A.esc(q.message) + '</div>' : '') +
+          (q.status === 'pending'
+            ? '<div class="qcard-actions"><button class="btn btn-outline btn-sm" data-wd="' + q.id + '">' + A.t('qt.withdraw') + '</button></div>'
+            : '');
+        var wd = el.querySelector('[data-wd]');
+        if(wd) wd.addEventListener('click', function(){
+          A.api('/api/quotes/' + q.id + '/withdraw', {}).then(function(r){
+            if(r.status === 200){ A.toast(A.t('qt.withdrawnOk'), 'ok'); loadSent(); }
+            else A.toast(A.errMsg(r.data.error), 'er');
+          });
+        });
+        box.appendChild(el);
+      });
+    });
+  }
+  /* ---- notifications ---- */
+  var ntOpen = false;
+  function loadNotifs(){
+    A.api('/api/notifications').then(function(r){
+      var count = document.getElementById('ntCount');
+      var list = document.getElementById('ntList');
+      if(r.data){
+        count.style.display = r.data.unread > 0 ? '' : 'none';
+        count.textContent = r.data.unread > 99 ? '99+' : r.data.unread;
+        list.innerHTML = '';
+        if(!r.data.notifications || r.data.notifications.length === 0){
+          list.innerHTML = '<div class="nt-empty">' + A.t('nt.empty') + '</div>';
+          return;
+        }
+        r.data.notifications.forEach(function(n){
+          var el = document.createElement('div');
+          el.className = 'nt-item' + (n.read ? '' : ' unread');
+          var txt = A.t('nt.' + n.type).replace('{name}', n.data.senderName || '');
+          var postTxt = n.data.postTitle ? ' <span style="color:#8A95AC">(' + A.esc(n.data.postTitle) + ')</span>' : '';
+          var time = timeAgo(n.createdAt);
+          el.innerHTML = '<span class="nt-ic">' + (n.type.indexOf('accepted') >= 0 ? '✅' : n.type.indexOf('rejected') >= 0 ? '❌' : n.type.indexOf('withdrawn') >= 0 ? '↩️' : '📩') + '</span>' +
+            '<div><p>' + A.esc(txt) + postTxt + '</p><span>' + time + '</span></div>';
+          if(!n.read){
+            el.addEventListener('click', function(){
+              A.api('/api/notifications/read', { id: n.id }).then(loadNotifs);
+            });
+          }
+          list.appendChild(el);
+        });
+      }
+    });
+  }
+  function timeAgo(iso){
+    var diff = (Date.now() - new Date(iso).getTime()) / 60000;
+    if(diff < 1) return A.t('nt.justNow');
+    if(diff < 60) return A.t('nt.timeAgo').replace('{m}', Math.floor(diff));
+    return A.t('nt.hoursAgo').replace('{h}', Math.floor(diff / 60));
+  }
+  document.getElementById('ntBell').addEventListener('click', function(e){
+    e.stopPropagation();
+    ntOpen = !ntOpen;
+    document.getElementById('ntPanel').classList.toggle('on', ntOpen);
+    if(ntOpen) loadNotifs();
+  });
+  document.addEventListener('click', function(e){
+    if(ntOpen && !e.target.closest('#ntPanel') && !e.target.closest('#ntBell')){
+      ntOpen = false;
+      document.getElementById('ntPanel').classList.remove('on');
+    }
+  });
+  document.getElementById('ntMarkAll').addEventListener('click', function(){
+    A.api('/api/notifications/read', {}).then(loadNotifs);
+  });
+
+  setInterval(loadNotifs, 30000); /* notification polling */
 
   document.getElementById('btnSignout').addEventListener('click', function(){
     var b = this;

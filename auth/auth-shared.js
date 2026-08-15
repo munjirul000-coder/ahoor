@@ -166,6 +166,13 @@ var D = {
  "err.image":["Image is too large. Please choose a smaller image (max 400KB).","ছবিটি অনেক বড়। ছোট ছবি বাছাই করুন (সর্বোচ্চ ৪০০KB)।"],
  "err.self_quote":["You cannot request a quote on your own post.","নিজের পোস্টে কোটেশন চাওয়া যাবে না।"],
  "err.post_not_found":["Post not found.","পোস্টটি পাওয়া যায়নি।"],
+ "err.role_not_allowed":["Your account type is not allowed to do this.","আপনার অ্যাকাউন্টের ধরন দিয়ে এটি করা যাবে না।"],
+ "err.duplicate":["You already sent a quote for this post.","এই পোস্টে আপনি আগেই কোটেশন পাঠিয়েছেন।"],
+ "err.post_closed":["This post is closed for new quotes.","নতুন কোটেশনের জন্য এই পোস্টটি বন্ধ।"],
+ "err.quote_not_found":["Quote not found.","কোটেশনটি পাওয়া যায়নি।"],
+ "err.not_pending":["This quote is no longer pending.","এই কোটেশনটি আর অপেক্ষমাণ নেই।"],
+ "err.own_quote":["You cannot respond to your own quote.","নিজের কোটেশনে সাড়া দেওয়া যাবে না।"],
+ "err.action":["Invalid action.","ভুল নির্দেশ।"],
  "ok.sent":["Code sent!","কোড পাঠানো হয়েছে!"],
  "ok.verified":["Verified!","যাচাই হয়েছে!"],
  "dev.note":["Demo mode — your code: {c} (in production it is sent by SMS/email)","ডেমো মোড — আপনার কোড: {c} (প্রকৃত পরিবেশে এটি এসএমএস/ইমেইলে যাবে)"],
@@ -212,6 +219,75 @@ document.querySelectorAll('.lang-btn').forEach(function(b){
   b.addEventListener('click', function(){ setLang(b.getAttribute('data-lang')); });
 });
 window.__t = t;
+
+/* ---------------- quotes & notifications dictionary ---------------- */
+var Q_EXT = {
+ "qt.sendQuote":["Send Quote","কোটেশন পাঠান"],
+ "qt.reqQuote":["Request Quote","কোটেশন চান"],
+ "qt.sendQuoteTitle":["Send Quote","কোটেশন পাঠান"],
+ "qt.reqQuoteTitle":["Request Quote","কোটেশন চান"],
+ "qt.forPost":["For post:","পোস্টের জন্য:"],
+ "qt.priceUnit":["Price per unit","প্রতি একক দাম"],
+ "qt.priceUnitPh":["e.g. ৳250 / pcs","যেমন: ৳২৫০ / পিস"],
+ "qt.totalPrice":["Total price (auto-calculated)","মোট দাম (স্বয়ংক্রিয়)"],
+ "qt.availQty":["Available quantity","পাওয়া যাবে পরিমাণ"],
+ "qt.availQtyPh":["e.g. 1000","যেমন: ১০০০"],
+ "qt.moq":["Minimum Order Quantity (optional)","ন্যূনতম অর্ডার পরিমাণ (ঐচ্ছিক)"],
+ "qt.moqPh":["e.g. 100","যেমন: ১০০"],
+ "qt.delivery":["Estimated delivery / production time","আনুমানিক ডেলিভারি / উৎপাদন সময়"],
+ "qt.deliveryPh":["e.g. 10 days","যেমন: ১০ দিন"],
+ "qt.valid":["Valid until (optional)","বৈধ থাকবে (ঐচ্ছিক)"],
+ "qt.msg":["Message / Additional details","মেসেজ / অতিরিক্ত বিবরণ"],
+ "qt.msgPhQuote":["We can manufacture premium cotton T-shirts according to your requirements.","আপনার প্রয়োজন অনুযায়ী প্রিমিয়াম কটন টি-শার্ট তৈরি করতে পারি।"],
+ "qt.reqQty":["Required quantity","প্রয়োজনীয় পরিমাণ"],
+ "qt.reqQtyPh":["e.g. 5000","যেমন: ৫০০০"],
+ "qt.prefDel":["Preferred delivery date","পছন্দের ডেলিভারি তারিখ"],
+ "qt.prefDelPh":["e.g. within 30 days","যেমন: ৩০ দিনের মধ্যে"],
+ "qt.budget":["Budget (optional)","বাজেট (ঐচ্ছিক)"],
+ "qt.budgetPh":["e.g. ৳1,250,000","যেমন: ৳১২,৫০,০০০"],
+ "qt.msgPhReq":["I am interested in ordering 5,000 pcs. Please send me your best quotation.","আমি ৫,০০০ পিস অর্ডার করতে আগ্রহী। অনুগ্রহ করে আপনার সেরা কোটেশন পাঠান।"],
+ "qt.send":["SEND QUOTE","কোটেশন পাঠান"],
+ "qt.sendReq":["SEND REQUEST","অনুরোধ পাঠান"],
+ "qt.sending":["Sending…","পাঠানো হচ্ছে…"],
+ "qt.sentOk":["Quote sent successfully.","কোটেশন সফলভাবে পাঠানো হয়েছে।"],
+ "qt.reqSentOk":["Quote request sent successfully.","কোটেশন অনুরোধ সফলভাবে পাঠানো হয়েছে।"],
+ "qt.statusPending":["Pending","অপেক্ষমাণ"],
+ "qt.statusAccepted":["Accepted","গৃহীত"],
+ "qt.statusRejected":["Rejected","প্রত্যাখ্যাত"],
+ "qt.statusWithdrawn":["Withdrawn","প্রত্যাহার"],
+ "qt.accept":["Accept Quote","কোটেশন গ্রহণ করুন"],
+ "qt.reject":["Reject Quote","কোটেশন প্রত্যাখ্যান করুন"],
+ "qt.contact":["Contact Supplier","সরবরাহকারীর সাথে যোগাযোগ"],
+ "qt.viewSupplier":["View Supplier","সরবরাহকারী দেখুন"],
+ "qt.withdraw":["Withdraw","প্রত্যাহার করুন"],
+ "qt.acceptedOk":["Quote accepted.","কোটেশন গৃহীত হয়েছে।"],
+ "qt.rejectedOk":["Quote rejected.","কোটেশন প্রত্যাখ্যান করা হয়েছে।"],
+ "qt.withdrawnOk":["Quote withdrawn.","কোটেশন প্রত্যাহার করা হয়েছে।"],
+ "qt.sentQuotes":["My Sent Quotes","আমার পাঠানো কোটেশন"],
+ "qt.receivedQuotes":["Received Quotes","প্রাপ্ত কোটেশন"],
+ "qt.noSent":["You haven't sent any quotes yet.","আপনি এখনো কোনো কোটেশন পাঠাননি।"],
+ "qt.noReceived":["No quotes received yet.","এখনো কোনো কোটেশন আসেনি।"],
+ "qt.pricePer":["Price / unit","দাম / একক"],
+ "qt.total":["Total","মোট"],
+ "qt.roleBlocked":["Only suppliers can send quotes on buyer posts.","ক্রেতার পোস্টে শুধু সরবরাহকারীরাই কোটেশন পাঠাতে পারেন।"],
+ "qt.roleBlockedReq":["Only buyers can request quotes on supplier posts.","সরবরাহকারীর পোস্টে শুধু ক্রেতারাই কোটেশন চাইতে পারেন।"],
+ "qt.loginFirst":["Please sign in to continue.","চালিয়ে যেতে সাইন ইন করুন।"],
+ "qt.alreadySent":["You already sent a quote for this post.","এই পোস্টে আপনি আগেই কোটেশন পাঠিয়েছেন।"],
+ "qt.postClosed":["This post is closed.","এই পোস্টটি বন্ধ।"],
+ "nt.unread":["Notifications","নোটিফিকেশন"],
+ "nt.markAll":["Mark all as read","সব পঠিত করুন"],
+ "nt.empty":["No notifications yet.","এখনো কোনো নোটিফিকেশন নেই।"],
+ "nt.quote_received":["You received a new quote from {name}.","{name} থেকে একটি নতুন কোটেশন পেয়েছেন।"],
+ "nt.request_received":["You received a new quote request from {name}.","{name} থেকে একটি নতুন কোটেশন অনুরোধ পেয়েছেন।"],
+ "nt.quote_accepted":["Your quote was accepted.","আপনার কোটেশন গৃহীত হয়েছে।"],
+ "nt.quote_rejected":["Your quote was rejected.","আপনার কোটেশন প্রত্যাখ্যাত হয়েছে।"],
+ "nt.quote_withdrawn":["A quote was withdrawn.","একটি কোটেশন প্রত্যাহার করা হয়েছে।"],
+ "nt.onPost":["on","এর জন্য"],
+ "nt.justNow":["just now","এইমাত্র"],
+ "nt.timeAgo":["{m} min ago","{m} মিনিট আগে"],
+ "nt.hoursAgo":["{h} hr ago","{h} ঘণ্টা আগে"]
+};
+for (var k in Q_EXT) { D[k] = Q_EXT[k]; }
 
 /* ---------------- marketplace dictionary extension ---------------- */
 var EXT = {
@@ -391,7 +467,7 @@ function api(path, body){
       .catch(function(){ return { status:r.status, data:{ error:'bad_response' } }; });
   }).catch(function(){ return { status:0, data:{ error:'offline' } }; });
 }
-var ERR_CODES = ['email_exists','phone_exists','invalid','not_found','weak','unverified','invalid_code','expired','too_many','network','offline','bad_response','missing','no_session','route','method','purpose','forbidden','email','phone','name','mismatch','required','type','code','locked','generic','title','category','location','desc','message','image','self_quote','post_not_found'];
+var ERR_CODES = ['email_exists','phone_exists','invalid','not_found','weak','unverified','invalid_code','expired','too_many','network','offline','bad_response','missing','no_session','route','method','purpose','forbidden','email','phone','name','mismatch','required','type','code','locked','generic','title','category','location','desc','message','image','self_quote','post_not_found','role_not_allowed','duplicate','post_closed','quote_not_found','not_pending','own_quote','action'];
 function errMsg(e){
   e = e || 'generic';
   if(ERR_CODES.indexOf(e) >= 0) return t('err.'+e);

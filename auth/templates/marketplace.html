@@ -86,19 +86,64 @@ __CSS__
   </div>
 </footer>
 
-<!-- quote modal -->
+<!-- quote / request modal -->
 <div class="modal-bg" id="quoteModal">
   <div class="modal">
-    <h3 id="qmTitle">Request Quote</h3>
+    <h3 id="qmTitle">Send Quote</h3>
     <p class="sub" id="qmSub"></p>
     <div class="msg" id="qmMsg"></div>
+    <!-- supplier quote fields -->
+    <div id="qmQuoteFields">
+      <div class="quote-form-grid">
+        <div class="field">
+          <label class="flabel" data-i18n="qt.priceUnit">Price per unit</label>
+          <input type="number" min="0" id="qmPrice" data-i18n-ph="qt.priceUnitPh" placeholder="e.g. ৳250">
+        </div>
+        <div class="field">
+          <label class="flabel" data-i18n="qt.availQty">Available quantity</label>
+          <input type="number" min="0" id="qmQty" data-i18n-ph="qt.availQtyPh" placeholder="e.g. 1000">
+        </div>
+      </div>
+      <div class="qt-total"><span data-i18n="qt.totalPrice">Total price (auto-calculated)</span><b id="qmTotal">৳—</b></div>
+      <div class="quote-form-grid">
+        <div class="field">
+          <label class="flabel" data-i18n="qt.moq">Minimum Order Quantity (optional)</label>
+          <input type="number" min="0" id="qmMoq" data-i18n-ph="qt.moqPh" placeholder="e.g. 100">
+        </div>
+        <div class="field">
+          <label class="flabel" data-i18n="qt.delivery">Estimated delivery / production time</label>
+          <input type="text" id="qmDelivery" data-i18n-ph="qt.deliveryPh" placeholder="e.g. 10 days">
+        </div>
+      </div>
+      <div class="field">
+        <label class="flabel" data-i18n="qt.valid">Valid until (optional)</label>
+        <input type="date" id="qmValid">
+      </div>
+    </div>
+    <!-- buyer request fields -->
+    <div id="qmReqFields" style="display:none">
+      <div class="quote-form-grid">
+        <div class="field">
+          <label class="flabel" data-i18n="qt.reqQty">Required quantity</label>
+          <input type="number" min="0" id="qmReqQty" data-i18n-ph="qt.reqQtyPh" placeholder="e.g. 5000">
+        </div>
+        <div class="field">
+          <label class="flabel" data-i18n="qt.prefDel">Preferred delivery date</label>
+          <input type="text" id="qmPrefDel" data-i18n-ph="qt.prefDelPh" placeholder="e.g. within 30 days">
+        </div>
+      </div>
+      <div class="field">
+        <label class="flabel" data-i18n="qt.budget">Budget (optional)</label>
+        <input type="text" id="qmBudget" data-i18n-ph="qt.budgetPh" placeholder="e.g. ৳1,250,000">
+      </div>
+    </div>
     <div class="field">
-      <label class="flabel" data-i18n="mp.quoteMsg">Your message</label>
-      <textarea id="qmText" data-i18n-ph="mp.quoteMsgPh" placeholder="e.g. We can supply at ৳240/pcs, delivery 12 days"></textarea>
+      <label class="flabel" data-i18n="qt.msg">Message / Additional details</label>
+      <textarea id="qmText" style="min-height:90px" data-i18n-ph="qt.msgPhQuote" placeholder="We can manufacture premium cotton T-shirts according to your requirements."></textarea>
     </div>
     <div class="modal-actions">
       <button type="button" class="btn btn-ghost" id="qmCancel"><span data-i18n="mp.cancel">Cancel</span></button>
-      <button type="button" class="btn btn-primary" id="qmSend"><span class="spinner"></span><span class="btn-label" data-i18n="mp.send">Send</span></button>
+      <button type="button" class="btn btn-primary" id="qmSend"><span class="spinner"></span><span class="btn-label" data-i18n="qt.send">SEND QUOTE</span></button>
     </div>
   </div>
 </div>
@@ -195,8 +240,8 @@ __JS__
     meta += '<span>' + A.locName(A.AhoorData.districts, p.location) + '</span>';
     var dateTxt = new Date(p.createdAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
     var btn = isBuyer
-      ? '<button class="btn btn-primary btn-sm" data-quote="' + p.id + '">' + A.t('mp.getQuotes') + '</button>'
-      : '<button class="btn btn-orange btn-sm" data-quote="' + p.id + '">' + A.t('mp.reqQuote') + '</button>';
+      ? '<button class="btn btn-primary btn-sm" data-quote="' + p.id + '">' + A.t('qt.sendQuote') + '</button>'
+      : '<button class="btn btn-orange btn-sm" data-quote="' + p.id + '">' + A.t('qt.reqQuote') + '</button>';
     el.innerHTML =
       (img ? img : '') +
       '<div class="post-top">' +
@@ -217,29 +262,81 @@ __JS__
 
   /* quote modal */
   var modal = document.getElementById('quoteModal');
+  var qKind = 'quote'; // quote = supplier->buyer post, request = buyer->supplier post
   function openQuote(p){
     targetPost = p;
-    document.getElementById('qmSub').textContent = p.title;
+    qKind = p.type === 'buyer' ? 'quote' : 'request';
+    document.getElementById('qmSub').textContent = A.t('qt.forPost') + ' ' + p.title;
     document.getElementById('qmText').value = '';
+    ['qmPrice','qmQty','qmMoq','qmDelivery','qmValid','qmReqQty','qmPrefDel','qmBudget'].forEach(function(id){
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('qmTotal').textContent = '৳—';
+    document.getElementById('qmQuoteFields').style.display = qKind === 'quote' ? '' : 'none';
+    document.getElementById('qmReqFields').style.display = qKind === 'request' ? '' : 'none';
+    document.getElementById('qmTitle').textContent = A.t(qKind === 'quote' ? 'qt.sendQuoteTitle' : 'qt.reqQuoteTitle');
+    var btnLabel = document.querySelector('#qmSend .btn-label');
+    btnLabel.textContent = A.t(qKind === 'quote' ? 'qt.send' : 'qt.sendReq');
+    document.getElementById('qmText').setAttribute('data-i18n-ph', qKind === 'quote' ? 'qt.msgPhQuote' : 'qt.msgPhReq');
+    document.getElementById('qmText').placeholder = A.t(qKind === 'quote' ? 'qt.msgPhQuote' : 'qt.msgPhReq');
     A.hideMsg(document.getElementById('qmMsg'));
     if(!me){ A.toast(A.t('mp.loginNeeded'), 'er'); location.href = '/login.html?next=/marketplace.html'; return; }
+    if(qKind === 'quote' && me.type !== 'supplier' && me.type !== 'both'){
+      A.toast(A.t('qt.roleBlocked'), 'er'); return;
+    }
+    if(qKind === 'request' && me.type !== 'buyer' && me.type !== 'both'){
+      A.toast(A.t('qt.roleBlockedReq'), 'er'); return;
+    }
     modal.classList.add('on');
   }
+  /* auto total = price x qty */
+  function calcTotal(){
+    var pr = parseFloat(document.getElementById('qmPrice').value);
+    var qt = parseFloat(document.getElementById('qmQty').value);
+    if(!isNaN(pr) && !isNaN(qt) && pr > 0 && qt > 0){
+      var total = Math.round(pr * qt).toLocaleString('en-US');
+      document.getElementById('qmTotal').textContent = '৳' + total;
+    } else {
+      document.getElementById('qmTotal').textContent = '৳—';
+    }
+  }
+  document.getElementById('qmPrice').addEventListener('input', calcTotal);
+  document.getElementById('qmQty').addEventListener('input', calcTotal);
   document.getElementById('qmCancel').addEventListener('click', function(){ modal.classList.remove('on'); });
   modal.addEventListener('click', function(e){ if(e.target === modal) modal.classList.remove('on'); });
   document.getElementById('qmSend').addEventListener('click', function(){
     var msgEl = document.getElementById('qmMsg');
     var text = document.getElementById('qmText').value.trim();
-    if(text.length < 5){ A.showMsg(msgEl, 'error', A.t('err.required')); return; }
+    if(text.length < 5){ A.showMsg(msgEl, 'error', A.t('err.message')); return; }
+    var body = { postId: targetPost.id, message: text };
+    if(qKind === 'quote'){
+      var price = document.getElementById('qmPrice').value.trim();
+      var qty = document.getElementById('qmQty').value.trim();
+      if(!price || parseFloat(price) <= 0){ A.showMsg(msgEl, 'error', A.t('err.required')); return; }
+      if(!qty || parseFloat(qty) <= 0){ A.showMsg(msgEl, 'error', A.t('err.required')); return; }
+      body.pricePerUnit = price;
+      body.availableQty = qty;
+      body.moq = document.getElementById('qmMoq').value.trim();
+      body.deliveryTime = document.getElementById('qmDelivery').value.trim();
+      body.validUntil = document.getElementById('qmValid').value;
+    } else {
+      var rq = document.getElementById('qmReqQty').value.trim();
+      if(!rq || parseFloat(rq) <= 0){ A.showMsg(msgEl, 'error', A.t('err.required')); return; }
+      body.reqQty = rq;
+      body.preferredDelivery = document.getElementById('qmPrefDel').value.trim();
+      body.budget = document.getElementById('qmBudget').value.trim();
+    }
     var btn = document.getElementById('qmSend');
     A.setLoading(btn, true);
-    A.api('/api/quotes', { postId: targetPost.id, message: text }).then(function(r){
+    A.api('/api/quotes', body).then(function(r){
       A.setLoading(btn, false);
       if(r.status === 201){
-        A.toast(A.t('mp.quoteSent'), 'ok');
+        A.toast(A.t(qKind === 'quote' ? 'qt.sentOk' : 'qt.reqSentOk'), 'ok');
         modal.classList.remove('on');
       } else if(r.status === 401){
         location.href = '/login.html?next=/marketplace.html';
+      } else if(r.status === 403 && r.data.error === 'role_not_allowed'){
+        A.showMsg(msgEl, 'error', A.t(qKind === 'quote' ? 'qt.roleBlocked' : 'qt.roleBlockedReq'));
       } else {
         A.showMsg(msgEl, 'error', A.errMsg(r.data.error));
       }

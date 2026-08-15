@@ -74,7 +74,7 @@ function load() {
   try {
     db = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
   } catch (e) {
-    db = { users: [], sessions: {}, codes: {}, fails: {}, posts: [], quotes: [] };
+    db = { users: [], sessions: {}, codes: {}, fails: {}, posts: [], quotes: [], notifications: [] };
   }
   return db;
 }
@@ -85,6 +85,40 @@ function save() {
   fs.renameSync(tmp, DB_FILE);
 }
 load();
+
+function publicQuote(q) {
+  const post = db.posts.find(x => x.id === q.postId);
+  const sender = db.users.find(u => u.id === q.senderId);
+  const recipient = post ? db.users.find(u => u.id === post.ownerId) : null;
+  return {
+    id: q.id, postId: q.postId, kind: q.kind, status: q.status,
+    pricePerUnit: q.pricePerUnit || '', totalPrice: q.totalPrice || '',
+    availableQty: q.availableQty || '', moq: q.moq || '', deliveryTime: q.deliveryTime || '',
+    validUntil: q.validUntil || '', reqQty: q.reqQty || '', preferredDelivery: q.preferredDelivery || '',
+    budget: q.budget || '', message: q.message || '',
+    createdAt: q.createdAt, respondedAt: q.respondedAt || null,
+    post: post ? publicPost(post) : null,
+    sender: sender ? { id: sender.id, name: sender.name, businessName: sender.businessName || '', district: sender.district || '', image: sender.image || '', phone: sender.phone } : null,
+    recipient: recipient ? { id: recipient.id, name: recipient.name, businessName: recipient.businessName || '' } : null
+  };
+}
+function addNotification(userId, type, refId, data) {
+  db.notifications.push({
+    id: uid(), userId, type, refId: refId || null,
+    data: data || {}, read: false, createdAt: new Date().toISOString()
+  });
+}
+function publicNotification(n) {
+  return { id: n.id, type: n.type, refId: n.refId, data: n.data || {}, read: !!n.read, createdAt: n.createdAt };
+}
+function canQuote(user, post) {
+  if (post.type === 'buyer') return user.type === 'supplier' || user.type === 'both';
+  return user.type === 'buyer' || user.type === 'both';
+}
+function numOrEmpty(v) {
+  const n = parseFloat(v);
+  return !isNaN(n) && n >= 0 ? String(n) : '';
+}
 
 /* ---------------- helpers ---------------- */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -274,7 +308,7 @@ async function handle(req, res) {
 
   /* --- API --- */
   if (p.startsWith('/api/')) {
-    if (req.method !== 'POST' && !(p === '/api/posts' && req.method === 'GET')) {
+    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications') && req.method === 'GET')) {
       return json(res, 405, { error: 'method' });
     }
     let body;
@@ -550,36 +584,128 @@ async function handle(req, res) {
       }
     }
 
-    /* ---- quotes ---- */
+    /* ---- quotes: send quote / request quote ---- */
     if (p === '/api/quotes' && req.method === 'POST') {
       const sess = getSession(req);
       if (!sess) return json(res, 401, { error: 'no_session' });
-      const { postId, message } = body;
+      const user = db.users.find(u => u.id === sess.userId);
+      if (!user) return json(res, 401, { error: 'no_session' });
+      const { postId, message, pricePerUnit, availableQty, moq, deliveryTime, validUntil, reqQty, preferredDelivery, budget } = body;
       const post = db.posts.find(pt => pt.id === postId);
       if (!post) return json(res, 404, { error: 'post_not_found' });
+      if (post.status === 'closed') return json(res, 400, { error: 'post_closed' });
+      if (!canQuote(user, post)) return json(res, 403, { error: 'role_not_allowed' });
       if (post.ownerId === sess.userId) return json(res, 400, { error: 'self_quote' });
       if (String(message || '').trim().length < 5) return json(res, 400, { error: 'message' });
+      // no duplicate pending quote from the same sender on the same post
+      if (db.quotes.some(qq => qq.senderId === sess.userId && qq.postId === postId && qq.status === 'pending')) {
+        return json(res, 409, { error: 'duplicate' });
+      }
+      const kind = post.type === 'buyer' ? 'quote' : 'request';
       const quote = {
-        id: uid(), postId, senderId: sess.userId, message: String(message).trim().slice(0, 1000),
-        createdAt: new Date().toISOString()
+        id: uid(), postId, senderId: sess.userId, kind,
+        pricePerUnit: kind === 'quote' ? numOrEmpty(pricePerUnit) : '',
+        totalPrice: '',
+        availableQty: kind === 'quote' ? numOrEmpty(availableQty) : '',
+        moq: kind === 'quote' ? numOrEmpty(moq) : '',
+        deliveryTime: kind === 'quote' ? String(deliveryTime || '').trim().slice(0, 60) : '',
+        validUntil: kind === 'quote' ? String(validUntil || '').trim().slice(0, 20) : '',
+        reqQty: kind === 'request' ? numOrEmpty(reqQty) : '',
+        preferredDelivery: kind === 'request' ? String(preferredDelivery || '').trim().slice(0, 60) : '',
+        budget: kind === 'request' ? String(budget || '').trim().slice(0, 60) : '',
+        message: String(message).trim().slice(0, 1000),
+        status: 'pending', createdAt: new Date().toISOString(), respondedAt: null
       };
+      if (kind === 'quote' && quote.pricePerUnit !== '' && quote.availableQty !== '') {
+        const ppu = parseFloat(quote.pricePerUnit), aq = parseFloat(quote.availableQty);
+        if (!isNaN(ppu) && !isNaN(aq)) quote.totalPrice = String(Math.round(ppu * aq));
+      }
       db.quotes.push(quote);
+      // notify the post owner
+      addNotification(post.ownerId, kind === 'quote' ? 'quote_received' : 'request_received', quote.id,
+        { senderName: user.businessName || user.name, postTitle: post.title });
       save();
-      return json(res, 201, { quote });
+      return json(res, 201, { quote: publicQuote(quote) });
     }
 
+    /* ---- received quotes (as post owner) ---- */
     if (p === '/api/quotes/received') {
       const sess = getSession(req);
       if (!sess) return json(res, 401, { error: 'no_session' });
       const myPostIds = new Set(db.posts.filter(pt => pt.ownerId === sess.userId).map(pt => pt.id));
       const list = db.quotes.filter(qq => myPostIds.has(qq.postId))
         .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
-      const full = list.map(qq => {
-        const pt = db.posts.find(x => x.id === qq.postId);
-        const sender = db.users.find(u => u.id === qq.senderId);
-        return { ...qq, post: pt ? publicPost(pt) : null, sender: sender ? { name: sender.name, businessName: sender.businessName || '', phone: sender.phone } : null };
-      });
-      return json(res, 200, { quotes: full });
+      return json(res, 200, { quotes: list.map(publicQuote) });
+    }
+
+    /* ---- sent quotes (as sender) ---- */
+    if (p === '/api/quotes/sent') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const list = db.quotes.filter(qq => qq.senderId === sess.userId)
+        .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+      return json(res, 200, { quotes: list.map(publicQuote) });
+    }
+
+    /* ---- respond: accept / reject (post owner only) ---- */
+    const qResp = p.match(/^\/api\/quotes\/([0-9a-f-]{36})\/respond$/);
+    if (qResp) {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const quote = db.quotes.find(qq => qq.id === qResp[1]);
+      if (!quote) return json(res, 404, { error: 'quote_not_found' });
+      const post = db.posts.find(pt => pt.id === quote.postId);
+      if (!post) return json(res, 404, { error: 'post_not_found' });
+      if (post.ownerId !== sess.userId) return json(res, 403, { error: 'forbidden' });
+      if (quote.senderId === sess.userId) return json(res, 403, { error: 'own_quote' });
+      if (quote.status !== 'pending') return json(res, 400, { error: 'not_pending' });
+      const action = body.action;
+      if (action !== 'accept' && action !== 'reject') return json(res, 400, { error: 'action' });
+      quote.status = action === 'accept' ? 'accepted' : 'rejected';
+      quote.respondedAt = new Date().toISOString();
+      const sender = db.users.find(u => u.id === quote.senderId);
+      addNotification(quote.senderId, action === 'accept' ? 'quote_accepted' : 'quote_rejected', quote.id,
+        { postTitle: post.title, recipientName: (sender ? '' : '') });
+      save();
+      return json(res, 200, { quote: publicQuote(quote) });
+    }
+
+    /* ---- withdraw (sender only, pending only) ---- */
+    const qWith = p.match(/^\/api\/quotes\/([0-9a-f-]{36})\/withdraw$/);
+    if (qWith) {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const quote = db.quotes.find(qq => qq.id === qWith[1]);
+      if (!quote) return json(res, 404, { error: 'quote_not_found' });
+      if (quote.senderId !== sess.userId) return json(res, 403, { error: 'forbidden' });
+      if (quote.status !== 'pending') return json(res, 400, { error: 'not_pending' });
+      quote.status = 'withdrawn';
+      save();
+      return json(res, 200, { quote: publicQuote(quote) });
+    }
+
+    /* ---- notifications ---- */
+    if (p === '/api/notifications' && req.method === 'GET') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const list = db.notifications.filter(n => n.userId === sess.userId)
+        .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || '')).slice(0, 50);
+      const unread = db.notifications.filter(n => n.userId === sess.userId && !n.read).length;
+      return json(res, 200, { notifications: list.map(publicNotification), unread });
+    }
+
+    if (p === '/api/notifications/read' && req.method === 'POST') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const { id } = body;
+      if (id) {
+        const n = db.notifications.find(x => x.id === id);
+        if (n && n.userId === sess.userId) n.read = true;
+      } else {
+        db.notifications.forEach(n => { if (n.userId === sess.userId) n.read = true; });
+      }
+      save();
+      return json(res, 200, { ok: true });
     }
 
     return json(res, 404, { error: 'route' });
