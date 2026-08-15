@@ -73,3 +73,13 @@ Push to GitHub → Deploy on Render (free tier):
 - **Quote requests** — "Get Quotes" / "Request Quote" buttons; sellers see received quotes in dashboard
 - **Dashboard** — profile summary, my posts (edit/close/delete), received quotes, create-post & marketplace shortcuts
 - Owner-only editing/deletion enforced server-side (403 otherwise); all pages bilingual
+
+## Features (v3 — Quote & Response System)
+
+- **Supplier → Buyer**: SEND QUOTE on buyer requirement posts — price/unit, auto-calculated total, available quantity, MOQ, delivery time, valid-until, message
+- **Buyer → Supplier**: REQUEST QUOTE on supplier posts — required quantity, preferred delivery, budget, message
+- **Quote statuses**: pending → accepted / rejected / withdrawn; post owner accepts/rejects, sender withdraws pending quotes; no self-actions
+- **Dashboard**: full Received Quotes cards (price, total, qty, delivery, message, status + Accept/Reject/Contact) and My Sent Quotes (status tracking + withdraw)
+- **In-app notifications**: new quote/request received, accepted, rejected — unread bell with count, mark-all-read, 30s polling (no email yet)
+- **Security**: role gating (supplier/both ↔ buyer/both), duplicate & closed-post prevention, ownership checks on every action
+- All new UI fully bilingual (বাংলা/EN)
