@@ -55,3 +55,11 @@ python3 build.py         # regenerate index.html (landing)
 - Dashboard cards, "Complete Profile" and messages are placeholders ("Coming soon") — business profile system is the next build.
 - Verification codes arrive via dev-mode display, not real SMS/email.
 - Sessions live in `data/db.json`; restart the server to pick up code changes.
+
+---
+
+## Deploy
+
+Push to GitHub → Deploy on Render (free tier):
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/munjirul000-coder/ahoor)
