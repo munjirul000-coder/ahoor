@@ -61,6 +61,45 @@ const ROOT = __dirname;
 const DATA_DIR = path.join(ROOT, 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
 const DEV = process.env.NODE_ENV !== 'production';
+
+/* optional Postgres persistence (Render free Postgres). When DATABASE_URL is
+   set, the whole db document is mirrored to a single jsonb row, so data
+   survives deploys (Render's free disk is ephemeral). Falls back to the JSON
+   file when no DATABASE_URL is configured. */
+let pgPool = null;
+let pgReady = false;
+let pgInitPromise = null;
+if (process.env.DATABASE_URL) {
+  try {
+    const { Pool } = require('pg');
+    pgPool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: process.env.DATABASE_URL.includes('sslmode=require') ? { rejectUnauthorized: false } : undefined });
+  } catch (e) { console.error('[Ahoor] pg unavailable:', e.message); }
+}
+function pgInit() {
+  if (pgReady) return Promise.resolve();
+  if (pgInitPromise) return pgInitPromise;
+  pgInitPromise = (async () => {
+    try {
+      await pgPool.query('CREATE TABLE IF NOT EXISTS ahoor_state (id INT PRIMARY KEY, data JSONB NOT NULL)');
+      pgReady = true;
+    } catch (e) { console.error('[Ahoor] pg init failed:', e.message); }
+  })();
+  return pgInitPromise;
+}
+function pgSaveSync() {
+  if (!pgPool || !pgReady) return;
+  pgPool.query('INSERT INTO ahoor_state (id, data) VALUES (1, $1) ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data', [JSON.stringify(db)])
+    .catch(e => console.error('[Ahoor] pg save failed:', e.message));
+}
+async function pgLoad() {
+  if (!pgPool) return null;
+  try {
+    await pgInit();
+    const r = await pgPool.query('SELECT data FROM ahoor_state WHERE id = 1');
+    if (r.rows.length) return r.rows[0].data;
+  } catch (e) { console.error('[Ahoor] pg load failed:', e.message); }
+  return null;
+}
 // No SMS/email gateway is connected yet, so verification codes are shown
 // on-screen in a labelled "demo mode" box. Set SHOW_CODES=0 once a real
 // gateway is connected (Render sets NODE_ENV=production automatically).
@@ -76,6 +115,14 @@ function load() {
   } catch (e) {
     db = { users: [], sessions: {}, codes: {}, fails: {}, posts: [], quotes: [], notifications: [] };
   }
+  if (pgPool) {
+    pgLoad().then(pgData => {
+      if (pgData && (pgData.users || []).length > (db.users || []).length) {
+        db = pgData;
+        console.log('[Ahoor] loaded state from Postgres (' + db.users.length + ' users)');
+      }
+    });
+  }
   return db;
 }
 function save() {
@@ -83,6 +130,7 @@ function save() {
   const tmp = DB_FILE + '.tmp';
   fs.writeFileSync(tmp, JSON.stringify(db));
   fs.renameSync(tmp, DB_FILE);
+  pgSaveSync();
 }
 load();
 
@@ -770,6 +818,8 @@ function send404(res) {
     res.end(d);
   });
 }
+
+pgInit();
 
 const server = http.createServer(handle);
 server.listen(PORT, '0.0.0.0', () => {
