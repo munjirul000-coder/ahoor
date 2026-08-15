@@ -16,6 +16,47 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
+/* optional SMTP mailer (nodemailer) — enables real email delivery of codes */
+let nodemailer = null;
+try { nodemailer = require('nodemailer'); } catch (e) { /* not installed yet */ }
+let _transporter = null;
+function getTransporter() {
+  if (!nodemailer) return null;
+  if (_transporter) return _transporter;
+  if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) return null;
+  _transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT || '465', 10),
+    secure: String(process.env.SMTP_PORT || '465') === '465',
+    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+  });
+  return _transporter;
+}
+async function sendCodeEmail(toEmail, code) {
+  const tr = getTransporter();
+  if (!tr || !toEmail) return false;
+  const from = process.env.MAIL_FROM || process.env.SMTP_USER;
+  try {
+    await tr.sendMail({
+      from: 'Ahoor <' + from + '>',
+      to: toEmail,
+      subject: 'Your Ahoor verification code / আপনার Ahoor যাচাই কোড',
+      html: '<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;border:1px solid #E4E9F2;border-radius:16px;padding:28px;background:#ffffff">'
+        + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:18px"><div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#3B77FF,#1E4FD8)"></div>'
+        + '<b style="font-size:18px">Ahoor<span style="color:#8FA3CE">.</span></b></div>'
+        + '<h2 style="margin:0 0 6px;font-size:20px;color:#101828">Your verification code</h2>'
+        + '<p style="margin:0 0 16px;font-size:14px;color:#57627A;line-height:1.6">Use this code to verify your Ahoor account. It expires in 10 minutes.</p>'
+        + '<div style="background:#F4F8FF;border:1px dashed #9DBDFF;border-radius:12px;padding:14px;text-align:center;font-size:26px;font-weight:bold;letter-spacing:8px;color:#1E4FD8">' + code + '</div>'
+        + '<p style="margin:16px 0 0;font-size:12px;color:#8A95AC;line-height:1.6">If you did not request this, you can safely ignore this email.<br>© 2026 Ahoor — Connecting businesses. Creating opportunities.</p></div>'
+    });
+    console.log('[Ahoor] code email sent to', toEmail);
+    return true;
+  } catch (e) {
+    console.error('[Ahoor] email send failed:', e.message);
+    return false;
+  }
+}
+
 const ROOT = __dirname;
 const DATA_DIR = path.join(ROOT, 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
@@ -138,7 +179,7 @@ function destroySession(req) {
 }
 
 /* ---------------- verification codes ---------------- */
-function sendCode(target /* 'signup:email' | 'reset:...' */, channel) {
+async function sendCode(target, channel, toEmail) {
   const now = Date.now();
   const key = 'code:' + target;
   const old = db.codes[key];
@@ -154,8 +195,9 @@ function sendCode(target /* 'signup:email' | 'reset:...' */, channel) {
     channel
   };
   save();
-  console.log(`[Ahoor dev] ${channel} code for ${target}: ${code}`);
-  return { ok: true, code: SHOW_CODES ? code : null, expiresIn: 600 };
+  const emailed = await sendCodeEmail(toEmail, code);
+  console.log(`[Ahoor] ${channel} code for ${target}: ${code} (email: ${emailed ? 'sent' : 'skipped'})`);
+  return { ok: true, code: emailed ? null : (SHOW_CODES ? code : null), expiresIn: 600 };
 }
 function checkCode(target, code) {
   const e = db.codes['code:' + target];
@@ -319,7 +361,7 @@ async function handle(req, res) {
         if (!user) return json(res, 401, { error: 'no_session' });
         const rl = checkLimit(rlKey('send:' + user.id), 'send', 5, 15 * 60000);
         if (!rl.ok) return json(res, 429, { error: 'locked', retryIn: rl.retryIn });
-        const r = sendCode('signup:' + user.id, 'email');
+        const r = await sendCode('signup:' + user.id, 'email', user.email);
         if (!r.ok) return json(res, 429, { error: 'cooldown', retryIn: r.retryIn });
         return json(res, 200, { devCode: r.code, expiresIn: r.expiresIn });
       }
@@ -328,7 +370,7 @@ async function handle(req, res) {
         if (!user) return json(res, 404, { error: 'not_found' });
         const rl = checkLimit(rlKey('send:' + user.id), 'send', 5, 15 * 60000);
         if (!rl.ok) return json(res, 429, { error: 'locked', retryIn: rl.retryIn });
-        const r = sendCode('reset:' + user.id, 'email');
+        const r = await sendCode('reset:' + user.id, 'email', user.email);
         if (!r.ok) return json(res, 429, { error: 'cooldown', retryIn: r.retryIn });
         return json(res, 200, { devCode: r.code, expiresIn: r.expiresIn });
       }
