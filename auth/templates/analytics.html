@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahoor — Business Insights</title>
+<meta name="theme-color" content="#0A1122">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1430'/%3E%3Cpath d='M16 8.5 9.6 23.5h12.8z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='9.6' cy='23.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='22.4' cy='23.5' r='2.6' fill='%23FF8A4C'/%3E%3C/svg%3E">
+<style>
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,__INTER__) format('woff2')}
+@font-face{font-family:'Noto Sans Bengali';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,__NSB__) format('woff2')}
+:root{--ink:#0A1122;--bg:#F4F6FA;--text:#101828;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+html[lang="bn"]{--font:'Noto Sans Bengali','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+html[lang="bn"] body{line-height:1.72}
+__CSS__
+.an-wrap{max-width:1120px;width:100%;margin:0 auto;padding:0 clamp(14px,3.5vw,28px);min-width:0}
+.an-grid{min-width:0}
+.an-card{min-width:0}
+.an-row{min-width:0}
+.tbl-wrap{max-width:100%}
+.an-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.an-head h1{font-size:clamp(1.3rem,3vw,1.6rem);font-weight:800;letter-spacing:-.02em;color:#101828}
+.an-head p{color:#57627A;font-size:.85rem;margin-top:4px}
+.an-periods{display:flex;gap:7px;flex-wrap:wrap}
+.an-period{font-family:inherit;font-size:.82rem;font-weight:650;color:#57627A;background:#fff;border:1.5px solid #E4E9F2;border-radius:999px;padding:8px 16px;cursor:pointer;transition:all .25s}
+.an-period:hover{border-color:#C9D8F2}
+.an-period.on{background:linear-gradient(135deg,#4C84FF,#2F6BFF);color:#fff;border-color:transparent;box-shadow:0 6px 16px -6px rgba(47,107,255,.5)}
+.an-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.an-card{background:#fff;border:1px solid #E4E9F2;border-radius:15px;padding:16px;box-shadow:0 4px 14px -10px rgba(10,17,34,.08)}
+.an-card b{display:block;font-size:1.5rem;font-weight:800;letter-spacing:-.02em;color:#0A1122}
+.an-card span{font-size:.74rem;color:#8A95AC;font-weight:600;line-height:1.4}
+.an-card .ai{float:right;font-size:1.15rem;opacity:.75}
+.an-note{background:#EBF1FF;border:1.5px dashed #9DBDFF;border-radius:12px;padding:10px 14px;font-size:.8rem;color:#1E4FD8;font-weight:600;margin-bottom:18px}
+.panel{background:#fff;border:1px solid #E4E9F2;border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 4px 14px -10px rgba(10,17,34,.06)}
+.panel h2{font-size:1rem;font-weight:800;margin-bottom:12px}
+.an-rows{display:grid;gap:8px}
+.an-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#FBFCFE;border:1px solid #EDF0F6;border-radius:12px;padding:11px 14px;font-size:.84rem}
+.an-row b{font-size:.9rem;color:#101828}
+.an-row .av{font-size:.9rem;font-weight:800;color:#2F6BFF}
+.an-bar{height:8px;border-radius:99px;background:#E9EEF7;overflow:hidden;margin-top:8px;width:100%}
+.an-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#5B8CFF,#2F6BFF)}
+.empty-box{text-align:center;padding:28px 14px;color:#8A95AC;font-size:.85rem;border:1.5px dashed #DDE3EE;border-radius:14px;background:#FBFCFE}
+.act-list{display:grid;gap:8px}
+.act-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid #EDF0F6;border-radius:11px;font-size:.84rem;background:#fff}
+.act-item .ai-ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:#EBF1FF;flex-shrink:0}
+.act-item .ai-t{flex:1}
+.act-item .ai-t b{display:block;font-size:.82rem;color:#101828}
+.act-item .ai-t span{font-size:.7rem;color:#8A95AC}
+.act-item .ai-time{font-size:.7rem;color:#A6B1C7;flex-shrink:0}
+.tbl-wrap{overflow-x:auto;border:1px solid #E4E9F2;border-radius:14px;background:#fff}
+table{width:100%;border-collapse:collapse;font-size:.84rem;min-width:560px}
+thead th{background:#F7F9FC;text-align:left;padding:10px 14px;font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#8A95AC;border-bottom:1px solid #EDF0F6}
+tbody td{padding:10px 14px;border-bottom:1px solid #F2F4F9}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#F8FAFF}
+.mini-btn{background:none;border:1px solid #E4E9F2;border-radius:9px;padding:5px 11px;font-size:.74rem;font-weight:650;color:#4A5870;cursor:pointer;transition:all .2s;white-space:nowrap}
+.mini-btn:hover{border-color:#2F6BFF;color:#2F6BFF}
+.an-head > div{min-width:0}
+.an-periods{min-width:0}
+@media(max-width:560px){
+  .an-grid{grid-template-columns:1fr 1fr;min-width:0}
+  .an-head{flex-direction:column;align-items:flex-start}
+  .an-periods{justify-content:flex-start}
+  .an-period{padding:7px 12px;font-size:.76rem}
+}
+</style>
+</head>
+<body data-meta="an.title">
+
+<header class="auth-nav">
+  <div class="container">
+    <a class="brand" href="/index.html" aria-label="Ahoor — home">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="9" fill="url(#lg1)"/>
+        <path d="M16 8.5 9.6 23.5h12.8z" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/>
+        <circle cx="16" cy="8.5" r="2.7" fill="#fff"/><circle cx="9.6" cy="23.5" r="2.7" fill="#fff"/><circle cx="22.4" cy="23.5" r="2.7" fill="#FF8A4C"/>
+        <defs><linearGradient id="lg1" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#3B77FF"/><stop offset="1" stop-color="#1E4FD8"/></linearGradient></defs>
+      </svg>
+      <span class="brand-name">Ahoor<em>.</em></span>
+    </a>
+    <div class="auth-nav-right">
+      <a class="back-home" href="/dashboard.html">
+        <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        <span data-i18n="nav.dash">Dashboard</span>
+      </a>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" class="lang-btn on" data-lang="bn" aria-pressed="true">বাংলা</button>
+        <span class="lsep" aria-hidden="true">|</span>
+        <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="auth-main" style="display:block;padding-top:22px">
+  <div class="an-wrap">
+    <div class="an-head">
+      <div>
+        <h1 data-i18n="an.title">Business Insights</h1>
+        <p data-i18n="an.sub">Real analytics from your Ahoor activity</p>
+      </div>
+      <div class="an-periods">
+        <button class="an-period" data-p="7" data-i18n="an.period7">Last 7 Days</button>
+        <button class="an-period on" data-p="30" data-i18n="an.period30">Last 30 Days</button>
+        <button class="an-period" data-p="90" data-i18n="an.period90">Last 90 Days</button>
+        <button class="an-period" data-p="all" data-i18n="an.periodAll">All Time</button>
+      </div>
+    </div>
+
+    <div id="anBody">
+      <div class="empty-box" data-i18n="an.loading">Loading analytics…</div>
+    </div>
+  </div>
+</main>
+
+<footer class="auth-foot">
+  <div class="container">
+    <p data-i18n="foot.made">Made in Bangladesh</p>
+    <p style="margin-top:6px" data-i18n="foot.cr">© 2026 Ahoor. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+__JS__
+(function(){
+  'use strict';
+  var A = window.Ahoor;
+  var period = '30';
+
+  A.api('/api/session').then(function(r){
+    if (!r.data || !r.data.user) { location.href = '/login.html?next=/analytics.html'; return; }
+    load();
+  });
+
+  document.querySelectorAll('.an-period').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.an-period').forEach(function(x){ x.classList.remove('on'); });
+      btn.classList.add('on');
+      period = btn.getAttribute('data-p');
+      load();
+    });
+  });
+
+  function fmtTime(iso){
+    return new Date(iso).toLocaleDateString('en-GB', { day:'numeric', month:'short' }) + ', ' + new Date(iso).toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+  }
+  function barRow(label, value, max){
+    var pct = max > 0 ? Math.round(value / max * 100) : 0;
+    return '<div class="an-row"><span>' + label + '</span><span style="display:flex;flex-direction:column;align-items:flex-end;width:46%"><b class="av">' + value + '</b><span class="an-bar"><i style="width:' + pct + '%"></i></span></span></div>';
+  }
+
+  document.addEventListener('langchange', function(){ load(); });
+
+  function load(){
+    var body = document.getElementById('anBody');
+    body.innerHTML = '<div class="empty-box" data-i18n="an.loading">' + A.t('an.loading') + '</div>';
+    fetch('/api/analytics?period=' + period, { credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (!d.analytics) { body.innerHTML = '<div class="empty-box">' + A.t('an.error') + '</div>'; return; }
+        var a = d.analytics;
+        var totalViews = a.profileViews + a.postViews;
+        var totalQuotes = a.quotesReceived + a.requestsReceived + a.quotesSent;
+        var totalMsgs = a.messagesReceived + a.messagesSent;
+
+        // summary cards
+        var cards = [
+          ['👤', A.t('an.profileViews'), a.profileViews],
+          ['📦', A.t('an.postViews'), a.postViews],
+          ['📩', A.t('an.quotesReceived'), a.quotesReceived],
+          ['📤', A.t('an.quotesSent'), a.quotesSent],
+          ['💬', A.t('an.messagesReceived'), a.messagesReceived],
+          ['✅', A.t('an.acceptedQuotes'), a.sentAccepted + a.recvAccepted],
+          ['📌', A.t('an.activePosts'), a.activePosts],
+          ['⭐', A.t('an.savedOpps'), a.savedCount],
+          ['🔥', A.t('an.newMatches'), a.newMatches]
+        ];
+        var note = '';
+        if (a.profileViews > 0 || a.postViews > 0) {
+          note = a.profileViews > 0
+            ? A.t('an.profileNote').replace('{n}', a.profileViews)
+            : A.t('an.postNote').replace('{n}', a.postViews);
+        }
+
+        var html = '';
+        if (note) html += '<div class="an-note">📊 ' + note + '</div>';
+        html += '<div class="an-grid">' + cards.map(function(c){
+          return '<div class="an-card"><span class="ai">' + c[0] + '</span><b>' + c[2] + '</b><span>' + c[1] + '</span></div>';
+        }).join('') + '</div>';
+
+        // post performance
+        html += '<div class="panel"><h2>📦 ' + A.t('an.postPerformance') + '</h2>';
+        if (!a.postStats.length) {
+          html += '<div class="empty-box">' + A.t('an.noPosts') + '</div>';
+        } else {
+          html += '<div class="tbl-wrap"><table><thead><tr><th>' + A.t('an.post') + '</th><th>' + A.t('an.views') + '</th><th>' + A.t('an.quotes') + '</th><th>' + A.t('an.requests') + '</th><th>' + A.t('an.saves') + '</th><th></th></tr></thead><tbody>';
+          a.postStats.forEach(function(p){
+            html += '<tr><td><b>' + A.esc(p.title) + '</b> <span class="badge ' + p.type + '" style="font-size:.6rem">' + A.t(p.type === 'buyer' ? 'ad.buyer' : 'ad.supplier') + '</span></td><td>' + p.views + '</td><td>' + p.quotes + '</td><td>' + p.requests + '</td><td>' + p.saves + '</td><td><button class="mini-btn" data-ins="' + p.id + '">' + A.t('an.viewsInsights') + '</button></td></tr>';
+          });
+          html += '</tbody></table></div>';
+        }
+        html += '</div>';
+
+        // quote performance
+        html += '<div class="panel"><h2>💬 ' + A.t('an.quotePerformance') + '</h2>';
+        var qmax = Math.max(a.quotesReceived, a.requestsReceived, a.quotesSent, a.sentAccepted, a.sentRejected, 1);
+        html += '<div class="an-rows">' +
+          barRow(A.t('an.quotesReceived'), a.quotesReceived, qmax) +
+          barRow(A.t('an.requestsReceived'), a.requestsReceived, qmax) +
+          barRow(A.t('an.quotesSent'), a.quotesSent, qmax) +
+          barRow(A.t('an.acceptedQuotes') + ' (' + A.t('an.sentLabel') + ')', a.sentAccepted, qmax) +
+          barRow(A.t('an.rejectedQuotes') + ' (' + A.t('an.sentLabel') + ')', a.sentRejected, qmax) +
+        '</div></div>';
+
+        // messaging
+        html += '<div class="panel"><h2>✉️ ' + A.t('an.messaging') + '</h2>';
+        if (!totalMsgs) html += '<div class="empty-box">' + A.t('an.noActivity') + '</div>';
+        else html += '<div class="an-rows">' +
+          barRow(A.t('an.messagesReceived'), a.messagesReceived, Math.max(totalMsgs,1)) +
+          barRow(A.t('an.messagesSent'), a.messagesSent, Math.max(totalMsgs,1)) +
+        '</div></div>';
+
+        // recent activity
+        html += '<div class="panel"><h2>🕒 ' + A.t('an.recentActivity') + '</h2>';
+        if (!a.activity.length) html += '<div class="empty-box">' + A.t('an.noActivity') + '</div>';
+        else {
+          html += '<div class="act-list">';
+          a.activity.forEach(function(act){
+            var icon = act.type === 'post_created' ? '📦' : act.type.indexOf('quote') >= 0 ? '💬' : '✉️';
+            html += '<div class="act-item"><span class="ai-ic">' + icon + '</span><span class="ai-t"><b>' + A.t('an.act.' + act.type) + '</b>' + (act.text ? '<span>' + A.esc(act.text) + '</span>' : '') + '</span><span class="ai-time">' + fmtTime(act.at) + '</span></div>';
+          });
+          html += '</div>';
+        }
+        html += '</div>';
+
+        body.innerHTML = html;
+        body.querySelectorAll('[data-ins]').forEach(function(btn){
+          btn.addEventListener('click', function(){
+            var pid = btn.getAttribute('data-ins');
+            fetch('/api/posts/insights?postId=' + pid + '&period=' + period, { credentials:'same-origin' })
+              .then(function(r){ return r.json(); })
+              .then(function(d){
+                if (!d.insights) return;
+                var ins = d.insights;
+                A.toast('👁 ' + A.t('an.views') + ': ' + ins.views + ' · ' + A.t('an.quotes') + ': ' + ins.quotes + ' · ' + A.t('an.requests') + ': ' + ins.requests + ' · ' + A.t('an.saves') + ': ' + ins.saves, 'ok');
+              });
+          });
+        });
+      })
+      .catch(function(){ body.innerHTML = '<div class="empty-box">' + A.t('an.error') + '</div>'; });
+  }
+})();
+</script>
+</body>
+</html>

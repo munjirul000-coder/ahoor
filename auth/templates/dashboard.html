@@ -111,6 +111,15 @@ __CSS__
       </div>
       <div class="dash-list" id="recList"></div>
 
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <h3 style="font-size:1.02rem;font-weight:750">📊 <span data-i18n="an.businessInsights">Business Insights</span></h3>
+        <a class="link-blue" href="/analytics.html" style="font-size:.82rem;font-weight:650" data-i18n="an.viewFull">View Full Analytics</a>
+      </div>
+      <div class="an-grid" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr));margin-bottom:6px" id="anSummary">
+        <div class="empty-box" style="padding:20px 12px;grid-column:1/-1" data-i18n="an.loading">Loading analytics…</div>
+      </div>
+      <div id="anAct" style="margin-bottom:20px"></div>
+
       <h3 style="font-size:1.02rem;font-weight:750;margin-bottom:12px" data-i18n="db.posts">My Posts</h3>
       <div class="dash-list" id="myPosts"></div>
       <div class="empty-box" id="noPosts" style="display:none" data-i18n="db.noPosts">You haven't posted anything yet.</div>
@@ -160,6 +169,7 @@ __JS__
     loadNotifs();
     loadMsgUnread();
     loadMatches();
+    loadAnalytics();
     document.addEventListener('langchange', loadMatches);
   });
 
@@ -382,6 +392,34 @@ __JS__
   });
 
   setInterval(loadNotifs, 30000); /* notification polling */
+  function loadAnalytics(){
+    fetch('/api/analytics?period=30', { credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        var a = d.analytics;
+        if (!a) return;
+        var box = document.getElementById('anSummary');
+        var items = [
+          ['👤', A.t('an.profileViews'), a.profileViews],
+          ['📦', A.t('an.postViews'), a.postViews],
+          ['💬', A.t('an.quotesReceived'), a.quotesReceived],
+          ['✉️', A.t('an.messagesReceived'), a.messagesReceived],
+          ['🔥', A.t('an.newMatches'), a.newMatches]
+        ];
+        box.innerHTML = items.map(function(it){
+          return '<div class="an-card" style="padding:12px 14px"><b style="font-size:1.25rem">' + it[2] + '</b><span style="font-size:.68rem">' + it[1] + '</span><span class="ai" style="font-size:1rem">' + it[0] + '</span></div>';
+        }).join('');
+        var actBox = document.getElementById('anAct');
+        actBox.innerHTML = '';
+        var acts = (a.activity || []).slice(0, 3);
+        if (!acts.length) { actBox.innerHTML = ''; return; }
+        actBox.innerHTML = '<div class="act-list">' + acts.map(function(act){
+          var icon = act.type === 'post_created' ? '📦' : act.type.indexOf('quote') >= 0 ? '💬' : '✉️';
+          return '<div class="act-item"><span class="ai-ic">' + icon + '</span><span class="ai-t"><b>' + A.t('an.act.' + act.type) + '</b>' + (act.text ? '<span>' + A.esc(act.text) + '</span>' : '') + '</span><span class="ai-time">' + new Date(act.at).toLocaleDateString('en-GB', {day:'numeric',month:'short'}) + '</span></div>';
+        }).join('') + '</div>';
+      })
+      .catch(function(){});
+  }
   function loadMatches(){
     fetch('/api/matches?limit=4', { credentials:'same-origin' })
       .then(function(r){ return r.json(); })

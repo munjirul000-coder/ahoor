@@ -13,7 +13,7 @@ NSB = b64('assets/noto-bengali-full.woff2')
 CSS = open('auth/auth-shared.css', encoding='utf-8').read()
 JS = open('auth/auth-shared.js', encoding='utf-8').read()
 
-PAGES = ['login', 'signup', 'forgot', 'dashboard', 'profile-setup', 'marketplace', 'post', 'business', 'messages', 'notifications', 'admin', 'matches', 'verify']
+PAGES = ['login', 'signup', 'forgot', 'dashboard', 'profile-setup', 'marketplace', 'post', 'business', 'messages', 'notifications', 'admin', 'matches', 'verify', 'analytics']
 for name in PAGES:
     t = open(os.path.join(TPL, name + '.html'), encoding='utf-8').read()
     t = t.replace('__INTER__', INTER).replace('__NSB__', NSB)

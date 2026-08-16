@@ -156,3 +156,15 @@ Push to GitHub → Deploy on Render (free tier):
 - **Verified badge**: shown on Business Profile, Marketplace post cards, Received Quote cards, Chat header — only when truly verified
 - **Security**: documents never public — only owner (own app) and admins can view; non-admin API access blocked (403); validated uploads (no exe/svg)
 - Fully bilingual (বাংলা/EN); 24/24 verification E2E tests + full regression pass
+
+## Features (v9 — Business Analytics & Insights)
+
+- **Real analytics only** (no fake numbers): profile views, post views, messages received/sent, quotes/requests received, quotes sent, accepted/rejected quotes, active posts, saved opportunities, new matches
+- **View tracking**: unique-ish profile & post views (same viewer counted once per 30 min), stored in `events` collection
+- **Time filters**: Last 7 / 30 / 90 days / All time — every stat updates
+- **Analytics page** (`/analytics.html`): summary cards, post performance table (views/quotes/requests/saves per post + View Insights), quote performance bars, messaging bars, real recent-activity feed
+- **Dashboard Business Insights** section: 5 summary cards + recent activity + "View Full Analytics"
+- **Post insights** (`/api/posts/insights`): owner-only, per-post views/quotes/requests/saves
+- **Privacy**: users see only their own analytics (403 otherwise); no visitor identity exposed
+- Buyer/Supplier/Both-friendly labels; fully bilingual (বাংলা/EN); mobile responsive
+- 26/26 analytics E2E tests + full regression pass

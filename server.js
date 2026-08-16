@@ -118,7 +118,7 @@ function load() {
   try {
     db = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
   } catch (e) {
-    db = { users: [], sessions: {}, codes: {}, fails: {}, posts: [], quotes: [], notifications: [], conversations: [], messages: [], reports: [], log: [], saved: [], verifications: [] };
+    db = { users: [], sessions: {}, codes: {}, fails: {}, posts: [], quotes: [], notifications: [], conversations: [], messages: [], reports: [], log: [], saved: [], verifications: [], events: [] };
   }
   if (pgPool) {
     pgLoad().then(pgData => {
@@ -480,6 +480,79 @@ const lv = matchLevel(sc);
 }
 
 
+/* ---------- analytics view tracking ---------- */
+const VIEW_DEDUPE_MS = 30 * 60 * 1000; // same viewer counts once per 30 min
+function viewerKey(req) {
+  const sess = getSession(req);
+  return sess ? sess.userId : 'anon';
+}
+function trackView(type, targetId, viewer) {
+  const now = Date.now();
+  // dedupe: skip if same type+target+viewer within window
+  for (let i = db.events.length - 1; i >= Math.max(0, db.events.length - 200); i--) {
+    const e = db.events[i];
+    if (e && e.type === type && e.targetId === targetId && e.viewer === viewer && now - new Date(e.createdAt).getTime() < VIEW_DEDUPE_MS) return;
+  }
+  db.events.push({ id: uid(), type, targetId, viewer, createdAt: new Date().toISOString() });
+  if (db.events.length > 8000) db.events.splice(0, db.events.length - 8000); // cap memory
+  save();
+}
+function analyticsFor(user, period) {
+  const days = period === '7' ? 7 : period === '30' ? 30 : period === '90' ? 90 : null;
+  const since = days ? Date.now() - days * 86400000 : 0;
+  const inP = iso => new Date(iso).getTime() >= since;
+  const myPostIds = db.posts.filter(pt => pt.ownerId === user.id).map(pt => pt.id);
+  const myPostSet = new Set(myPostIds);
+
+  const profileViews = db.events.filter(e => e.type === 'profile_view' && e.targetId === user.id && inP(e.createdAt)).length;
+  const postViews = db.events.filter(e => e.type === 'post_view' && myPostSet.has(e.targetId) && inP(e.createdAt)).length;
+  const quotesReceived = db.quotes.filter(q => myPostSet.has(q.postId) && q.kind === 'quote' && inP(q.createdAt)).length;
+  const requestsReceived = db.quotes.filter(q => myPostSet.has(q.postId) && q.kind === 'request' && inP(q.createdAt)).length;
+  const quotesSent = db.quotes.filter(q => q.senderId === user.id && inP(q.createdAt)).length;
+  const sentAccepted = db.quotes.filter(q => q.senderId === user.id && q.status === 'accepted' && inP(q.createdAt)).length;
+  const sentRejected = db.quotes.filter(q => q.senderId === user.id && q.status === 'rejected' && inP(q.createdAt)).length;
+  const recvAccepted = db.quotes.filter(q => myPostSet.has(q.postId) && q.status === 'accepted' && inP(q.createdAt)).length;
+  const recvRejected = db.quotes.filter(q => myPostSet.has(q.postId) && q.status === 'rejected' && inP(q.createdAt)).length;
+
+  const myConvIds = db.conversations.filter(c => c.participants.includes(user.id)).map(c => c.id);
+  const convSet = new Set(myConvIds);
+  const msgsIn = db.messages.filter(m => convSet.has(m.conversationId) && inP(m.createdAt));
+  const messagesReceived = msgsIn.filter(m => m.senderId !== user.id).length;
+  const messagesSent = msgsIn.filter(m => m.senderId === user.id).length;
+
+  const activePosts = db.posts.filter(pt => pt.ownerId === user.id && pt.status === 'open').length;
+  const savedCount = db.saved.filter(sv => myPostSet.has(sv.postId) && inP(sv.createdAt)).length;
+  const newMatches = db.notifications.filter(n => n.userId === user.id && n.type === 'opportunity_match' && inP(n.createdAt)).length;
+
+  const postStats = db.posts.filter(pt => pt.ownerId === user.id)
+    .map(pt => ({
+      id: pt.id, title: pt.title, type: pt.type, status: pt.status, createdAt: pt.createdAt,
+      views: db.events.filter(e => e.type === 'post_view' && e.targetId === pt.id && inP(e.createdAt)).length,
+      quotes: db.quotes.filter(q => q.postId === pt.id && q.kind === 'quote' && inP(q.createdAt)).length,
+      requests: db.quotes.filter(q => q.postId === pt.id && q.kind === 'request' && inP(q.createdAt)).length,
+      saves: db.saved.filter(sv => sv.postId === pt.id && inP(sv.createdAt)).length
+    }));
+
+  // recent activity (real events only)
+  const activity = [];
+  db.posts.filter(pt => pt.ownerId === user.id && inP(pt.createdAt)).slice(-3).forEach(pt =>
+    activity.push({ type: 'post_created', text: pt.title, at: pt.createdAt }));
+  db.quotes.filter(q => q.senderId === user.id && inP(q.createdAt)).slice(-3).forEach(q =>
+    activity.push({ type: 'quote_sent', at: q.createdAt }));
+  db.quotes.filter(q => myPostSet.has(q.postId) && inP(q.createdAt)).slice(-3).forEach(q =>
+    activity.push({ type: 'quote_received', at: q.createdAt }));
+  msgsIn.slice(-3).forEach(m => activity.push({ type: m.senderId === user.id ? 'msg_sent' : 'msg_received', at: m.createdAt }));
+  activity.sort((a, b) => (b.at || '').localeCompare(a.at || '')).slice(0, 8);
+
+  return {
+    period: days ? String(days) : 'all',
+    profileViews, postViews, quotesReceived, requestsReceived, quotesSent,
+    sentAccepted, sentRejected, recvAccepted, recvRejected,
+    messagesReceived, messagesSent, activePosts, savedCount, newMatches,
+    postStats, activity
+  };
+}
+
 /* ---------------- routes ---------------- */
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
@@ -494,8 +567,8 @@ async function handle(req, res) {
 
   /* --- protected pages (server-side guard) --- */
   if (req.method === 'GET') {
-    const target = p === '/dashboard' ? '/dashboard.html' : p === '/profile-setup' ? '/profile-setup.html' : p === '/post' ? '/post.html' : p === '/messages' ? '/messages.html' : p === '/notifications' ? '/notifications.html' : p === '/matches' ? '/matches.html' : p === '/verify' ? '/verify.html' : p === '/admin' ? '/admin.html' : p;
-    if ((target === '/dashboard.html' || target === '/profile-setup.html' || target === '/post.html' || target === '/messages.html' || target === '/notifications.html' || target === '/matches.html' || target === '/verify.html' || target === '/admin.html') && !getSession(req)) {
+    const target = p === '/dashboard' ? '/dashboard.html' : p === '/profile-setup' ? '/profile-setup.html' : p === '/post' ? '/post.html' : p === '/messages' ? '/messages.html' : p === '/notifications' ? '/notifications.html' : p === '/matches' ? '/matches.html' : p === '/verify' ? '/verify.html' : p === '/analytics' ? '/analytics.html' : p === '/admin' ? '/admin.html' : p;
+    if ((target === '/dashboard.html' || target === '/profile-setup.html' || target === '/post.html' || target === '/messages.html' || target === '/notifications.html' || target === '/matches.html' || target === '/verify.html' || target === '/analytics.html' || target === '/admin.html') && !getSession(req)) {
       res.writeHead(302, { Location: '/login?next=' + encodeURIComponent(target) });
       return res.end();
     }
@@ -526,7 +599,7 @@ async function handle(req, res) {
       });
       return;
     }
-    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications' || p === '/api/business' || p === '/api/conversations' || p.indexOf('/api/conversations/') === 0 || p === '/api/stream' || p.indexOf('/api/admin/') === 0 || p === '/api/matches' || p === '/api/saved' || p === '/api/verification-request') && req.method === 'GET')) {
+    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications' || p === '/api/business' || p === '/api/conversations' || p.indexOf('/api/conversations/') === 0 || p === '/api/stream' || p.indexOf('/api/admin/') === 0 || p === '/api/matches' || p === '/api/saved' || p === '/api/verification-request' || p === '/api/analytics' || p === '/api/posts/insights') && req.method === 'GET')) {
       return json(res, 405, { error: 'method' });
     }
     let body;
@@ -803,6 +876,8 @@ async function handle(req, res) {
       });
       list.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
       list = list.slice(0, 60);
+      const vk = viewerKey(req);
+      list.forEach(pt => trackView('post_view', pt.id, vk));
       return json(res, 200, { posts: list.map(publicPost) });
     }
 
@@ -861,6 +936,7 @@ async function handle(req, res) {
       if (!user) return json(res, 404, { error: 'not_found' });
       const sess = getSession(req);
       const viewerId = sess ? sess.userId : null;
+      trackView('profile_view', user.id, viewerKey(req));
       const posts = db.posts.filter(pt => pt.ownerId === user.id && (pt.status === 'open' || viewerId === user.id))
         .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || '')).slice(0, 20);
       return json(res, 200, { profile: publicBusinessProfile(user, viewerId), posts: posts.map(publicPost) });
@@ -1127,6 +1203,37 @@ async function handle(req, res) {
       db.saved = db.saved.filter(s => !(s.userId === sess.userId && s.postId === body.postId));
       save();
       return json(res, 200, { ok: true });
+    }
+
+    /* ---- analytics (owner only) ---- */
+    if (p === '/api/analytics' && req.method === 'GET') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const user = db.users.find(u => u.id === sess.userId);
+      if (!user) return json(res, 401, { error: 'no_session' });
+      const u2 = new URL(req.url, 'http://x');
+      const period = u2.searchParams.get('period') || '30';
+      return json(res, 200, { analytics: analyticsFor(user, period) });
+    }
+
+    if (p === '/api/posts/insights' && req.method === 'GET') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const u2 = new URL(req.url, 'http://x');
+      const postId = u2.searchParams.get('postId') || '';
+      const post = db.posts.find(pt => pt.id === postId);
+      if (!post) return json(res, 404, { error: 'post_not_found' });
+      if (post.ownerId !== sess.userId) return json(res, 403, { error: 'forbidden' });
+      const period = u2.searchParams.get('period') || 'all';
+      const days = period === '7' ? 7 : period === '30' ? 30 : period === '90' ? 90 : null;
+      const since = days ? Date.now() - days * 86400000 : 0;
+      const inP = iso => new Date(iso).getTime() >= since;
+      return json(res, 200, { insights: {
+        views: db.events.filter(e => e.type === 'post_view' && e.targetId === postId && inP(e.createdAt)).length,
+        quotes: db.quotes.filter(q => q.postId === postId && q.kind === 'quote' && inP(q.createdAt)).length,
+        requests: db.quotes.filter(q => q.postId === postId && q.kind === 'request' && inP(q.createdAt)).length,
+        saves: db.saved.filter(sv => sv.postId === postId && inP(sv.createdAt)).length
+      }});
     }
 
     /* ---- user reports (any logged-in user) ---- */
