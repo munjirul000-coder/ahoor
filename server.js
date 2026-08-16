@@ -534,7 +534,7 @@ async function handle(req, res) {
       if (!user) return json(res, 401, { error: 'no_session' });
       if (req.method !== 'POST') return json(res, 405, { error: 'method' });
       const { name, businessName, phone, district, category, description, image,
-        businessType, division, city, address, productsServices, moq, productionCapacity,
+        businessType, division, city, address, productsServices, buyProducts, typicalQty, moq, productionCapacity,
         employees, yearsInBusiness, businessPhone, businessEmail, website, facebook,
         phoneVisibility, emailVisibility } = body;
       if (name !== undefined) {
@@ -564,6 +564,8 @@ async function handle(req, res) {
       if (city !== undefined) user.city = String(city || '').trim().slice(0, 60);
       if (address !== undefined) user.address = String(address || '').trim().slice(0, 200);
       if (productsServices !== undefined) user.productsServices = String(productsServices || '').trim().slice(0, 500);
+      if (buyProducts !== undefined) user.buyProducts = String(buyProducts || '').trim().slice(0, 500);
+      if (typicalQty !== undefined) user.typicalQty = String(typicalQty || '').trim().slice(0, 60);
       if (moq !== undefined) user.moq = String(moq || '').trim().slice(0, 60);
       if (productionCapacity !== undefined) user.productionCapacity = String(productionCapacity || '').trim().slice(0, 60);
       if (employees !== undefined) user.employees = String(employees || '').trim().slice(0, 20);
@@ -868,6 +870,7 @@ function publicUser(u) {
     description: u.description || '', image: u.image || '', profileComplete: !!(u.businessName && u.district),
     businessType: u.businessType || '', division: u.division || '', city: u.city || '',
     address: u.address || '', productsServices: u.productsServices || '',
+    buyProducts: u.buyProducts || '', typicalQty: u.typicalQty || '',
     moq: u.moq || '', productionCapacity: u.productionCapacity || '',
     employees: u.employees || '', yearsInBusiness: u.yearsInBusiness || '',
     businessPhone: u.businessPhone || '', businessEmail: u.businessEmail || '',
@@ -882,6 +885,7 @@ function publicBusinessProfile(u, viewerId) {
     category: u.category || '', description: u.description || '', image: u.image || '',
     division: u.division || '', district: u.district || '', city: u.city || '',
     address: u.address || '', productsServices: u.productsServices || '',
+    buyProducts: u.buyProducts || '', typicalQty: u.typicalQty || '',
     moq: u.moq || '', productionCapacity: u.productionCapacity || '',
     employees: u.employees || '', yearsInBusiness: u.yearsInBusiness || '',
     website: u.website || '', facebook: u.facebook || '',

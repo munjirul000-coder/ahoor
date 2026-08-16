@@ -19,6 +19,7 @@ def signup(pg, name, email, phone, pw, role):
     pg.fill('#pw1', pw); pg.fill('#pw2', pw)
     pg.click('#btnS1'); pg.wait_for_timeout(1400)
     pg.click(f'.type-card[data-type="{role}"]'); pg.click('#btnS2'); pg.wait_for_timeout(1000)
+    pg.click('#btnBizNext'); pg.wait_for_timeout(1300)
     dev = pg.evaluate("document.getElementById('devNote').textContent")
     code = re.search(r'(\d{6})', dev).group(1)
     for i, c in enumerate(code):

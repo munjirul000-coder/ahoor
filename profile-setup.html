@@ -594,6 +594,17 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
       <input type="text" id="ppProducts" data-i18n-ph="bp.productsPh" placeholder="e.g. T-Shirts, Hoodies, Polo Shirts">
     </div>
 
+    <div class="grid2">
+      <div class="field">
+        <label class="flabel" data-i18n="su.buyProducts">What products do you usually want to buy?</label>
+        <input type="text" id="ppBuyProducts" data-i18n-ph="su.buyProductsPh" placeholder="e.g. Cotton T-Shirts, Yarn, Packaging">
+      </div>
+      <div class="field">
+        <label class="flabel" data-i18n="su.typicalQty">Typical required quantity</label>
+        <input type="text" id="ppTypicalQty" data-i18n-ph="su.typicalQtyPh" placeholder="e.g. 1,000 pcs">
+      </div>
+    </div>
+
     <div class="grid3">
       <div class="field">
         <label class="flabel" data-i18n="bp.moq">MOQ</label>
@@ -743,7 +754,27 @@ var D = {
  "su.typeBoth":["Both","দুটোই"],
  "su.typeBothD":["I want to both buy and sell through Ahoor.","আমি Ahoor-এর মাধ্যমে কিনতে এবং বিক্রি—দুটোই করতে চাই।"],
  "su.typeErr":["Please select an account type.","অনুগ্রহ করে অ্যাকাউন্টের ধরন নির্বাচন করুন।"],
- "su.s3l":["Step 3 of 3 — Verify","ধাপ ৩/৩ — যাচাই করুন"],
+ "su.s3l":["Step 3 of 4 — Business Info","ধাপ ৩/৪ — ব্যবসার তথ্য"],
+ "su.s4l":["Step 4 of 4 — Verify","ধাপ ৪/৪ — যাচাই করুন"],
+ "su.bizTitle":["Tell us about your business","আপনার ব্যবসা সম্পর্কে জানান"],
+ "su.bizSub":["You can edit these anytime from your business profile.","যেকোনো সময় বিজনেস প্রোফাইল থেকে এডিট করতে পারবেন।"],
+ "su.bizName":["Company / Business Name","কোম্পানি / ব্যবসার নাম"],
+ "su.bizNamePh":["e.g. Rahim Garments","যেমন: রহিম গার্মেন্টস"],
+ "su.buyerSec":["Buying Information","ক্রয় সংক্রান্ত তথ্য"],
+ "su.supplierSec":["Supplier / Manufacturing Information","সরবরাহ / উৎপাদন সংক্রান্ত তথ্য"],
+ "su.buyProducts":["What products do you usually want to buy?","আপনি সাধারণত কী কী পণ্য কিনে থাকেন?"],
+ "su.buyProductsPh":["e.g. Cotton T-Shirts, Yarn, Packaging","যেমন: কটন টি-শার্ট, সুতা, প্যাকেজিং"],
+ "su.supplyProducts":["What products do you make or supply?","আপনি কী কী পণ্য তৈরি করেন বা সরবরাহ করেন?"],
+ "su.supplyProductsPh":["e.g. T-Shirts, Hoodies, Polo Shirts","যেমন: টি-শার্ট, হুডি, পোলো শার্ট"],
+ "su.typicalQty":["Typical required quantity","সাধারণ প্রয়োজনীয় পরিমাণ"],
+ "su.typicalQtyPh":["e.g. 1,000 pcs","যেমন: ১,০০০ পিস"],
+ "su.moq":["Minimum Order Quantity (MOQ)","ন্যূনতম অর্ডার পরিমাণ (MOQ)"],
+ "su.moqPh":["e.g. 100 pcs","যেমন: ১০০ পিস"],
+ "su.category":["Product Category","পণ্যের ক্যাটাগরি"],
+ "su.location":["Location","অবস্থান"],
+ "su.bizSkip":["Skip for now — complete later","এখনই না — পরে সম্পূর্ণ করব"],
+ "bp.buyProducts":["Products usually bought","সাধারণত কেনা পণ্য"],
+ "bp.typicalQty":["Typical quantity","সাধারণ পরিমাণ"],
  "su.verifyTitle":["Verify Your Account","আপনার অ্যাকাউন্ট যাচাই করুন"],
  "su.verifySub":["We sent a 6-digit verification code to your email.","আপনার ইমেইলে ৬ সংখ্যার যাচাই কোড পাঠানো হয়েছে।"],
  "su.code":["Verification code","যাচাই কোড"],
@@ -1458,6 +1489,8 @@ applyLang();
     document.getElementById('ppCity').value = me.city || '';
     document.getElementById('ppAddr').value = me.address || '';
     document.getElementById('ppProducts').value = me.productsServices || '';
+    document.getElementById('ppBuyProducts').value = me.buyProducts || '';
+    document.getElementById('ppTypicalQty').value = me.typicalQty || '';
     document.getElementById('ppMoq').value = me.moq || '';
     document.getElementById('ppCapacity').value = me.productionCapacity || '';
     document.getElementById('ppEmployees').value = me.employees || '';
@@ -1531,6 +1564,8 @@ applyLang();
       city: document.getElementById('ppCity').value.trim(),
       address: document.getElementById('ppAddr').value.trim(),
       productsServices: document.getElementById('ppProducts').value.trim(),
+      buyProducts: document.getElementById('ppBuyProducts').value.trim(),
+      typicalQty: document.getElementById('ppTypicalQty').value.trim(),
       moq: document.getElementById('ppMoq').value.trim(),
       productionCapacity: document.getElementById('ppCapacity').value.trim(),
       employees: document.getElementById('ppEmployees').value.trim(),

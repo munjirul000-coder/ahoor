@@ -93,3 +93,13 @@ Push to GitHub → Deploy on Render (free tier):
 - **Marketplace cards**: business name links to public profile with logo, type, location
 - Business logo upload with preview (400KB limit, data-URI storage)
 - Fully bilingual (বাংলা/EN); 30/30 business E2E tests + full regression pass
+
+## Features (v4.1 — Role-based Signup Business Info)
+
+- After choosing Account Type during signup, a **Business Info step** shows role-specific fields:
+  - **Buyer**: company name, products you usually buy, product category, typical quantity, location
+  - **Supplier / Manufacturer**: company name, products you make/supply, category, MOQ, location
+  - **Both**: both buyer & supplier sections
+- All fields optional (Skip for now) — editable anytime from the Business Profile
+- Saved to profile: businessName, category, district, buyProducts, typicalQty, productsServices, moq
+- Public business page shows "Products usually bought" + "Typical quantity" when filled

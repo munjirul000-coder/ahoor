@@ -483,7 +483,8 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
     <div class="steps" aria-hidden="true">
       <span class="step-dot on" id="sd1"></span><span class="step-sep" id="ss1"></span>
       <span class="step-dot" id="sd2"></span><span class="step-sep" id="ss2"></span>
-      <span class="step-dot" id="sd3"></span>
+      <span class="step-dot" id="sd3"></span><span class="step-sep" id="ss3"></span>
+      <span class="step-dot" id="sd4"></span>
     </div>
 
     <div id="msgBox" class="msg" role="alert"></div>
@@ -576,8 +577,65 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
       </div>
     </div>
 
-    <!-- ===== STEP 3 : VERIFY ===== -->
-    <div id="step3" style="display:none">
+    <!-- ===== STEP 3 : BUSINESS INFO ===== -->
+    <div id="stepBiz" style="display:none">
+      <div class="auth-head" style="margin-bottom:16px">
+        <h1 style="font-size:1.3rem" data-i18n="su.bizTitle">Tell us about your business</h1>
+        <p data-i18n="su.bizSub">You can edit these anytime from your business profile.</p>
+      </div>
+      <div class="field">
+        <label class="flabel" data-i18n="su.bizName">Company / Business Name</label>
+        <input type="text" id="bizName" data-i18n-ph="su.bizNamePh" placeholder="e.g. Rahim Garments">
+      </div>
+
+      <div id="bizBuyerSec">
+        <div class="sec-title" style="margin:18px 0 12px"><span class="st-ic">🛒</span><span data-i18n="su.buyerSec">Buying Information</span></div>
+        <div class="field">
+          <label class="flabel" data-i18n="su.buyProducts">What products do you usually want to buy?</label>
+          <input type="text" id="bizBuyProducts" data-i18n-ph="su.buyProductsPh" placeholder="e.g. Cotton T-Shirts, Yarn, Packaging">
+        </div>
+        <div class="field">
+          <label class="flabel" data-i18n="su.typicalQty">Typical required quantity</label>
+          <input type="text" id="bizTypicalQty" data-i18n-ph="su.typicalQtyPh" placeholder="e.g. 1,000 pcs">
+        </div>
+      </div>
+
+      <div id="bizSupplierSec" style="display:none">
+        <div class="sec-title" style="margin:18px 0 12px"><span class="st-ic">🏭</span><span data-i18n="su.supplierSec">Supplier / Manufacturing Information</span></div>
+        <div class="field">
+          <label class="flabel" data-i18n="su.supplyProducts">What products do you make or supply?</label>
+          <input type="text" id="bizSupplyProducts" data-i18n-ph="su.supplyProductsPh" placeholder="e.g. T-Shirts, Hoodies, Polo Shirts">
+        </div>
+        <div class="field">
+          <label class="flabel" data-i18n="su.moq">Minimum Order Quantity (MOQ)</label>
+          <input type="text" id="bizMoq" data-i18n-ph="su.moqPh" placeholder="e.g. 100 pcs">
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="field">
+          <label class="flabel" data-i18n="su.category">Product Category</label>
+          <div class="select-wrap">
+            <select id="bizCat" data-fill="category"></select>
+          </div>
+        </div>
+        <div class="field">
+          <label class="flabel" data-i18n="su.location">Location</label>
+          <div class="select-wrap">
+            <select id="bizLoc" data-fill="district"></select>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary btn-block" id="btnBizNext">
+        <span class="spinner"></span><span class="btn-label" data-i18n="su.continue">Continue</span>
+      </button>
+      <button type="button" class="btn btn-ghost btn-block" id="btnBizSkip" style="margin-top:6px"><span data-i18n="su.bizSkip">Skip for now — complete later</span></button>
+      <button type="button" class="btn btn-ghost btn-block" id="btnBizBack" style="margin-top:4px"><span class="btn-label" data-i18n="su.back">Back</span></button>
+    </div>
+
+    <!-- ===== STEP 4 : VERIFY ===== -->
+    <div id="stepVerify" style="display:none">
       <div class="auth-head" style="margin-bottom:18px">
         <h1 style="font-size:1.3rem" data-i18n="su.verifyTitle">Verify Your Account</h1>
         <p id="verifySub" data-i18n="su.verifySub">We sent a 6-digit verification code to your email.</p>
@@ -686,7 +744,27 @@ var D = {
  "su.typeBoth":["Both","দুটোই"],
  "su.typeBothD":["I want to both buy and sell through Ahoor.","আমি Ahoor-এর মাধ্যমে কিনতে এবং বিক্রি—দুটোই করতে চাই।"],
  "su.typeErr":["Please select an account type.","অনুগ্রহ করে অ্যাকাউন্টের ধরন নির্বাচন করুন।"],
- "su.s3l":["Step 3 of 3 — Verify","ধাপ ৩/৩ — যাচাই করুন"],
+ "su.s3l":["Step 3 of 4 — Business Info","ধাপ ৩/৪ — ব্যবসার তথ্য"],
+ "su.s4l":["Step 4 of 4 — Verify","ধাপ ৪/৪ — যাচাই করুন"],
+ "su.bizTitle":["Tell us about your business","আপনার ব্যবসা সম্পর্কে জানান"],
+ "su.bizSub":["You can edit these anytime from your business profile.","যেকোনো সময় বিজনেস প্রোফাইল থেকে এডিট করতে পারবেন।"],
+ "su.bizName":["Company / Business Name","কোম্পানি / ব্যবসার নাম"],
+ "su.bizNamePh":["e.g. Rahim Garments","যেমন: রহিম গার্মেন্টস"],
+ "su.buyerSec":["Buying Information","ক্রয় সংক্রান্ত তথ্য"],
+ "su.supplierSec":["Supplier / Manufacturing Information","সরবরাহ / উৎপাদন সংক্রান্ত তথ্য"],
+ "su.buyProducts":["What products do you usually want to buy?","আপনি সাধারণত কী কী পণ্য কিনে থাকেন?"],
+ "su.buyProductsPh":["e.g. Cotton T-Shirts, Yarn, Packaging","যেমন: কটন টি-শার্ট, সুতা, প্যাকেজিং"],
+ "su.supplyProducts":["What products do you make or supply?","আপনি কী কী পণ্য তৈরি করেন বা সরবরাহ করেন?"],
+ "su.supplyProductsPh":["e.g. T-Shirts, Hoodies, Polo Shirts","যেমন: টি-শার্ট, হুডি, পোলো শার্ট"],
+ "su.typicalQty":["Typical required quantity","সাধারণ প্রয়োজনীয় পরিমাণ"],
+ "su.typicalQtyPh":["e.g. 1,000 pcs","যেমন: ১,০০০ পিস"],
+ "su.moq":["Minimum Order Quantity (MOQ)","ন্যূনতম অর্ডার পরিমাণ (MOQ)"],
+ "su.moqPh":["e.g. 100 pcs","যেমন: ১০০ পিস"],
+ "su.category":["Product Category","পণ্যের ক্যাটাগরি"],
+ "su.location":["Location","অবস্থান"],
+ "su.bizSkip":["Skip for now — complete later","এখনই না — পরে সম্পূর্ণ করব"],
+ "bp.buyProducts":["Products usually bought","সাধারণত কেনা পণ্য"],
+ "bp.typicalQty":["Typical quantity","সাধারণ পরিমাণ"],
  "su.verifyTitle":["Verify Your Account","আপনার অ্যাকাউন্ট যাচাই করুন"],
  "su.verifySub":["We sent a 6-digit verification code to your email.","আপনার ইমেইলে ৬ সংখ্যার যাচাই কোড পাঠানো হয়েছে।"],
  "su.code":["Verification code","যাচাই কোড"],
@@ -1382,19 +1460,41 @@ applyLang();
   var step = 1, accountType = null, userId = null;
 
   var msg = document.getElementById('msgBox');
-  var labels = { 1:'su.s1l', 2:'su.s2l', 3:'su.s3l' };
-  var dots = [document.getElementById('sd1'), document.getElementById('sd2'), document.getElementById('sd3')];
-  var seps = [document.getElementById('ss1'), document.getElementById('ss2')];
+  var labels = { 1:'su.s1l', 2:'su.s2l', 3:'su.s3l', 4:'su.s4l' };
+  var dots = [document.getElementById('sd1'), document.getElementById('sd2'), document.getElementById('sd3'), document.getElementById('sd4')];
+  var seps = [document.getElementById('ss1'), document.getElementById('ss2'), document.getElementById('ss3')];
 
   function renderStep(n){
     step = n;
     document.getElementById('step1').style.display = n===1 ? '' : 'none';
     document.getElementById('step2').style.display = n===2 ? '' : 'none';
-    document.getElementById('step3').style.display = n===3 ? '' : 'none';
+    document.getElementById('stepBiz').style.display = n===3 ? '' : 'none';
+    document.getElementById('stepVerify').style.display = n===4 ? '' : 'none';
     document.getElementById('stepLabel').innerHTML = A.t(labels[n]);
     dots.forEach(function(d, i){ d.className = 'step-dot' + (i < n ? ' done' : i===n-1 ? ' on' : ''); });
     seps.forEach(function(s, i){ s.className = 'step-sep' + (i < n-1 ? ' done' : ''); });
     A.hideMsg(msg);
+    if(n===3) showBizFields();
+  }
+
+  function showBizFields(){
+    var isBuyer = accountType === 'buyer' || accountType === 'both';
+    var isSupplier = accountType === 'supplier' || accountType === 'both';
+    document.getElementById('bizBuyerSec').style.display = isBuyer ? '' : 'none';
+    document.getElementById('bizSupplierSec').style.display = isSupplier ? '' : 'none';
+  }
+
+  function saveBizInfo(){
+    var body = {
+      businessName: document.getElementById('bizName').value.trim(),
+      category: document.getElementById('bizCat').value,
+      district: document.getElementById('bizLoc').value,
+      buyProducts: document.getElementById('bizBuyProducts').value.trim(),
+      typicalQty: document.getElementById('bizTypicalQty').value.trim(),
+      productsServices: document.getElementById('bizSupplyProducts').value.trim(),
+      moq: document.getElementById('bizMoq').value.trim()
+    };
+    return A.api('/api/profile', body);
   }
 
   /* ---------- step 1 ---------- */
@@ -1451,10 +1551,36 @@ applyLang();
     A.setLoading(btn, true);
     A.api('/api/type', { type:accountType }).then(function(r){
       A.setLoading(btn, false);
-      if(r.status===200){ renderStep(3); initVerify(); }
+      if(r.status===200){ renderStep(3); }
       else A.showMsg(msg,'error', A.errMsg(r.data.error));
     });
   });
+
+  /* step 3: business info -> save & continue, or skip */
+  A.fillSelect(document.getElementById('bizCat'), A.AhoorData.categories, '');
+  A.fillSelect(document.getElementById('bizLoc'), A.AhoorData.districts, '');
+  (function(){
+    var cat = document.getElementById('bizCat');
+    var o1 = document.createElement('option'); o1.value=''; o1.textContent = A.t('pt.selCat'); cat.prepend(o1); cat.value='';
+    var loc = document.getElementById('bizLoc');
+    var o2 = document.createElement('option'); o2.value=''; o2.textContent = A.t('pt.selLoc'); loc.prepend(o2); loc.value='';
+  })();
+  function goVerify(){
+    renderStep(4);
+    initVerify();
+  }
+  document.getElementById('btnBizNext').addEventListener('click', function(){
+    var btn = this;
+    A.setLoading(btn, true);
+    saveBizInfo().then(function(r){
+      A.setLoading(btn, false);
+      if(r.status===200){ goVerify(); }
+      else if(r.status===401){ location.href='/login.html?next=/signup.html'; }
+      else { A.showMsg(msg,'error', A.errMsg(r.data.error)); }
+    });
+  });
+  document.getElementById('btnBizSkip').addEventListener('click', goVerify);
+  document.getElementById('btnBizBack').addEventListener('click', function(){ renderStep(2); });
 
   /* ---------- step 3 ---------- */
   var otpInputs = [], verifyInit = false, verifyTimer = null;
@@ -1467,7 +1593,7 @@ applyLang();
       document.getElementById('otpRow').appendChild(inp);
     }
     A.initOtp(otpInputs, function(code){ doVerify(code); });
-    document.getElementById('btnS3back').addEventListener('click', function(){ renderStep(2); });
+    document.getElementById('btnS3back').addEventListener('click', function(){ renderStep(3); });
     document.getElementById('btnS3').addEventListener('click', function(){
       doVerify(otpInputs.map(function(x){return x.value;}).join(''));
     });
@@ -1499,7 +1625,7 @@ applyLang();
     A.api('/api/verify-code', { purpose:'signup', code:code }).then(function(r){
       A.setLoading(btn, false);
       if(r.status===200){
-        document.getElementById('step3').style.display='none';
+        document.getElementById('stepVerify').style.display='none';
         document.getElementById('stepDone').style.display='';
         setTimeout(function(){ location.href='/profile-setup.html'; }, 1900);
       } else {
@@ -1515,7 +1641,7 @@ applyLang();
     if(r.status===200){
       var u=r.data.user;
       if(u && u.status==='pending'){
-        userId=u.id; renderStep(3); initVerify();
+        userId=u.id; renderStep(4); initVerify();
       }
     }
   });

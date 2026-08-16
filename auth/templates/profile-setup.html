@@ -170,6 +170,17 @@ __CSS__
       <input type="text" id="ppProducts" data-i18n-ph="bp.productsPh" placeholder="e.g. T-Shirts, Hoodies, Polo Shirts">
     </div>
 
+    <div class="grid2">
+      <div class="field">
+        <label class="flabel" data-i18n="su.buyProducts">What products do you usually want to buy?</label>
+        <input type="text" id="ppBuyProducts" data-i18n-ph="su.buyProductsPh" placeholder="e.g. Cotton T-Shirts, Yarn, Packaging">
+      </div>
+      <div class="field">
+        <label class="flabel" data-i18n="su.typicalQty">Typical required quantity</label>
+        <input type="text" id="ppTypicalQty" data-i18n-ph="su.typicalQtyPh" placeholder="e.g. 1,000 pcs">
+      </div>
+    </div>
+
     <div class="grid3">
       <div class="field">
         <label class="flabel" data-i18n="bp.moq">MOQ</label>
@@ -274,6 +285,8 @@ __JS__
     document.getElementById('ppCity').value = me.city || '';
     document.getElementById('ppAddr').value = me.address || '';
     document.getElementById('ppProducts').value = me.productsServices || '';
+    document.getElementById('ppBuyProducts').value = me.buyProducts || '';
+    document.getElementById('ppTypicalQty').value = me.typicalQty || '';
     document.getElementById('ppMoq').value = me.moq || '';
     document.getElementById('ppCapacity').value = me.productionCapacity || '';
     document.getElementById('ppEmployees').value = me.employees || '';
@@ -347,6 +360,8 @@ __JS__
       city: document.getElementById('ppCity').value.trim(),
       address: document.getElementById('ppAddr').value.trim(),
       productsServices: document.getElementById('ppProducts').value.trim(),
+      buyProducts: document.getElementById('ppBuyProducts').value.trim(),
+      typicalQty: document.getElementById('ppTypicalQty').value.trim(),
       moq: document.getElementById('ppMoq').value.trim(),
       productionCapacity: document.getElementById('ppCapacity').value.trim(),
       employees: document.getElementById('ppEmployees').value.trim(),
