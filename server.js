@@ -352,9 +352,14 @@ function validatePhone(p) {
   return PHONE_RE.test(digits) ? null : 'phone';
 }
 
+/* Owner/admin emails: ADMIN_EMAIL env takes precedence; fallback list
+   guarantees the site owner's account is always admin even when the env
+   variable has not been applied to the hosting platform yet. */
+const OWNER_ADMIN_EMAILS = ['munjirul000@gmail.com'];
 function isAdminEmail(email) {
-  const adminEmail = (process.env.ADMIN_EMAIL || '').toLowerCase();
-  return !!adminEmail && !!email && String(email).toLowerCase() === adminEmail;
+  const list = [process.env.ADMIN_EMAIL || ''].concat(OWNER_ADMIN_EMAILS)
+    .map(e => String(e).toLowerCase()).filter(Boolean);
+  return !!email && list.includes(String(email).toLowerCase());
 }
 
 function requireAdmin(req, res) {
