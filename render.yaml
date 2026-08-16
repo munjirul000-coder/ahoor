@@ -12,4 +12,4 @@ services:
       - key: SHOW_CODES
         value: "1"
       - key: ADMIN_EMAIL
-        value: "admin@ahoor.com"
+        value: "munjirul000@gmail.com"
