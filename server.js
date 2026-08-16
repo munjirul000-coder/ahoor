@@ -352,11 +352,18 @@ function validatePhone(p) {
   return PHONE_RE.test(digits) ? null : 'phone';
 }
 
+function isAdminEmail(email) {
+  const adminEmail = (process.env.ADMIN_EMAIL || '').toLowerCase();
+  return !!adminEmail && !!email && String(email).toLowerCase() === adminEmail;
+}
+
 function requireAdmin(req, res) {
   const sess = getSession(req);
   if (!sess) { json(res, 401, { error: 'no_session' }); return null; }
   const user = db.users.find(u => u.id === sess.userId);
-  if (!user || user.role !== 'admin') { json(res, 403, { error: 'forbidden' }); return null; }
+  if (!user) { json(res, 403, { error: 'forbidden' }); return null; }
+  const isAdmin = user.role === 'admin' || isAdminEmail(user.email);
+  if (!isAdmin) { json(res, 403, { error: 'forbidden' }); return null; }
   if (user.accountStatus !== 'active') { json(res, 403, { error: 'forbidden' }); return null; }
   return user;
 }
@@ -386,7 +393,7 @@ async function handle(req, res) {
     if (target === '/admin.html') {
       const sess = getSession(req);
       const user = sess && db.users.find(u => u.id === sess.userId);
-      if (!user || user.role !== 'admin') {
+      if (!user || (user.role !== 'admin' && !isAdminEmail(user.email))) {
         res.writeHead(302, { Location: '/dashboard.html' });
         return res.end();
       }
@@ -1222,7 +1229,7 @@ function publicUser(u) {
     website: u.website || '', facebook: u.facebook || '',
     phoneVisibility: u.phoneVisibility || 'members', emailVisibility: u.emailVisibility || 'members',
     verificationStatus: u.verificationStatus || 'unverified', completionPercent: profileCompletion(u),
-    role: u.role || 'user', accountStatus: u.accountStatus || 'active'
+    role: (u.role === 'admin' || isAdminEmail(u.email)) ? 'admin' : 'user', accountStatus: u.accountStatus || 'active'
   };
 }
 function publicBusinessProfile(u, viewerId) {
