@@ -281,6 +281,14 @@ async function sendCode(target, channel, toEmail) {
     channel
   };
   save();
+  // Always show the code on screen (labelled demo mode) when SHOW_CODES is on,
+  // and fire the email in parallel — the user never waits or misses the code.
+  if (SHOW_CODES) {
+    sendCodeEmail(toEmail, code).then(ok => {
+      console.log(`[Ahoor] ${channel} code ${code} emailed: ${ok ? 'yes' : 'no (shown on screen)'}`);
+    }).catch(() => {});
+    return { ok: true, code, expiresIn: 600 };
+  }
   let emailed = false;
   try {
     emailed = await Promise.race([
@@ -289,7 +297,7 @@ async function sendCode(target, channel, toEmail) {
     ]);
   } catch (e) { emailed = false; }
   console.log(`[Ahoor] ${channel} code for ${target}: ${code} (email: ${emailed ? 'sent' : 'skipped/fallback'})`);
-  return { ok: true, code: emailed ? null : (SHOW_CODES ? code : null), expiresIn: 600 };
+  return { ok: true, code: emailed ? null : code, expiresIn: 600 };
 }
 function checkCode(target, code) {
   const e = db.codes['code:' + target];
