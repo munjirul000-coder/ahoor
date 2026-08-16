@@ -353,6 +353,8 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 .mp-empty-login{margin-top:10px;font-size:.8rem;color:#A6B1C7}
 .mp-err{text-align:center;padding:44px 16px;color:#B42318;grid-column:1/-1}
 .mp-err p{margin-bottom:16px;font-size:.92rem}
+/* nav link rows (marketplace + suppliers/opportunities listing pages) collapse on mobile */
+@media(max-width:700px){.mp-navlinks{display:none!important}}
 /* footer link rows on auth/marketplace pages */
 .auth-foot .flinks{display:flex;justify-content:center;gap:18px;margin-top:10px;flex-wrap:wrap}
 .auth-foot .flinks a{color:#8A95AC;text-decoration:none;font-size:.8rem;transition:color .15s}
@@ -584,16 +586,16 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 <main class="auth-main">
   <div class="auth-card info-card">
     <h1 data-i18n="about.title">About</h1>
-    <about.lead data-i18n="p"></about.lead>
-    <about.updated data-i18n="p"></about.updated>
-<about.h1 data-i18n="h2"></about.h1>
-    <about.p1 data-i18n="p"></about.p1>
-    <about.h2 data-i18n="h2"></about.h2>
-    <about.p2 data-i18n="p"></about.p2>
-    <about.h3 data-i18n="h2"></about.h3>
-    <about.p3 data-i18n="p"></about.p3>
-    <about.h4 data-i18n="h2"></about.h4>
-    <about.p4 data-i18n="p"></about.p4>
+    <p class="lead" data-i18n="about.lead"></p>
+    <p class="updated" data-i18n="about.updated"></p>
+    <h2 data-i18n="about.h1">Who we are</h2>
+    <p data-i18n="about.p1">Ahoor helps Bangladeshi businesses find each other. Buyers post what they need; suppliers and manufacturers post what they offer. Our smart matching surfaces the right opportunities to the right businesses — without endless searching.</p>
+    <h2 data-i18n="about.h2">What we do</h2>
+    <p data-i18n="about.p2">Businesses on Ahoor can post requirements and offers, receive and compare quotations, chat directly with potential partners, get matched with relevant opportunities, and track their performance through business analytics.</p>
+    <h2 data-i18n="about.h3">Who it's for</h2>
+    <p data-i18n="about.p3">Ahoor is for manufacturers, suppliers, wholesalers, exporters, importers, and bulk buyers across Bangladesh — from textiles and garments to agro products, jute, leather, packaging, and more.</p>
+    <h2 data-i18n="about.h4">Contact us</h2>
+    <p data-i18n="about.p4">Questions or feedback? Reach us through the contact page — or sign in and use in-app messaging to talk to any business on the platform.</p>
   </div>
 </main>
 
@@ -1251,8 +1253,13 @@ for (var k in Q_EXT) { D[k] = Q_EXT[k]; }
 
 /* ---------------- marketplace dictionary extension ---------------- */
 var EXT = {
+ "nav.home":["Home","হোম"],
+ "nav.join":["Join Ahoor","Ahoor-এ যোগ দিন"],
  "nav.market":["Marketplace","মার্কেটপ্লেস"],
  "nav.dash":["Dashboard","ড্যাশবোর্ড"],
+ "bp.sub":["Help the right businesses find you.","সঠিক ব্যবসাগুলো যেন আপনাকে খুঁজে পায়, তা নিশ্চিত করুন।"],
+ "qt.status":["Status","স্ট্যাটাস"],
+ "ad.search":["Search","খুঁজুন"],
  "mp.title":["Ahoor Marketplace","Ahoor মার্কেটপ্লেস"],
  "mp.sub":["Buyer requirements & supplier offers across Bangladesh","সারাদেশের ক্রেতার প্রয়োজন ও সরবরাহকারীর অফার"],
  "mp.tabAll":["All","সব"],

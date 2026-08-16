@@ -638,8 +638,13 @@ for (var k in Q_EXT) { D[k] = Q_EXT[k]; }
 
 /* ---------------- marketplace dictionary extension ---------------- */
 var EXT = {
+ "nav.home":["Home","হোম"],
+ "nav.join":["Join Ahoor","Ahoor-এ যোগ দিন"],
  "nav.market":["Marketplace","মার্কেটপ্লেস"],
  "nav.dash":["Dashboard","ড্যাশবোর্ড"],
+ "bp.sub":["Help the right businesses find you.","সঠিক ব্যবসাগুলো যেন আপনাকে খুঁজে পায়, তা নিশ্চিত করুন।"],
+ "qt.status":["Status","স্ট্যাটাস"],
+ "ad.search":["Search","খুঁজুন"],
  "mp.title":["Ahoor Marketplace","Ahoor মার্কেটপ্লেস"],
  "mp.sub":["Buyer requirements & supplier offers across Bangladesh","সারাদেশের ক্রেতার প্রয়োজন ও সরবরাহকারীর অফার"],
  "mp.tabAll":["All","সব"],

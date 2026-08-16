@@ -339,6 +339,8 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 .mp-empty-login{margin-top:10px;font-size:.8rem;color:#A6B1C7}
 .mp-err{text-align:center;padding:44px 16px;color:#B42318;grid-column:1/-1}
 .mp-err p{margin-bottom:16px;font-size:.92rem}
+/* nav link rows (marketplace + suppliers/opportunities listing pages) collapse on mobile */
+@media(max-width:700px){.mp-navlinks{display:none!important}}
 /* footer link rows on auth/marketplace pages */
 .auth-foot .flinks{display:flex;justify-content:center;gap:18px;margin-top:10px;flex-wrap:wrap}
 .auth-foot .flinks a{color:#8A95AC;text-decoration:none;font-size:.8rem;transition:color .15s}

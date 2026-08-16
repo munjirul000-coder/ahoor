@@ -353,6 +353,8 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 .mp-empty-login{margin-top:10px;font-size:.8rem;color:#A6B1C7}
 .mp-err{text-align:center;padding:44px 16px;color:#B42318;grid-column:1/-1}
 .mp-err p{margin-bottom:16px;font-size:.92rem}
+/* nav link rows (marketplace + suppliers/opportunities listing pages) collapse on mobile */
+@media(max-width:700px){.mp-navlinks{display:none!important}}
 /* footer link rows on auth/marketplace pages */
 .auth-foot .flinks{display:flex;justify-content:center;gap:18px;margin-top:10px;flex-wrap:wrap}
 .auth-foot .flinks a{color:#8A95AC;text-decoration:none;font-size:.8rem;transition:color .15s}
@@ -584,14 +586,14 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 <main class="auth-main">
   <div class="auth-card info-card">
     <h1 data-i18n="contact.title">Contact</h1>
-    <contact.lead data-i18n="p"></contact.lead>
-    <contact.updated data-i18n="p"></contact.updated>
-<contact.h1 data-i18n="h2"></contact.h1>
-    <contact.p1 data-i18n="p"></contact.p1>
-    <contact.h2 data-i18n="h2"></contact.h2>
-    <contact.p2 data-i18n="p"></contact.p2>
-    <contact.h3 data-i18n="h2"></contact.h3>
-    <contact.p3 data-i18n="p"></contact.p3>
+    <p class="lead" data-i18n="contact.lead"></p>
+    <p class="updated" data-i18n="contact.updated"></p>
+    <h2 data-i18n="contact.h1">Email</h2>
+    <p data-i18n="contact.p1">For general questions and support, email us at munjirul000@gmail.com.</p>
+    <h2 data-i18n="contact.h2">Report a problem</h2>
+    <p data-i18n="contact.p2">See something wrong on the platform — a suspicious post, an unfair quotation, or a bug? Sign in and use the Report option on any post or business profile.</p>
+    <h2 data-i18n="contact.h3">Response time</h2>
+    <p data-i18n="contact.p3">We typically respond within 1–2 business days.</p>
   </div>
 </main>
 
@@ -1249,8 +1251,13 @@ for (var k in Q_EXT) { D[k] = Q_EXT[k]; }
 
 /* ---------------- marketplace dictionary extension ---------------- */
 var EXT = {
+ "nav.home":["Home","হোম"],
+ "nav.join":["Join Ahoor","Ahoor-এ যোগ দিন"],
  "nav.market":["Marketplace","মার্কেটপ্লেস"],
  "nav.dash":["Dashboard","ড্যাশবোর্ড"],
+ "bp.sub":["Help the right businesses find you.","সঠিক ব্যবসাগুলো যেন আপনাকে খুঁজে পায়, তা নিশ্চিত করুন।"],
+ "qt.status":["Status","স্ট্যাটাস"],
+ "ad.search":["Search","খুঁজুন"],
  "mp.title":["Ahoor Marketplace","Ahoor মার্কেটপ্লেস"],
  "mp.sub":["Buyer requirements & supplier offers across Bangladesh","সারাদেশের ক্রেতার প্রয়োজন ও সরবরাহকারীর অফার"],
  "mp.tabAll":["All","সব"],

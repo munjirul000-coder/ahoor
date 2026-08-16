@@ -599,7 +599,7 @@ async function handle(req, res) {
       });
       return;
     }
-    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications' || p === '/api/business' || p === '/api/conversations' || p.indexOf('/api/conversations/') === 0 || p === '/api/stream' || p.indexOf('/api/admin/') === 0 || p === '/api/matches' || p === '/api/saved' || p === '/api/verification-request' || p === '/api/analytics' || p === '/api/posts/insights' || p === '/api/quotes/received' || p === '/api/quotes/sent') && req.method === 'GET')) {
+    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications' || p === '/api/business' || p === '/api/conversations' || p.indexOf('/api/conversations/') === 0 || p === '/api/stream' || p.indexOf('/api/admin/') === 0 || p === '/api/matches' || p === '/api/saved' || p === '/api/verification-request' || p === '/api/analytics' || p === '/api/posts/insights' || p === '/api/quotes/received' || p === '/api/quotes/sent' || p === '/api/logout') && req.method === 'GET')) {
       return json(res, 405, { error: 'method' });
     }
     let body;
@@ -657,6 +657,8 @@ async function handle(req, res) {
     /* logout */
     if (p === '/api/logout') {
       destroySession(req);
+      // expire the session cookie client-side so no stale token lingers
+      res.setHeader('Set-Cookie', 'ahoor_sid=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0');
       res.writeHead(302, { Location: '/login.html' });
       return res.end();
     }

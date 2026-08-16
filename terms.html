@@ -353,6 +353,8 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 .mp-empty-login{margin-top:10px;font-size:.8rem;color:#A6B1C7}
 .mp-err{text-align:center;padding:44px 16px;color:#B42318;grid-column:1/-1}
 .mp-err p{margin-bottom:16px;font-size:.92rem}
+/* nav link rows (marketplace + suppliers/opportunities listing pages) collapse on mobile */
+@media(max-width:700px){.mp-navlinks{display:none!important}}
 /* footer link rows on auth/marketplace pages */
 .auth-foot .flinks{display:flex;justify-content:center;gap:18px;margin-top:10px;flex-wrap:wrap}
 .auth-foot .flinks a{color:#8A95AC;text-decoration:none;font-size:.8rem;transition:color .15s}
@@ -584,20 +586,20 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 <main class="auth-main">
   <div class="auth-card info-card">
     <h1 data-i18n="terms.title">Terms of Service</h1>
-    <terms.lead data-i18n="p"></terms.lead>
-    <terms.updated data-i18n="p"></terms.updated>
-<terms.h1 data-i18n="h2"></terms.h1>
-    <terms.p1 data-i18n="p"></terms.p1>
-    <terms.h2 data-i18n="h2"></terms.h2>
-    <terms.p2 data-i18n="p"></terms.p2>
-    <terms.h3 data-i18n="h2"></terms.h3>
-    <terms.p3 data-i18n="p"></terms.p3>
-    <terms.h4 data-i18n="h2"></terms.h4>
-    <terms.p4 data-i18n="p"></terms.p4>
-    <terms.h5 data-i18n="h2"></terms.h5>
-    <terms.p5 data-i18n="p"></terms.p5>
-    <terms.h6 data-i18n="h2"></terms.h6>
-    <terms.p6 data-i18n="p"></terms.p6>
+    <p class="lead" data-i18n="terms.lead"></p>
+    <p class="updated" data-i18n="terms.updated"></p>
+    <h2 data-i18n="terms.h1">Using the platform</h2>
+    <p data-i18n="terms.p1">Ahoor connects buyers and suppliers in Bangladesh. We provide the venue; the actual business dealings, negotiations, and payments happen between the parties themselves. Always verify the credibility of your business partners before entering into any agreement.</p>
+    <h2 data-i18n="terms.h2">Accounts</h2>
+    <p data-i18n="terms.p2">You must provide accurate information when creating an account. You are responsible for keeping your login credentials safe and for everything done from your account.</p>
+    <h2 data-i18n="terms.h3">Acceptable use</h2>
+    <p data-i18n="terms.p3">Do not post false or misleading business information, send spam, harass other members, or use the platform for anything unlawful. Posts, quotations, and messages should represent genuine business intent.</p>
+    <h2 data-i18n="terms.h4">Reporting</h2>
+    <p data-i18n="terms.p4">If you see a violation, report it through the Report option on the platform. We review reports and may suspend accounts that violate these terms.</p>
+    <h2 data-i18n="terms.h5">Liability</h2>
+    <p data-i18n="terms.p5">Ahoor is provided as-is. To the extent permitted by law, we are not liable for losses arising from transactions, communications, or decisions made between businesses on the platform.</p>
+    <h2 data-i18n="terms.h6">Changes</h2>
+    <p data-i18n="terms.p6">We may update these terms as the platform grows. The latest version will always be available on this page.</p>
   </div>
 </main>
 
@@ -1255,8 +1257,13 @@ for (var k in Q_EXT) { D[k] = Q_EXT[k]; }
 
 /* ---------------- marketplace dictionary extension ---------------- */
 var EXT = {
+ "nav.home":["Home","হোম"],
+ "nav.join":["Join Ahoor","Ahoor-এ যোগ দিন"],
  "nav.market":["Marketplace","মার্কেটপ্লেস"],
  "nav.dash":["Dashboard","ড্যাশবোর্ড"],
+ "bp.sub":["Help the right businesses find you.","সঠিক ব্যবসাগুলো যেন আপনাকে খুঁজে পায়, তা নিশ্চিত করুন।"],
+ "qt.status":["Status","স্ট্যাটাস"],
+ "ad.search":["Search","খুঁজুন"],
  "mp.title":["Ahoor Marketplace","Ahoor মার্কেটপ্লেস"],
  "mp.sub":["Buyer requirements & supplier offers across Bangladesh","সারাদেশের ক্রেতার প্রয়োজন ও সরবরাহকারীর অফার"],
  "mp.tabAll":["All","সব"],
