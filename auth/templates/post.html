@@ -63,6 +63,11 @@ __CSS__
 
     <div class="msg" id="ptMsg"></div>
 
+    <div class="warn-strip" id="ptBanner" style="display:none">
+      <span>💡</span>
+      <span><span data-i18n="bp.postBanner">Tip: complete your business profile to increase trust before posting.</span> <a href="/profile-setup.html" data-i18n="bp.edit">Edit Business Profile</a></span>
+    </div>
+
     <div id="ptForm">
       <div class="kind-toggle">
         <button type="button" class="kind-card on" data-kind="buyer">
@@ -170,6 +175,8 @@ __JS__
   A.api('/api/session').then(function(r){
     if(!r.data || !r.data.user){ location.href = '/login.html?next=' + encodeURIComponent(location.pathname + location.search); return; }
     me = r.data.user;
+    var comp = me.completionPercent != null ? me.completionPercent : 0;
+    if(comp < 60) document.getElementById('ptBanner').style.display = '';
     if(editId) loadPost();
   });
 

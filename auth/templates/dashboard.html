@@ -71,13 +71,22 @@ __CSS__
         </div>
       </div>
 
-      <div class="profile-summary" id="profileSum">
+      <div class="profile-summary" id="profileSum" style="align-items:flex-start">
         <span class="ps-av" id="psAv">A</span>
-        <div class="ps-info">
+        <div class="ps-info" style="flex:1">
           <b id="psBiz">—</b>
           <span id="psMeta"></span>
+          <div style="margin-top:9px;max-width:300px">
+            <div class="comp-head" style="font-size:.7rem;font-weight:700;color:#1E4FD8;display:flex;justify-content:space-between;margin-bottom:5px">
+              <span data-i18n="bp.complete">Profile Completion</span><b id="dashCompPct">0%</b>
+            </div>
+            <div class="comp-bar" style="height:6px"><i id="dashCompFill" style="display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#5B8CFF,#2F6BFF);width:0%;transition:width .5s"></i></div>
+          </div>
         </div>
-        <a class="btn btn-outline btn-sm" href="/profile-setup.html"><span data-i18n="db.profile">My Profile</span></a>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <a class="btn btn-primary btn-sm" href="/profile-setup.html"><span data-i18n="bp.edit">Edit Business Profile</span></a>
+          <a class="btn btn-outline btn-sm" id="viewBiz" href="/business.html?id="><span data-i18n="bp.viewPublic">View Public Profile</span></a>
+        </div>
       </div>
 
       <div class="dash-quick">
@@ -152,6 +161,10 @@ __JS__
     var psAv = document.getElementById('psAv');
     if(user.image){ psAv.innerHTML = '<img src="' + user.image + '" alt="">'; } else { psAv.textContent = initial; }
     document.getElementById('psBiz').textContent = user.businessName || user.name;
+    var comp = user.completionPercent != null ? user.completionPercent : 0;
+    document.getElementById('dashCompFill').style.width = comp + '%';
+    document.getElementById('dashCompPct').textContent = comp + '%';
+    document.getElementById('viewBiz').href = '/business.html?id=' + user.id;
     var parts = [];
     if(user.district) parts.push(A.locName(A.AhoorData.districts, user.district));
     if(user.category) parts.push(A.locName(A.AhoorData.categories, user.category));

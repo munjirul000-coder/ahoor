@@ -83,3 +83,13 @@ Push to GitHub → Deploy on Render (free tier):
 - **In-app notifications**: new quote/request received, accepted, rejected — unread bell with count, mark-all-read, 30s polling (no email yet)
 - **Security**: role gating (supplier/both ↔ buyer/both), duplicate & closed-post prevention, ownership checks on every action
 - All new UI fully bilingual (বাংলা/EN)
+
+## Features (v4 — Business Profile System)
+
+- **Full business profile editor** (`/profile-setup.html`): business type (Manufacturer/Supplier/Wholesaler/Buyer/Exporter/Importer/Service/Other), division (8) + district (64) + city + address, products/services, MOQ, production capacity, employees, years in business, business phone/email, website, Facebook
+- **Privacy controls**: phone & email visibility — Public / Only logged-in users / Hidden (enforced server-side)
+- **Public business profile page** (`/business.html?id=...`): logo, name, type, location, verification status, about, business details, active opportunities, contact per privacy; Edit button only for owner
+- **Profile completion %**: live bar in editor + dashboard card, friendly suggestion; post page shows tip banner when <60%
+- **Marketplace cards**: business name links to public profile with logo, type, location
+- Business logo upload with preview (400KB limit, data-URI storage)
+- Fully bilingual (বাংলা/EN); 30/30 business E2E tests + full regression pass

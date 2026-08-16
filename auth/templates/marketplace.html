@@ -224,6 +224,12 @@ __JS__
       .catch(function(){ loadEl.textContent = A.t('err.network'); });
   }
 
+  function bizTypeShort(owner){
+    if(!owner || !owner.businessType) return '';
+    var t = A.AhoorData.businessTypes.find(function(x){ return x[0] === owner.businessType; });
+    if(!t) return owner.businessType;
+    return A.LANG === 'bn' ? t[1] : (A.AhoorData.businessTypeNames[owner.businessType] || owner.businessType);
+  }
   function card(p){
     var el = document.createElement('article');
     el.className = 'post-card';
@@ -253,7 +259,10 @@ __JS__
       (p.desc ? '<p class="post-desc">' + A.esc(p.desc) + '</p>' : '') +
       '<div class="post-owner">' +
         '<span class="po-av">' + (p.owner && p.owner.image ? '<img src="' + p.owner.image + '" alt="">' : (biz ? A.esc(biz.charAt(0).toUpperCase()) : '?')) + '</span>' +
-        '<span class="po-info"><b>' + A.esc(biz) + '</b>' + A.t('mp.postedOn') + ': ' + dateTxt + '</span>' +
+        '<span class="po-info"><a href="/business.html?id=' + (p.owner ? p.owner.id : '') + '" style="color:inherit;text-decoration:none"><b style="color:#2F6BFF">' + A.esc(biz) + '</b></a>' +
+          '<span>' + bizTypeShort(p.owner) + (p.owner && p.owner.district ? ' · ' + A.locName(A.AhoorData.districts, p.owner.district) : '') + '</span>' +
+          '<span>' + A.t('mp.postedOn') + ': ' + dateTxt + '</span>' +
+        '</span>' +
       '</div>' +
       btn;
     el.querySelector('[data-quote]').addEventListener('click', function(){ openQuote(p); });

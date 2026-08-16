@@ -10,7 +10,7 @@ def check(name, cond, extra=''):
 def fresh(prefix):
     return f"{prefix}{int(time.time())}{random.randint(10,99)}"
 def bd_phone(prefix):
-    return f"{prefix}{int(time.time()) % 10000000:08d}"
+    return f"{prefix}{random.randint(10,99)}{int(time.time()) % 1000000:06d}"
 
 def signup(pg, name, email, phone, pw, role):
     pg.goto(BASE + '/signup.html', wait_until='domcontentloaded'); pg.wait_for_timeout(600)
@@ -29,7 +29,7 @@ def signup(pg, name, email, phone, pw, role):
 def fill_profile(pg, name, biz, phone, dist, cat, desc):
     pg.goto(BASE + '/profile-setup.html', wait_until='domcontentloaded'); pg.wait_for_timeout(900)
     pg.fill('#ppName', name); pg.fill('#ppBiz', biz)
-    pg.fill('#ppPhone', phone)
+    pg.fill('#ppBizPhone', phone)
     pg.select_option('#ppDistrict', dist); pg.select_option('#ppCat', cat)
     pg.fill('#ppDesc', desc)
     pg.click('#ppSave'); pg.wait_for_timeout(2000)

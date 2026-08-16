@@ -439,15 +439,25 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
 @media(max-width:520px){.grid2{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 14px}
+@media(max-width:600px){.grid3{grid-template-columns:1fr}}
 .pp-role{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:20px}
 .pp-role button{display:flex;flex-direction:column;gap:5px;align-items:center;text-align:center;background:#FBFCFE;border:1.5px solid #E4E9F2;border-radius:14px;padding:13px 8px;cursor:pointer;font-family:inherit;transition:all .25s}
 .pp-role button .ri{font-size:1.25rem}
 .pp-role button b{font-size:.82rem;font-weight:750;color:#101828}
 .pp-role button.on{border-color:#2F6BFF;background:#F2F6FF;box-shadow:0 0 0 3px rgba(47,107,255,.1)}
 @media(max-width:420px){.pp-role{grid-template-columns:1fr}}
+.sec-title{display:flex;align-items:center;gap:9px;font-size:.92rem;font-weight:800;color:#101828;margin:26px 0 14px;padding-top:18px;border-top:1px solid #EDF0F6}
+.sec-title:first-of-type{border-top:none;margin-top:0;padding-top:0}
+.sec-title .st-ic{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:#EBF1FF;color:#2F6BFF;font-size:.9rem;flex-shrink:0}
+.comp-wrap{background:#F4F8FF;border:1.5px dashed #9DBDFF;border-radius:14px;padding:14px 16px;margin-bottom:22px}
+.comp-head{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:650;color:#1E4FD8;margin-bottom:8px}
+.comp-bar{height:8px;border-radius:99px;background:#DCE6FB;overflow:hidden}
+.comp-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#5B8CFF,#2F6BFF);transition:width .5s cubic-bezier(.16,1,.3,1)}
+.comp-note{font-size:.76rem;color:#57627A;margin-top:8px;line-height:1.55}
 </style>
 </head>
-<body data-meta="pp.title">
+<body data-meta="bp.title">
 
 <header class="auth-nav">
   <div class="container">
@@ -480,11 +490,20 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
       <span class="logo-ic">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </span>
-      <h1 data-i18n="pp.title">Complete Your Business Profile</h1>
-      <p data-i18n="pp.sub">Help the right businesses find you.</p>
+      <h1 data-i18n="bp.myTitle">My Business Profile</h1>
+      <p data-i18n="bp.sub">Help the right businesses find you.</p>
+    </div>
+
+    <div class="comp-wrap">
+      <div class="comp-head"><span data-i18n="bp.complete">Profile Completion</span><b id="ppCompPct">0%</b></div>
+      <div class="comp-bar"><i id="ppCompFill" style="width:0%"></i></div>
+      <div class="comp-note" id="ppCompNote" data-i18n="bp.suggest">Complete your business profile to increase trust and help relevant businesses understand what you offer.</div>
     </div>
 
     <div class="msg" id="ppMsg"></div>
+
+    <!-- ===== BASIC ===== -->
+    <div class="sec-title"><span class="st-ic">🏢</span><span data-i18n="bp.sectionBasic">Basic Information</span></div>
 
     <div class="field">
       <label class="flabel" data-i18n="pp.role">Business Role</label>
@@ -497,36 +516,30 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 
     <div class="grid2">
       <div class="field">
-        <label class="flabel" data-i18n="pp.name">Full Name</label>
-        <input type="text" id="ppName" autocomplete="name">
+        <label class="flabel" data-i18n="pp.biz">Business Name</label>
+        <input type="text" id="ppBiz" data-i18n-ph="pp.bizPh" placeholder="e.g. Rahim Garments">
         <p class="field-err"></p>
       </div>
       <div class="field">
-        <label class="flabel" data-i18n="pp.biz">Business Name</label>
-        <input type="text" id="ppBiz" data-i18n-ph="pp.bizPh" placeholder="e.g. Rahim Garments">
+        <label class="flabel" data-i18n="bp.contactPerson">Contact Person Name</label>
+        <input type="text" id="ppName" autocomplete="name">
         <p class="field-err"></p>
       </div>
     </div>
 
     <div class="grid2">
       <div class="field">
-        <label class="flabel" data-i18n="pp.phone">Phone Number</label>
-        <input type="tel" id="ppPhone" inputmode="tel" placeholder="01XXXXXXXXX">
-        <p class="field-err"></p>
-      </div>
-      <div class="field">
-        <label class="flabel" data-i18n="pp.district">District / Location</label>
+        <label class="flabel" data-i18n="bp.bizType">Business Type</label>
         <div class="select-wrap">
-          <select id="ppDistrict" data-fill="district"></select>
+          <select id="ppBizType" data-fill="businesstype"></select>
         </div>
         <p class="field-err"></p>
       </div>
-    </div>
-
-    <div class="field">
-      <label class="flabel" data-i18n="pp.cat">Business Category</label>
-      <div class="select-wrap">
-        <select id="ppCat" data-fill="category"></select>
+      <div class="field">
+        <label class="flabel" data-i18n="pp.cat">Business Category</label>
+        <div class="select-wrap">
+          <select id="ppCat" data-fill="category"></select>
+        </div>
       </div>
     </div>
 
@@ -536,7 +549,7 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
     </div>
 
     <div class="field">
-      <label class="flabel" data-i18n="pp.image">Profile Image / Company Logo (optional)</label>
+      <label class="flabel" data-i18n="pp.image">Business Logo / Profile Image</label>
       <button type="button" class="btn btn-outline btn-sm" id="ppImgBtn">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.5-3.5L8 21"/></svg>
         <span data-i18n="pp.upload">Choose image</span>
@@ -545,8 +558,107 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
       <img id="ppImgPrev" class="img-preview" style="display:none" alt="">
     </div>
 
-    <button type="button" class="btn btn-primary btn-block" id="ppSave">
-      <span class="spinner"></span><span class="btn-label" data-i18n="pp.save">Save Profile</span>
+    <!-- ===== LOCATION ===== -->
+    <div class="sec-title"><span class="st-ic">📍</span><span data-i18n="bp.sectionLoc">Location</span></div>
+
+    <div class="grid3">
+      <div class="field">
+        <label class="flabel" data-i18n="bp.division">Division</label>
+        <div class="select-wrap">
+          <select id="ppDivision" data-fill="division"></select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="flabel" data-i18n="pp.district">District</label>
+        <div class="select-wrap">
+          <select id="ppDistrict" data-fill="district"></select>
+        </div>
+        <p class="field-err"></p>
+      </div>
+      <div class="field">
+        <label class="flabel" data-i18n="bp.city">City / Area</label>
+        <input type="text" id="ppCity" data-i18n-ph="bp.cityPh" placeholder="e.g. Mirpur, Dhaka">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="flabel" data-i18n="bp.address">Full Business Address (optional)</label>
+      <input type="text" id="ppAddr" data-i18n-ph="bp.addressPh" placeholder="House, road, area…">
+    </div>
+
+    <!-- ===== BUSINESS DETAILS ===== -->
+    <div class="sec-title"><span class="st-ic">📦</span><span data-i18n="bp.sectionDetails">Business Details</span></div>
+
+    <div class="field">
+      <label class="flabel" data-i18n="bp.products">Products / Services</label>
+      <input type="text" id="ppProducts" data-i18n-ph="bp.productsPh" placeholder="e.g. T-Shirts, Hoodies, Polo Shirts">
+    </div>
+
+    <div class="grid3">
+      <div class="field">
+        <label class="flabel" data-i18n="bp.moq">MOQ</label>
+        <input type="text" id="ppMoq" data-i18n-ph="bp.moqPh" placeholder="e.g. 100 pcs">
+      </div>
+      <div class="field">
+        <label class="flabel" data-i18n="bp.capacity">Production Capacity</label>
+        <input type="text" id="ppCapacity" data-i18n-ph="bp.capacityPh" placeholder="e.g. 50,000 pcs / month">
+      </div>
+      <div class="field">
+        <label class="flabel" data-i18n="bp.employees">Employees</label>
+        <input type="text" id="ppEmployees" data-i18n-ph="bp.employeesPh" placeholder="e.g. 50">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="flabel" data-i18n="bp.years">Years in Business</label>
+      <input type="text" id="ppYears" data-i18n-ph="bp.yearsPh" placeholder="e.g. 5">
+    </div>
+
+    <!-- ===== CONTACT ===== -->
+    <div class="sec-title"><span class="st-ic">📞</span><span data-i18n="bp.sectionContact">Contact Information</span></div>
+
+    <div class="grid2">
+      <div class="field">
+        <label class="flabel" data-i18n="bp.bizPhone">Business Phone Number</label>
+        <input type="tel" id="ppBizPhone" inputmode="tel" placeholder="01XXXXXXXXX">
+      </div>
+      <div class="field">
+        <label class="flabel" data-i18n="bp.bizEmail">Business Email</label>
+        <input type="email" id="ppBizEmail" placeholder="business@company.com">
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label class="flabel" data-i18n="bp.website">Website (optional)</label>
+        <input type="text" id="ppWebsite" data-i18n-ph="bp.websitePh" placeholder="https://yourbusiness.com">
+      </div>
+      <div class="field">
+        <label class="flabel" data-i18n="bp.facebook">Facebook Page (optional)</label>
+        <input type="text" id="ppFb" data-i18n-ph="bp.facebookPh" placeholder="facebook.com/yourbusiness">
+      </div>
+    </div>
+
+    <!-- ===== PRIVACY ===== -->
+    <div class="sec-title"><span class="st-ic">🔒</span><span data-i18n="bp.sectionPrivacy">Privacy Settings</span></div>
+
+    <div class="grid2">
+      <div class="field">
+        <label class="flabel" data-i18n="bp.phoneVis">Phone visibility</label>
+        <div class="select-wrap">
+          <select id="ppPhoneVis" data-fill="visibility"></select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="flabel" data-i18n="bp.emailVis">Email visibility</label>
+        <div class="select-wrap">
+          <select id="ppEmailVis" data-fill="visibility"></select>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-primary btn-block" id="ppSave" style="margin-top:22px">
+      <span class="spinner"></span><span class="btn-label" data-i18n="bp.save">Save Business Profile</span>
     </button>
     <a class="btn btn-ghost btn-block" href="/dashboard.html" style="margin-top:8px"><span data-i18n="pp.skip">Skip for now</span></a>
   </div>
@@ -847,7 +959,70 @@ var Q_EXT = {
  "nt.onPost":["on","এর জন্য"],
  "nt.justNow":["just now","এইমাত্র"],
  "nt.timeAgo":["{m} min ago","{m} মিনিট আগে"],
- "nt.hoursAgo":["{h} hr ago","{h} ঘণ্টা আগে"]
+ "nt.hoursAgo":["{h} hr ago","{h} ঘণ্টা আগে"],
+ "bp.title":["Business Profile","ব্যবসায়িক প্রোফাইল"],
+ "bp.myTitle":["My Business Profile","আমার ব্যবসায়িক প্রোফাইল"],
+ "bp.complete":["Profile Completion","প্রোফাইল সম্পূর্ণতা"],
+ "bp.pct":["{p}% Complete","{p}% সম্পূর্ণ"],
+ "bp.sectionBasic":["Basic Information","মৌলিক তথ্য"],
+ "bp.bizType":["Business Type","ব্যবসার ধরন"],
+ "bp.selBizType":["Select business type…","ব্যবসার ধরন নির্বাচন করুন…"],
+ "bp.contactPerson":["Contact Person Name","যোগাযোগকারী ব্যক্তির নাম"],
+ "bp.sectionLoc":["Location","অবস্থান"],
+ "bp.division":["Division","বিভাগ"],
+ "bp.selDivision":["Select division…","বিভাগ নির্বাচন করুন…"],
+ "bp.city":["City / Area","শহর / এলাকা"],
+ "bp.cityPh":["e.g. Mirpur, Dhaka","যেমন: মিরপুর, ঢাকা"],
+ "bp.address":["Full Business Address (optional)","সম্পূর্ণ ব্যবসার ঠিকানা (ঐচ্ছিক)"],
+ "bp.addressPh":["House, road, area…","বাসা, রোড, এলাকা…"],
+ "bp.sectionDetails":["Business Details","ব্যবসার বিবরণ"],
+ "bp.products":["Products / Services","পণ্য / সেবা"],
+ "bp.productsPh":["e.g. T-Shirts, Hoodies, Polo Shirts","যেমন: টি-শার্ট, হুডি, পোলো শার্ট"],
+ "bp.moq":["Minimum Order Quantity (MOQ)","ন্যূনতম অর্ডার পরিমাণ (MOQ)"],
+ "bp.moqPh":["e.g. 100 pcs","যেমন: ১০০ পিস"],
+ "bp.capacity":["Production Capacity","উৎপাদন ক্ষমতা"],
+ "bp.capacityPh":["e.g. 50,000 pcs per month","যেমন: মাসে ৫০,০০০ পিস"],
+ "bp.employees":["Number of Employees","কর্মচারীর সংখ্যা"],
+ "bp.employeesPh":["e.g. 50","যেমন: ৫০"],
+ "bp.years":["Years in Business","ব্যবসায়ের বছর"],
+ "bp.yearsPh":["e.g. 5","যেমন: ৫"],
+ "bp.sectionContact":["Contact Information","যোগাযোগের তথ্য"],
+ "bp.bizPhone":["Business Phone Number","ব্যবসার ফোন নম্বর"],
+ "bp.bizEmail":["Business Email","ব্যবসার ইমেইল"],
+ "bp.website":["Website (optional)","ওয়েবসাইট (ঐচ্ছিক)"],
+ "bp.websitePh":["https://yourbusiness.com","https://yourbusiness.com"],
+ "bp.facebook":["Facebook Page (optional)","ফেসবুক পেজ (ঐচ্ছিক)"],
+ "bp.facebookPh":["facebook.com/yourbusiness","facebook.com/yourbusiness"],
+ "bp.sectionPrivacy":["Privacy Settings","গোপনীয়তা সেটিংস"],
+ "bp.phoneVis":["Phone visibility","ফোন নম্বর দেখা যাবে"],
+ "bp.emailVis":["Email visibility","ইমেইল দেখা যাবে"],
+ "bp.visPublic":["Public","মুক্ত"],
+ "bp.visMembers":["Only logged-in users","শুধু লগইন করা ইউজার"],
+ "bp.visHidden":["Hidden","লুকানো"],
+ "bp.save":["Save Business Profile","ব্যবসায়িক প্রোফাইল সেভ করুন"],
+ "bp.saving":["Saving…","সেভ হচ্ছে…"],
+ "bp.saved":["Business profile saved successfully!","ব্যবসায়িক প্রোফাইল সফলভাবে সেভ হয়েছে!"],
+ "bp.edit":["Edit Business Profile","ব্যবসায়িক প্রোফাইল সম্পাদনা করুন"],
+ "bp.viewPublic":["View Public Profile","পাবলিক প্রোফাইল দেখুন"],
+ "bp.suggest":["Complete your business profile to increase trust and help relevant businesses understand what you offer.","ব্যবসায়িক প্রোফাইল সম্পূর্ণ করুন — এতে আস্থা বাড়বে এবং উপযুক্ত ব্যবসাগুলো আপনার অফার বুঝতে পারবে।"],
+ "bp.publicTitle":["Business Profile","ব্যবসায়িক প্রোফাইল"],
+ "bp.about":["About","সম্পর্কে"],
+ "bp.details":["Business Details","ব্যবসার বিবরণ"],
+ "bp.opps":["Active Opportunities","সক্রিয় সুযোগ"],
+ "bp.noOpps":["No active opportunities right now.","এখন কোনো সক্রিয় সুযোগ নেই।"],
+ "bp.contact":["Contact Business","ব্যবসার সাথে যোগাযোগ"],
+ "bp.viewOpps":["View Opportunities","সুযোগ দেখুন"],
+ "bp.contactTitle":["Contact","যোগাযোগ"],
+ "bp.noContact":["This business has not shared contact information.","এই ব্যবসাটি যোগাযোগের তথ্য শেয়ার করেনি।"],
+ "bp.loginToContact":["Sign in to view contact information.","যোগাযোগের তথ্য দেখতে সাইন ইন করুন।"],
+ "bp.verif.basic":["Basic Profile","মৌলিক প্রোফাইল"],
+ "bp.verif.verified":["Verified","যাচাইকৃত"],
+ "bp.postBanner":["Tip: complete your business profile to increase trust before posting.","টিপ: পোস্ট করার আগে ব্যবসায়িক প্রোফাইল সম্পূর্ণ করুন — এতে আস্থা বাড়বে।"],
+ "bp.backMarket":["Back to Marketplace","মার্কেটপ্লেসে ফিরুন"],
+ "bp.notFound":["Business profile not found.","ব্যবসায়িক প্রোফাইল পাওয়া যায়নি।"],
+ "bp.role.buyer":["Buyer","ক্রেতা"],
+ "bp.role.supplier":["Supplier / Manufacturer","সরবরাহকারী / প্রস্তুতকারক"],
+ "bp.role.both":["Buyer & Supplier","ক্রেতা ও সরবরাহকারী"]
 };
 for (var k in Q_EXT) { D[k] = Q_EXT[k]; }
 
@@ -998,10 +1173,28 @@ var DATA = {
   ["Panchagarh","পঞ্চগড়"],["Thakurgaon","ঠাকুরগাঁও"],["Mymensingh","ময়মনসিংহ"],["Jamalpur","জামালপুর"],
   ["Sherpur","শেরপুর"],["Netrokona","নেত্রকোনা"]
  ],
- units: [["PCS","পিস"],["KG","কেজি"],["Ton","টন"],["Meter","মিটার"],["Dozen","ডজন"],["Set","সেট"],["Liter","লিটার"],["Bag","ব্যাগ"],["Carton","কার্টন"]]
+ units: [["PCS","পিস"],["KG","কেজি"],["Ton","টন"],["Meter","মিটার"],["Dozen","ডজন"],["Set","সেট"],["Liter","লিটার"],["Bag","ব্যাগ"],["Carton","কার্টন"]],
+ divisions: [
+  ["dhaka","ঢাকা"],["chattogram","চট্টগ্রাম"],["rajshahi","রাজশাহী"],["khulna","খুলনা"],
+  ["barishal","বরিশাল"],["sylhet","সিলেট"],["rangpur","রংপুর"],["mymensingh","ময়মনসিংহ"]
+ ],
+ businessTypes: [
+  ["manufacturer","প্রস্তুতকারক"],["supplier","সরবরাহকারী"],["wholesaler","পাইকারি ব্যবসায়ী"],
+  ["buyer","ক্রেতা"],["exporter","রপ্তানিকারক"],["importer","আমদানিকারক"],
+  ["service","সেবা প্রদানকারী"],["other","অন্যান্য"]
+ ],
+ visibilities: [["public","মুক্ত"],["members","শুধু লগইন করা ইউজার"],["hidden","লুকানো"]]
 };
 function locName(arr, val){ for(var i=0;i<arr.length;i++){ if(arr[i][0]===val||arr[i][1]===val) return LANG==='bn'?arr[i][1]:arr[i][0]; } return val; }
-window.AhoorData = { categories: DATA.categories, districts: DATA.districts, units: DATA.units, locName: locName };
+window.AhoorData = {
+  categories: DATA.categories, districts: DATA.districts, units: DATA.units,
+  divisions: DATA.divisions, businessTypes: DATA.businessTypes, visibilities: DATA.visibilities,
+  locName: locName,
+  businessTypeNames: {
+    manufacturer:'Manufacturer', supplier:'Supplier', wholesaler:'Wholesaler', buyer:'Buyer',
+    exporter:'Exporter', importer:'Importer', service:'Service Provider', other:'Other'
+  }
+};
 function fillSelect(sel, list, selected){
   var cur = LANG==='bn'?1:0;
   sel.innerHTML = '';
@@ -1214,6 +1407,9 @@ document.addEventListener('langchange', function(){
   document.querySelectorAll('[data-fill="category"]').forEach(function(s){ fillSelect(s, DATA.categories, s.value); });
   document.querySelectorAll('[data-fill="district"]').forEach(function(s){ fillSelect(s, DATA.districts, s.value); });
   document.querySelectorAll('[data-fill="unit"]').forEach(function(s){ fillSelect(s, DATA.units, s.value); });
+  document.querySelectorAll('[data-fill="division"]').forEach(function(s){ fillSelect(s, DATA.divisions, s.value); });
+  document.querySelectorAll('[data-fill="businesstype"]').forEach(function(s){ fillSelect(s, DATA.businessTypes, s.value); });
+  document.querySelectorAll('[data-fill="visibility"]').forEach(function(s){ fillSelect(s, DATA.visibilities, s.value); });
 });
 
 window.Ahoor = {
@@ -1225,6 +1421,15 @@ window.Ahoor = {
 };
 window.Ahoor.AhoorData = window.AhoorData;
 window.Ahoor.fillSelect = fillSelect;
+window.Ahoor.LANG = LANG;
+(function(){
+  var _set = setLang;
+  setLang = function(l){
+    LANG = l;
+    window.Ahoor.LANG = l;
+    _set(l);
+  };
+})();
 applyLang();
 })();
 
@@ -1244,15 +1449,41 @@ applyLang();
   function fillForm(){
     A.fillSelect(document.getElementById('ppDistrict'), A.AhoorData.districts, me.district || '');
     A.fillSelect(document.getElementById('ppCat'), A.AhoorData.categories, me.category || '');
+    A.fillSelect(document.getElementById('ppBizType'), A.AhoorData.businessTypes, me.businessType || '');
+    A.fillSelect(document.getElementById('ppDivision'), A.AhoorData.divisions, me.division || '');
+    A.fillSelect(document.getElementById('ppPhoneVis'), A.AhoorData.visibilities, me.phoneVisibility || 'members');
+    A.fillSelect(document.getElementById('ppEmailVis'), A.AhoorData.visibilities, me.emailVisibility || 'members');
     document.getElementById('ppName').value = me.name || '';
     document.getElementById('ppBiz').value = me.businessName || '';
-    document.getElementById('ppPhone').value = me.phone || '';
-    document.getElementById('ppDesc').value = me.description || '';
+    document.getElementById('ppCity').value = me.city || '';
+    document.getElementById('ppAddr').value = me.address || '';
+    document.getElementById('ppProducts').value = me.productsServices || '';
+    document.getElementById('ppMoq').value = me.moq || '';
+    document.getElementById('ppCapacity').value = me.productionCapacity || '';
+    document.getElementById('ppEmployees').value = me.employees || '';
+    document.getElementById('ppYears').value = me.yearsInBusiness || '';
+    document.getElementById('ppBizPhone').value = me.businessPhone || '';
+    document.getElementById('ppBizEmail').value = me.businessEmail || '';
+    document.getElementById('ppWebsite').value = me.website || '';
+    document.getElementById('ppFb').value = me.facebook || '';
     if(me.image){ imgData = me.image; var pr = document.getElementById('ppImgPrev'); pr.src = me.image; pr.style.display = ''; }
     if(me.type){ role = me.type; }
     document.querySelectorAll('.pp-role button').forEach(function(b){
       b.classList.toggle('on', b.getAttribute('data-role') === role);
     });
+    updateComp();
+  }
+
+  function updateComp(){
+    if(!me) return;
+    var fields = [
+      me.businessName, me.name, me.businessType, me.category, me.description,
+      me.image, me.division, me.district, me.city, me.productsServices
+    ];
+    var filled = fields.filter(function(v){ return v && String(v).trim(); }).length;
+    var pct = Math.round(filled / fields.length * 100);
+    document.getElementById('ppCompFill').style.width = pct + '%';
+    document.getElementById('ppCompPct').textContent = pct + '%';
   }
 
   document.querySelectorAll('.pp-role button').forEach(function(b){
@@ -1273,6 +1504,7 @@ applyLang();
       imgData = e.target.result;
       var pr = document.getElementById('ppImgPrev');
       pr.src = imgData; pr.style.display = '';
+      me.image = imgData; updateComp();
     };
     rd.readAsDataURL(f);
   });
@@ -1280,25 +1512,44 @@ applyLang();
   document.getElementById('ppSave').addEventListener('click', function(){
     var name = document.getElementById('ppName').value.trim();
     var biz = document.getElementById('ppBiz').value.trim();
-    var phone = document.getElementById('ppPhone').value.trim();
     var dist = document.getElementById('ppDistrict').value;
     var ok = true;
     if(name.length < 2){ A.fieldErr(document.getElementById('ppName'), 'err.name'); ok = false; }
-    if(!A.validPhone(phone)){ A.fieldErr(document.getElementById('ppPhone'), 'err.phone'); ok = false; }
-    if(!dist){ A.fieldErr(document.getElementById('ppDistrict'), 'err.required'); ok = false; }
+    if(dist.length < 2){ A.fieldErr(document.getElementById('ppDistrict'), 'err.required'); ok = false; }
     if(!ok) return;
     var btn = document.getElementById('ppSave');
-    A.setLoading(btn, true, 'pp.saving');
+    A.setLoading(btn, true, 'bp.saving');
     A.api('/api/profile', {
-      name: name, businessName: biz, phone: phone,
-      district: dist, category: document.getElementById('ppCat').value,
+      name: name,
+      businessName: biz,
+      businessType: document.getElementById('ppBizType').value,
+      category: document.getElementById('ppCat').value,
       description: document.getElementById('ppDesc').value.trim(),
-      image: imgData
+      image: imgData,
+      division: document.getElementById('ppDivision').value,
+      district: dist,
+      city: document.getElementById('ppCity').value.trim(),
+      address: document.getElementById('ppAddr').value.trim(),
+      productsServices: document.getElementById('ppProducts').value.trim(),
+      moq: document.getElementById('ppMoq').value.trim(),
+      productionCapacity: document.getElementById('ppCapacity').value.trim(),
+      employees: document.getElementById('ppEmployees').value.trim(),
+      yearsInBusiness: document.getElementById('ppYears').value.trim(),
+      businessPhone: document.getElementById('ppBizPhone').value.trim(),
+      businessEmail: document.getElementById('ppBizEmail').value.trim(),
+      website: document.getElementById('ppWebsite').value.trim(),
+      facebook: document.getElementById('ppFb').value.trim(),
+      phoneVisibility: document.getElementById('ppPhoneVis').value,
+      emailVisibility: document.getElementById('ppEmailVis').value
     }).then(function(r){
       A.setLoading(btn, false);
       if(r.status === 200){
-        A.toast(A.t('pp.saved'), 'ok');
-        setTimeout(function(){ location.href = '/dashboard.html'; }, 1000);
+        me = r.data.user;
+        updateComp();
+        A.toast(A.t('bp.saved'), 'ok');
+        setTimeout(function(){ location.href = '/dashboard.html'; }, 1100);
+      } else if(r.status === 401){
+        location.href = '/login.html?next=/profile-setup.html';
       } else {
         A.showMsg(document.getElementById('ppMsg'), 'error', A.errMsg(r.data.error));
       }

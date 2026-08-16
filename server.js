@@ -366,7 +366,7 @@ async function handle(req, res) {
 
   /* --- API --- */
   if (p.startsWith('/api/')) {
-    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications') && req.method === 'GET')) {
+    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications' || p === '/api/business') && req.method === 'GET')) {
       return json(res, 405, { error: 'method' });
     }
     let body;
@@ -378,7 +378,7 @@ async function handle(req, res) {
     /* register (step 1 of signup) */
     if (p === '/api/register') {
       const { name, email, phone, password } = body;
-      const rl = checkLimit(rlKey('register'), 'register', 20, 60 * 60000);
+      const rl = checkLimit(rlKey('register'), 'register', 100, 60 * 60000);
       if (!rl.ok) return json(res, 429, { error: 'locked', retryIn: rl.retryIn });
       const eName = validateName(name), eMail = validateEmail(email), ePh = validatePhone(phone), ePw = validatePassword(password);
       if (eName) return json(res, 400, { error: eName });
@@ -525,7 +525,10 @@ async function handle(req, res) {
       const user = db.users.find(u => u.id === sess.userId);
       if (!user) return json(res, 401, { error: 'no_session' });
       if (req.method !== 'POST') return json(res, 405, { error: 'method' });
-      const { name, businessName, phone, district, category, description, image } = body;
+      const { name, businessName, phone, district, category, description, image,
+        businessType, division, city, address, productsServices, moq, productionCapacity,
+        employees, yearsInBusiness, businessPhone, businessEmail, website, facebook,
+        phoneVisibility, emailVisibility } = body;
       if (name !== undefined) {
         if (String(name || '').trim().length < 2) return json(res, 400, { error: 'name' });
         user.name = String(name).trim();
@@ -541,6 +544,37 @@ async function handle(req, res) {
       if (image !== undefined) {
         if (String(image).length > 400000) return json(res, 400, { error: 'image' });
         user.image = String(image || '');
+      }
+      if (businessType !== undefined) {
+        if (businessType && BUSINESS_TYPES.indexOf(businessType) < 0) return json(res, 400, { error: 'type' });
+        user.businessType = businessType || '';
+      }
+      if (division !== undefined) {
+        if (division && DIVISIONS.indexOf(division) < 0) return json(res, 400, { error: 'division' });
+        user.division = division || '';
+      }
+      if (city !== undefined) user.city = String(city || '').trim().slice(0, 60);
+      if (address !== undefined) user.address = String(address || '').trim().slice(0, 200);
+      if (productsServices !== undefined) user.productsServices = String(productsServices || '').trim().slice(0, 500);
+      if (moq !== undefined) user.moq = String(moq || '').trim().slice(0, 60);
+      if (productionCapacity !== undefined) user.productionCapacity = String(productionCapacity || '').trim().slice(0, 60);
+      if (employees !== undefined) user.employees = String(employees || '').trim().slice(0, 20);
+      if (yearsInBusiness !== undefined) user.yearsInBusiness = String(yearsInBusiness || '').trim().slice(0, 20);
+      if (businessPhone !== undefined) user.businessPhone = String(businessPhone || '').trim().slice(0, 40);
+      if (businessEmail !== undefined) {
+        const be = String(businessEmail || '').trim();
+        if (be && !EMAIL_RE.test(be)) return json(res, 400, { error: 'email' });
+        user.businessEmail = be.slice(0, 120);
+      }
+      if (website !== undefined) user.website = String(website || '').trim().slice(0, 160);
+      if (facebook !== undefined) user.facebook = String(facebook || '').trim().slice(0, 160);
+      if (phoneVisibility !== undefined) {
+        if (VISIBILITIES.indexOf(phoneVisibility) < 0) return json(res, 400, { error: 'visibility' });
+        user.phoneVisibility = phoneVisibility;
+      }
+      if (emailVisibility !== undefined) {
+        if (VISIBILITIES.indexOf(emailVisibility) < 0) return json(res, 400, { error: 'visibility' });
+        user.emailVisibility = emailVisibility;
       }
       save();
       return json(res, 200, { user: publicUser(user) });
@@ -580,10 +614,12 @@ async function handle(req, res) {
       const q = (url2.searchParams.get('q') || '').toLowerCase().trim();
       const cat = url2.searchParams.get('category') || '';
       const loc = url2.searchParams.get('location') || '';
+      const ownerF = url2.searchParams.get('owner') || '';
       let list = db.posts.filter(pst => {
         if (typeF && typeF !== 'all' && pst.type !== typeF) return false;
         if (cat && pst.category !== cat) return false;
         if (loc && pst.location !== loc) return false;
+        if (ownerF && pst.ownerId !== ownerF) return false;
         if (q) {
           const hay = (pst.title + ' ' + pst.desc + ' ' + pst.category + ' ' + pst.location).toLowerCase();
           if (!hay.includes(q)) return false;
@@ -640,6 +676,19 @@ async function handle(req, res) {
         save();
         return json(res, 200, { post: publicPost(post) });
       }
+    }
+
+    /* ---- public business profile ---- */
+    if (p === '/api/business' && req.method === 'GET') {
+      const url2 = new URL(req.url, 'http://x');
+      const id = url2.searchParams.get('id') || '';
+      const user = db.users.find(u => u.id === id);
+      if (!user) return json(res, 404, { error: 'not_found' });
+      const sess = getSession(req);
+      const viewerId = sess ? sess.userId : null;
+      const posts = db.posts.filter(pt => pt.ownerId === user.id && (pt.status === 'open' || viewerId === user.id))
+        .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || '')).slice(0, 20);
+      return json(res, 200, { profile: publicBusinessProfile(user, viewerId), posts: posts.map(publicPost) });
     }
 
     /* ---- quotes: send quote / request quote ---- */
@@ -792,12 +841,50 @@ function setCookie(res, s) {
   const maxAge = Math.round((s.expires - Date.now()) / 1000);
   res.setHeader('Set-Cookie', `ahoor_sid=${s.t}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}`);
 }
+const BUSINESS_TYPES = ['manufacturer','supplier','wholesaler','buyer','exporter','importer','service','other'];
+const DIVISIONS = ['dhaka','chattogram','rajshahi','khulna','barishal','sylhet','rangpur','mymensingh'];
+const VISIBILITIES = ['public','members','hidden'];
+
+function profileCompletion(u) {
+  const checks = [
+    u.businessName, u.name, u.businessType, u.category, u.description,
+    u.image, u.division, u.district, u.city, u.productsServices
+  ];
+  const filled = checks.filter(v => v && String(v).trim()).length;
+  return Math.round((filled / checks.length) * 100);
+}
 function publicUser(u) {
   return {
     id: u.id, name: u.name, email: u.email, phone: u.phone, type: u.type, createdAt: u.createdAt,
     businessName: u.businessName || '', district: u.district || '', category: u.category || '',
-    description: u.description || '', image: u.image || '', profileComplete: !!(u.businessName && u.district)
+    description: u.description || '', image: u.image || '', profileComplete: !!(u.businessName && u.district),
+    businessType: u.businessType || '', division: u.division || '', city: u.city || '',
+    address: u.address || '', productsServices: u.productsServices || '',
+    moq: u.moq || '', productionCapacity: u.productionCapacity || '',
+    employees: u.employees || '', yearsInBusiness: u.yearsInBusiness || '',
+    businessPhone: u.businessPhone || '', businessEmail: u.businessEmail || '',
+    website: u.website || '', facebook: u.facebook || '',
+    phoneVisibility: u.phoneVisibility || 'members', emailVisibility: u.emailVisibility || 'members',
+    verificationStatus: u.verificationStatus || 'basic', completionPercent: profileCompletion(u)
   };
+}
+function publicBusinessProfile(u, viewerId) {
+  const base = {
+    id: u.id, name: u.name, businessName: u.businessName || '', businessType: u.businessType || '',
+    category: u.category || '', description: u.description || '', image: u.image || '',
+    division: u.division || '', district: u.district || '', city: u.city || '',
+    address: u.address || '', productsServices: u.productsServices || '',
+    moq: u.moq || '', productionCapacity: u.productionCapacity || '',
+    employees: u.employees || '', yearsInBusiness: u.yearsInBusiness || '',
+    website: u.website || '', facebook: u.facebook || '',
+    verificationStatus: u.verificationStatus || 'basic', accountRole: u.type || '',
+    isOwn: viewerId === u.id
+  };
+  const phoneAllowed = u.phoneVisibility === 'public' || (u.phoneVisibility === 'members' && viewerId);
+  const emailAllowed = u.emailVisibility === 'public' || (u.emailVisibility === 'members' && viewerId);
+  base.businessPhone = phoneAllowed ? (u.businessPhone || u.phone || '') : '';
+  base.businessEmail = emailAllowed ? (u.businessEmail || u.email || '') : '';
+  return base;
 }
 function publicPost(p) {
   const owner = db.users.find(u => u.id === p.ownerId);
@@ -808,7 +895,9 @@ function publicPost(p) {
     status: p.status || 'open', createdAt: p.createdAt, updatedAt: p.updatedAt || p.createdAt,
     owner: owner ? {
       id: owner.id, name: owner.name, businessName: owner.businessName || '',
-      district: owner.district || '', image: owner.image || ''
+      district: owner.district || '', image: owner.image || '',
+      businessType: owner.businessType || '', division: owner.division || '', city: owner.city || '',
+      verificationStatus: owner.verificationStatus || 'basic'
     } : null
   };
 }

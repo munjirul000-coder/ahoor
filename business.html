@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ahoor — Marketplace</title>
+<title>Ahoor — Business Profile</title>
 <meta name="theme-color" content="#0A1122">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1430'/%3E%3Cpath d='M16 8.5 9.6 23.5h12.8z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='9.6' cy='23.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='22.4' cy='23.5' r='2.6' fill='%23FF8A4C'/%3E%3C/svg%3E">
 <style>
@@ -437,13 +437,47 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 .nt-item span{font-size:.7rem;color:#8A95AC;display:block;margin-top:3px}
 .nt-empty{padding:34px 16px;text-align:center;color:#8A95AC;font-size:.84rem}
 
-.mp-wrap{max-width:1120px;margin:0 auto;padding:0 clamp(16px,4vw,32px)}
-.mp-body{min-height:60vh}
-@media(max-width:700px){.mp-navlinks{display:none!important}}
-@media(max-width:420px){.auth-nav .container{flex-wrap:wrap;gap:8px}.auth-nav-right{margin-left:auto}}
+.bp-wrap{max-width:980px;margin:0 auto;padding:0 clamp(16px,4vw,32px)}
+.bp-hero{background:linear-gradient(160deg,#0D1A3E,#0A1122 70%,#101326);border-radius:24px;padding:clamp(22px,4vw,38px);color:#fff;position:relative;overflow:hidden;margin-bottom:18px}
+.bp-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(420px 240px at 15% 0%,rgba(47,107,255,.25),transparent 60%),radial-gradient(360px 220px at 90% 100%,rgba(255,122,61,.16),transparent 60%)}
+.bp-hero-in{position:relative;z-index:1;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.bp-logo{width:86px;height:86px;border-radius:22px;display:grid;place-items:center;font-size:2rem;font-weight:800;background:linear-gradient(135deg,#4C84FF,#2F6BFF);color:#fff;overflow:hidden;flex-shrink:0;box-shadow:0 16px 34px -12px rgba(47,107,255,.6)}
+.bp-logo img{width:100%;height:100%;object-fit:cover}
+.bp-hinfo{flex:1;min-width:220px}
+.bp-hinfo h1{font-size:clamp(1.3rem,3vw,1.7rem);font-weight:800;letter-spacing:-.02em;line-height:1.25}
+.bp-hmeta{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px;font-size:.8rem;color:#B9C6E3}
+.bp-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:5px 12px;font-weight:650}
+.bp-chip.vrf{color:#7EF0CD;border-color:rgba(14,159,126,.4);background:rgba(14,159,126,.12)}
+.bp-hbtns{display:flex;gap:10px;flex-wrap:wrap}
+.bp-hbtns .btn{padding:11px 20px;font-size:.85rem}
+.bp-section{background:#fff;border:1px solid #E4E9F2;border-radius:18px;padding:clamp(18px,3vw,26px);margin-bottom:16px;box-shadow:0 4px 16px -12px rgba(10,17,34,.08)}
+.bp-section h2{font-size:1rem;font-weight:800;color:#101828;display:flex;align-items:center;gap:9px;margin-bottom:13px}
+.bp-section h2 .st-ic{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:#EBF1FF;color:#2F6BFF;font-size:.9rem}
+.bp-section p.desc{color:#3D4A5F;font-size:.92rem;line-height:1.75}
+.bp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.bp-cell{background:#FBFCFE;border:1px solid #EDF0F6;border-radius:12px;padding:12px 14px}
+.bp-cell span{display:block;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8A95AC;margin-bottom:4px}
+.bp-cell b{font-size:.88rem;color:#101828;font-weight:700}
+.bp-contact-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px dashed #EDF0F6;font-size:.9rem;color:#3D4A5F}
+.bp-contact-row:last-child{border-bottom:none}
+.bp-contact-row .ci{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#F0F3F9;color:#4A5870;flex-shrink:0}
+.bp-contact-row a{color:#2F6BFF;font-weight:650;word-break:break-all}
+.bp-empty{text-align:center;color:#8A95AC;font-size:.85rem;padding:22px 10px}
+.bp-posts{display:grid;gap:12px}
+.bp-post{display:flex;gap:14px;align-items:center;background:#FBFCFE;border:1.5px solid #E4E9F2;border-radius:14px;padding:14px 16px;text-decoration:none;color:inherit;transition:all .25s;flex-wrap:wrap}
+.bp-post:hover{border-color:#C9D8F2;transform:translateY(-2px);box-shadow:0 12px 26px -16px rgba(10,17,34,.16)}
+.bp-post .pp-badge{font-size:.6rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.bp-post .pp-badge.buyer{color:#1E4FD8;background:#EBF1FF}
+.bp-post .pp-badge.supplier{color:#B45309;background:#FFF1E7}
+.bp-post .pp-main{flex:1;min-width:180px}
+.bp-post .pp-main b{display:block;font-size:.92rem;color:#101828}
+.bp-post .pp-main span{font-size:.76rem;color:#8A95AC}
+.bp-notfound{text-align:center;padding:70px 20px}
+.bp-notfound h1{font-size:1.3rem;color:#101828;margin-bottom:10px}
+@media(max-width:520px){.bp-hero-in{gap:14px}.bp-logo{width:64px;height:64px;font-size:1.4rem}}
 </style>
 </head>
-<body data-meta="mp.title">
+<body data-meta="bp.publicTitle">
 
 <header class="auth-nav">
   <div class="container">
@@ -456,50 +490,66 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
       </svg>
       <span class="brand-name">Ahoor<em>.</em></span>
     </a>
-    <nav class="mp-navlinks" style="display:flex;gap:4px;align-items:center">
-      <a href="/index.html" style="font-size:.88rem;font-weight:600;color:#57627A;padding:8px 13px;border-radius:9px" data-i18n="nav.home">Home</a>
-      <a href="/marketplace.html" style="font-size:.88rem;font-weight:700;color:#2F6BFF;padding:8px 13px;border-radius:9px;background:#EBF1FF" data-i18n="nav.market">Marketplace</a>
-    </nav>
     <div class="auth-nav-right">
+      <a class="back-home" href="/marketplace.html">
+        <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        <span data-i18n="bp.backMarket">Back to Marketplace</span>
+      </a>
       <div class="lang-switch" role="group" aria-label="Language">
         <button type="button" class="lang-btn on" data-lang="bn" aria-pressed="true">বাংলা</button>
         <span class="lsep" aria-hidden="true">|</span>
         <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
       </div>
-      <a class="btn btn-primary btn-sm" id="navCta" href="/signup.html"><span data-i18n="nav.join">Join Ahoor</span></a>
     </div>
   </div>
 </header>
 
-<main class="mp-body">
-  <div class="mp-head">
-    <div class="mp-wrap">
-      <h1 data-i18n="mp.title">Ahoor Marketplace</h1>
-      <p data-i18n="mp.sub">Buyer requirements &amp; supplier offers across Bangladesh</p>
-      <div class="mp-controls">
-        <div class="select-wrap" style="grid-column:1">
-          <input type="text" id="mpQ" data-i18n-ph="mp.searchPh" placeholder="Search products, requirements…" style="width:100%;background:#F6F8FC;border:1px solid #E4E9F2;border-radius:12px;padding:13px 16px;font-size:.92rem;font-family:inherit;outline:none;color:#101828">
+<main class="auth-main" style="display:block">
+  <div class="bp-wrap">
+    <div class="bp-notfound" id="bpNotFound" style="display:none">
+      <h1 data-i18n="bp.notFound">Business profile not found.</h1>
+      <a class="btn btn-primary" href="/marketplace.html" style="margin-top:14px"><span data-i18n="bp.backMarket">Back to Marketplace</span></a>
+    </div>
+    <div id="bpBody" style="display:none">
+      <div class="bp-hero">
+        <div class="bp-hero-in">
+          <span class="bp-logo" id="bpLogo">A</span>
+          <div class="bp-hinfo">
+            <h1 id="bpName">—</h1>
+            <div class="bp-hmeta">
+              <span class="bp-chip" id="bpType"></span>
+              <span class="bp-chip" id="bpLoc"></span>
+              <span class="bp-chip vrf" id="bpVrf"></span>
+            </div>
+          </div>
+          <div class="bp-hbtns">
+            <a class="btn btn-primary" href="#bpContactSec"><span data-i18n="bp.contact">Contact Business</span></a>
+            <a class="btn btn-ghost-dark" href="/marketplace.html"><span data-i18n="bp.viewOpps">View Opportunities</span></a>
+            <a class="btn btn-ghost-dark" id="bpEditBtn" href="/profile-setup.html" style="display:none"><span data-i18n="bp.edit">Edit Business Profile</span></a>
+          </div>
         </div>
-        <div class="select-wrap">
-          <select id="mpCat" data-fill="category"></select>
-        </div>
-        <div class="select-wrap">
-          <select id="mpLoc" data-fill="district"></select>
-        </div>
-        <a class="btn btn-primary" id="mpNew" href="/post.html"><span data-i18n="mp.newPost">Create Post</span></a>
       </div>
-      <div class="tabs">
-        <button class="tab on" data-t="all" data-i18n="mp.tabAll">All</button>
-        <button class="tab" data-t="buyer" data-i18n="mp.tabBuyer">Buyer Requirements</button>
-        <button class="tab" data-t="supplier" data-i18n="mp.tabSupplier">Supplier Products</button>
+
+      <div class="bp-section">
+        <h2><span class="st-ic">💼</span><span data-i18n="bp.about">About</span></h2>
+        <p class="desc" id="bpAbout">—</p>
+      </div>
+
+      <div class="bp-section">
+        <h2><span class="st-ic">📋</span><span data-i18n="bp.details">Business Details</span></h2>
+        <div class="bp-grid" id="bpDetails"></div>
+      </div>
+
+      <div class="bp-section">
+        <h2><span class="st-ic">🛒</span><span data-i18n="bp.opps">Active Opportunities</span></h2>
+        <div class="bp-posts" id="bpPosts"></div>
+      </div>
+
+      <div class="bp-section" id="bpContactSec">
+        <h2><span class="st-ic">📞</span><span data-i18n="bp.contactTitle">Contact</span></h2>
+        <div id="bpContact"></div>
       </div>
     </div>
-  </div>
-
-  <div class="mp-wrap">
-    <div class="mp-grid" id="mpGrid"></div>
-    <div class="mp-empty" id="mpEmpty" style="display:none" data-i18n="mp.empty">No posts found. Try changing filters.</div>
-    <div class="mp-empty" id="mpLoad" data-i18n="ui.loading">Loading…</div>
   </div>
 </main>
 
@@ -509,68 +559,6 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
     <p style="margin-top:6px" data-i18n="foot.cr">© 2026 Ahoor. All rights reserved.</p>
   </div>
 </footer>
-
-<!-- quote / request modal -->
-<div class="modal-bg" id="quoteModal">
-  <div class="modal">
-    <h3 id="qmTitle">Send Quote</h3>
-    <p class="sub" id="qmSub"></p>
-    <div class="msg" id="qmMsg"></div>
-    <!-- supplier quote fields -->
-    <div id="qmQuoteFields">
-      <div class="quote-form-grid">
-        <div class="field">
-          <label class="flabel" data-i18n="qt.priceUnit">Price per unit</label>
-          <input type="number" min="0" id="qmPrice" data-i18n-ph="qt.priceUnitPh" placeholder="e.g. ৳250">
-        </div>
-        <div class="field">
-          <label class="flabel" data-i18n="qt.availQty">Available quantity</label>
-          <input type="number" min="0" id="qmQty" data-i18n-ph="qt.availQtyPh" placeholder="e.g. 1000">
-        </div>
-      </div>
-      <div class="qt-total"><span data-i18n="qt.totalPrice">Total price (auto-calculated)</span><b id="qmTotal">৳—</b></div>
-      <div class="quote-form-grid">
-        <div class="field">
-          <label class="flabel" data-i18n="qt.moq">Minimum Order Quantity (optional)</label>
-          <input type="number" min="0" id="qmMoq" data-i18n-ph="qt.moqPh" placeholder="e.g. 100">
-        </div>
-        <div class="field">
-          <label class="flabel" data-i18n="qt.delivery">Estimated delivery / production time</label>
-          <input type="text" id="qmDelivery" data-i18n-ph="qt.deliveryPh" placeholder="e.g. 10 days">
-        </div>
-      </div>
-      <div class="field">
-        <label class="flabel" data-i18n="qt.valid">Valid until (optional)</label>
-        <input type="date" id="qmValid">
-      </div>
-    </div>
-    <!-- buyer request fields -->
-    <div id="qmReqFields" style="display:none">
-      <div class="quote-form-grid">
-        <div class="field">
-          <label class="flabel" data-i18n="qt.reqQty">Required quantity</label>
-          <input type="number" min="0" id="qmReqQty" data-i18n-ph="qt.reqQtyPh" placeholder="e.g. 5000">
-        </div>
-        <div class="field">
-          <label class="flabel" data-i18n="qt.prefDel">Preferred delivery date</label>
-          <input type="text" id="qmPrefDel" data-i18n-ph="qt.prefDelPh" placeholder="e.g. within 30 days">
-        </div>
-      </div>
-      <div class="field">
-        <label class="flabel" data-i18n="qt.budget">Budget (optional)</label>
-        <input type="text" id="qmBudget" data-i18n-ph="qt.budgetPh" placeholder="e.g. ৳1,250,000">
-      </div>
-    </div>
-    <div class="field">
-      <label class="flabel" data-i18n="qt.msg">Message / Additional details</label>
-      <textarea id="qmText" style="min-height:90px" data-i18n-ph="qt.msgPhQuote" placeholder="We can manufacture premium cotton T-shirts according to your requirements."></textarea>
-    </div>
-    <div class="modal-actions">
-      <button type="button" class="btn btn-ghost" id="qmCancel"><span data-i18n="mp.cancel">Cancel</span></button>
-      <button type="button" class="btn btn-primary" id="qmSend"><span class="spinner"></span><span class="btn-label" data-i18n="qt.send">SEND QUOTE</span></button>
-    </div>
-  </div>
-</div>
 
 <script>
 /* ============================================================
@@ -1337,207 +1325,124 @@ applyLang();
 (function(){
   'use strict';
   var A = window.Ahoor;
-  var grid = document.getElementById('mpGrid');
-  var empty = document.getElementById('mpEmpty');
-  var loadEl = document.getElementById('mpLoad');
-  var current = { type:'all', q:'', cat:'', loc:'' };
-  var me = null;
-  var targetPost = null;
+  var id = new URLSearchParams(location.search).get('id');
+  var data = null;
 
-  /* nav state */
-  A.api('/api/session').then(function(r){
-    if(r.data && r.data.user){
-      me = r.data.user;
-      var cta = document.getElementById('navCta');
-      cta.href = '/dashboard.html';
-      cta.innerHTML = '<span data-i18n="nav.dash">Dashboard</span>';
-      applyNav();
-    }
-  });
-  function applyNav(){ document.querySelectorAll('[data-i18n]').forEach(function(el){ var v = window.Ahoor && A.t(el.getAttribute('data-i18n')); if(v) el.innerHTML = v; }); }
-  document.addEventListener('langchange', applyNav);
-
-  /* selects */
-  A.fillSelect(document.getElementById('mpCat'), A.AhoorData.categories, '');
-  var catSel = document.getElementById('mpCat');
-  var firstCat = document.createElement('option');
-  firstCat.value = ''; firstCat.textContent = A.t('mp.catAll');
-  catSel.prepend(firstCat);
-  A.fillSelect(document.getElementById('mpLoc'), A.AhoorData.districts, '');
-  var locSel = document.getElementById('mpLoc');
-  var firstLoc = document.createElement('option');
-  firstLoc.value = ''; firstLoc.textContent = A.t('mp.locAll');
-  locSel.prepend(firstLoc);
-
-  /* tabs */
-  document.querySelectorAll('.tab').forEach(function(t){
-    t.addEventListener('click', function(){
-      document.querySelectorAll('.tab').forEach(function(x){ x.classList.remove('on'); });
-      t.classList.add('on');
-      current.type = t.getAttribute('data-t');
-      load();
-    });
-  });
-
-  /* filters */
-  var debounce = null;
-  document.getElementById('mpQ').addEventListener('input', function(){
-    clearTimeout(debounce);
-    debounce = setTimeout(function(){ current.q = this.value.trim(); load(); }.bind(this), 350);
-  });
-  catSel.addEventListener('change', function(){ current.cat = this.value; load(); });
-  locSel.addEventListener('change', function(){ current.loc = this.value; load(); });
-
-  /* load posts */
-  function load(){
-    grid.innerHTML = '';
-    empty.style.display = 'none';
-    loadEl.style.display = '';
-    var params = new URLSearchParams();
-    if(current.type !== 'all') params.set('type', current.type);
-    if(current.q) params.set('q', current.q);
-    if(current.cat) params.set('category', current.cat);
-    if(current.loc) params.set('location', current.loc);
-    fetch('/api/posts?' + params.toString(), { credentials:'same-origin' })
+  if(!id){ document.getElementById('bpNotFound').style.display = ''; }
+  else {
+    fetch('/api/business?id=' + encodeURIComponent(id), { credentials:'same-origin' })
       .then(function(r){ return r.json(); })
       .then(function(d){
-        loadEl.style.display = 'none';
-        if(!d.posts || d.posts.length === 0){ empty.style.display = ''; return; }
-        d.posts.forEach(function(p){ grid.appendChild(card(p)); });
+        if(!d.profile){ document.getElementById('bpNotFound').style.display = ''; return; }
+        data = d;
+        render();
       })
-      .catch(function(){ loadEl.textContent = A.t('err.network'); });
+      .catch(function(){ document.getElementById('bpNotFound').style.display = ''; });
+  }
+  document.addEventListener('langchange', function(){ if(data) render(); });
+
+  function locName(kind, val){
+    var list = kind === 'district' ? A.AhoorData.districts : kind === 'division' ? A.AhoorData.divisions : A.AhoorData.categories;
+    return A.locName(list, val);
+  }
+  function bizTypeName(v){
+    if(!v) return '';
+    var t = A.AhoorData.businessTypes.find(function(x){ return x[0] === v; });
+    if(!t) return v;
+    return A.LANG === 'bn' ? t[1] : (A.AhoorData.businessTypeNames[v] || v);
   }
 
-  function bizTypeShort(owner){
-    if(!owner || !owner.businessType) return '';
-    var t = A.AhoorData.businessTypes.find(function(x){ return x[0] === owner.businessType; });
-    if(!t) return owner.businessType;
-    return A.LANG === 'bn' ? t[1] : (A.AhoorData.businessTypeNames[owner.businessType] || owner.businessType);
-  }
-  function card(p){
-    var el = document.createElement('article');
-    el.className = 'post-card';
-    var isBuyer = p.type === 'buyer';
-    var biz = (p.owner && p.owner.businessName) || (p.owner && p.owner.name) || '';
-    var img = p.image ? '<img class="post-img" src="' + p.image + '" alt="">' : '';
-    var meta = '';
-    if(p.qty) meta += '<span>' + A.t('mp.qty') + ': <b>' + A.esc(p.qty) + (p.unit ? ' ' + A.esc(p.unit) : '') + '</b></span>';
-    if(isBuyer && p.budget) meta += '<span>' + A.t('mp.budget') + ': <b>' + A.esc(p.budget) + '</b></span>';
-    if(!isBuyer && p.moq) meta += '<span>' + A.t('mp.moq') + ': <b>' + A.esc(p.moq) + '</b></span>';
-    if(!isBuyer && p.price) meta += '<span>' + A.t('mp.price') + ': <b>' + A.esc(p.price) + '</b></span>';
-    if(!isBuyer && !p.price) meta += '<span>' + A.t('mp.contactPrice') + '</span>';
-    if(p.deadline && isBuyer) meta += '<span>' + A.t('mp.deadline') + ': <b>' + A.esc(p.deadline) + '</b></span>';
-    meta += '<span>' + A.locName(A.AhoorData.districts, p.location) + '</span>';
-    var dateTxt = new Date(p.createdAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
-    var btn = isBuyer
-      ? '<button class="btn btn-primary btn-sm" data-quote="' + p.id + '">' + A.t('qt.sendQuote') + '</button>'
-      : '<button class="btn btn-orange btn-sm" data-quote="' + p.id + '">' + A.t('qt.reqQuote') + '</button>';
-    el.innerHTML =
-      (img ? img : '') +
-      '<div class="post-top">' +
-        '<span class="post-badge ' + (isBuyer ? 'buyer' : 'supplier') + '">' + (isBuyer ? '🛒 ' : '🏭 ') + A.t(isBuyer ? 'mp.badgeBuyer' : 'mp.badgeSupplier') + '</span>' +
-        '<span class="post-status ' + p.status + '">' + A.t(p.status === 'open' ? 'mp.open' : 'mp.closed') + '</span>' +
-      '</div>' +
-      '<h3>' + A.esc(p.title) + '</h3>' +
-      '<div class="post-meta">' + meta + '</div>' +
-      (p.desc ? '<p class="post-desc">' + A.esc(p.desc) + '</p>' : '') +
-      '<div class="post-owner">' +
-        '<span class="po-av">' + (p.owner && p.owner.image ? '<img src="' + p.owner.image + '" alt="">' : (biz ? A.esc(biz.charAt(0).toUpperCase()) : '?')) + '</span>' +
-        '<span class="po-info"><a href="/business.html?id=' + (p.owner ? p.owner.id : '') + '" style="color:inherit;text-decoration:none"><b style="color:#2F6BFF">' + A.esc(biz) + '</b></a>' +
-          '<span>' + bizTypeShort(p.owner) + (p.owner && p.owner.district ? ' · ' + A.locName(A.AhoorData.districts, p.owner.district) : '') + '</span>' +
-          '<span>' + A.t('mp.postedOn') + ': ' + dateTxt + '</span>' +
-        '</span>' +
-      '</div>' +
-      btn;
-    el.querySelector('[data-quote]').addEventListener('click', function(){ openQuote(p); });
-    return el;
-  }
+  function render(){
+    var p = data.profile;
+    var bizName = p.businessName || p.name || '—';
+    document.getElementById('bpName').textContent = bizName;
+    var logo = document.getElementById('bpLogo');
+    if(p.image){ logo.innerHTML = '<img src="' + p.image + '" alt="">'; }
+    else logo.textContent = bizName.charAt(0).toUpperCase();
+    document.getElementById('bpType').textContent = p.businessType ? bizTypeName(p.businessType) : A.t('bp.role.' + (p.accountRole || 'buyer'));
+    var locParts = [];
+    if(p.division) locParts.push(locName('division', p.division));
+    if(p.district) locParts.push(locName('district', p.district));
+    if(p.city) locParts.push(p.city);
+    document.getElementById('bpLoc').textContent = locParts.length ? locParts.join(', ') : '—';
+    document.getElementById('bpLoc').style.display = locParts.length ? '' : 'none';
+    document.getElementById('bpVrf').textContent = '✓ ' + A.t('bp.verif.' + (p.verificationStatus === 'verified' ? 'verified' : 'basic'));
+    if(p.isOwn) document.getElementById('bpEditBtn').style.display = '';
 
-  /* quote modal */
-  var modal = document.getElementById('quoteModal');
-  var qKind = 'quote'; // quote = supplier->buyer post, request = buyer->supplier post
-  function openQuote(p){
-    targetPost = p;
-    qKind = p.type === 'buyer' ? 'quote' : 'request';
-    document.getElementById('qmSub').textContent = A.t('qt.forPost') + ' ' + p.title;
-    document.getElementById('qmText').value = '';
-    ['qmPrice','qmQty','qmMoq','qmDelivery','qmValid','qmReqQty','qmPrefDel','qmBudget'].forEach(function(id){
-      document.getElementById(id).value = '';
-    });
-    document.getElementById('qmTotal').textContent = '৳—';
-    document.getElementById('qmQuoteFields').style.display = qKind === 'quote' ? '' : 'none';
-    document.getElementById('qmReqFields').style.display = qKind === 'request' ? '' : 'none';
-    document.getElementById('qmTitle').textContent = A.t(qKind === 'quote' ? 'qt.sendQuoteTitle' : 'qt.reqQuoteTitle');
-    var btnLabel = document.querySelector('#qmSend .btn-label');
-    btnLabel.textContent = A.t(qKind === 'quote' ? 'qt.send' : 'qt.sendReq');
-    document.getElementById('qmText').setAttribute('data-i18n-ph', qKind === 'quote' ? 'qt.msgPhQuote' : 'qt.msgPhReq');
-    document.getElementById('qmText').placeholder = A.t(qKind === 'quote' ? 'qt.msgPhQuote' : 'qt.msgPhReq');
-    A.hideMsg(document.getElementById('qmMsg'));
-    if(!me){ A.toast(A.t('mp.loginNeeded'), 'er'); location.href = '/login.html?next=/marketplace.html'; return; }
-    if(qKind === 'quote' && me.type !== 'supplier' && me.type !== 'both'){
-      A.toast(A.t('qt.roleBlocked'), 'er'); return;
+    document.getElementById('bpAbout').textContent = p.description || '—';
+
+    var details = document.getElementById('bpDetails');
+    details.innerHTML = '';
+    function cell(label, value){
+      if(!value) return;
+      var el = document.createElement('div');
+      el.className = 'bp-cell';
+      el.innerHTML = '<span>' + A.esc(label) + '</span><b>' + A.esc(value) + '</b>';
+      details.appendChild(el);
     }
-    if(qKind === 'request' && me.type !== 'buyer' && me.type !== 'both'){
-      A.toast(A.t('qt.roleBlockedReq'), 'er'); return;
-    }
-    modal.classList.add('on');
-  }
-  /* auto total = price x qty */
-  function calcTotal(){
-    var pr = parseFloat(document.getElementById('qmPrice').value);
-    var qt = parseFloat(document.getElementById('qmQty').value);
-    if(!isNaN(pr) && !isNaN(qt) && pr > 0 && qt > 0){
-      var total = Math.round(pr * qt).toLocaleString('en-US');
-      document.getElementById('qmTotal').textContent = '৳' + total;
+    if(p.businessType) cell(A.t('bp.bizType'), bizTypeName(p.businessType));
+    if(p.category) cell(A.t('pp.cat'), locName('category', p.category));
+    if(p.productsServices) cell(A.t('bp.products'), p.productsServices);
+    if(p.moq) cell(A.t('bp.moq'), p.moq);
+    if(p.productionCapacity) cell(A.t('bp.capacity'), p.productionCapacity);
+    if(p.employees) cell(A.t('bp.employees'), p.employees);
+    if(p.yearsInBusiness) cell(A.t('bp.years'), p.yearsInBusiness);
+
+    var posts = document.getElementById('bpPosts');
+    posts.innerHTML = '';
+    if(!data.posts || data.posts.length === 0){
+      posts.innerHTML = '<div class="bp-empty">' + A.t('bp.noOpps') + '</div>';
     } else {
-      document.getElementById('qmTotal').textContent = '৳—';
+      data.posts.forEach(function(pt){
+        var el = document.createElement('a');
+        el.className = 'bp-post';
+        el.href = '/marketplace.html';
+        var isBuyer = pt.type === 'buyer';
+        el.innerHTML =
+          '<span class="pp-badge ' + pt.type + '">' + (isBuyer ? '🛒 ' : '🏭 ') + A.t(isBuyer ? 'mp.badgeBuyer' : 'mp.badgeSupplier') + '</span>' +
+          '<div class="pp-main"><b>' + A.esc(pt.title) + '</b><span>' +
+            A.locName(A.AhoorData.districts, pt.location) +
+            (pt.qty ? ' · ' + A.esc(pt.qty) + (pt.unit ? ' ' + A.esc(pt.unit) : '') : '') +
+            ' · ' + A.t('mp.open') + '</span></div>';
+        posts.appendChild(el);
+      });
+    }
+
+    var contact = document.getElementById('bpContact');
+    contact.innerHTML = '';
+    var hasContact = false;
+    if(p.businessPhone){
+      hasContact = true;
+      var row = document.createElement('div');
+      row.className = 'bp-contact-row';
+      row.innerHTML = '<span class="ci"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span><a href="tel:' + A.esc(p.businessPhone) + '">' + A.esc(p.businessPhone) + '</a>';
+      contact.appendChild(row);
+    }
+    if(p.businessEmail){
+      hasContact = true;
+      var row2 = document.createElement('div');
+      row2.className = 'bp-contact-row';
+      row2.innerHTML = '<span class="ci"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg></span><a href="mailto:' + A.esc(p.businessEmail) + '">' + A.esc(p.businessEmail) + '</a>';
+      contact.appendChild(row2);
+    }
+    if(p.website){
+      hasContact = true;
+      var row3 = document.createElement('div');
+      row3.className = 'bp-contact-row';
+      row3.innerHTML = '<span class="ci"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z"/></svg></span><a href="' + A.esc(p.website) + '" target="_blank" rel="noopener">' + A.esc(p.website) + '</a>';
+      contact.appendChild(row3);
+    }
+    if(p.facebook){
+      hasContact = true;
+      var row4 = document.createElement('div');
+      row4.className = 'bp-contact-row';
+      row4.innerHTML = '<span class="ci"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></span><a href="' + A.esc(p.facebook) + '" target="_blank" rel="noopener">' + A.esc(p.facebook) + '</a>';
+      contact.appendChild(row4);
+    }
+    if(!hasContact){
+      contact.innerHTML = '<div class="bp-empty">' + A.t('bp.noContact') + '</div>';
     }
   }
-  document.getElementById('qmPrice').addEventListener('input', calcTotal);
-  document.getElementById('qmQty').addEventListener('input', calcTotal);
-  document.getElementById('qmCancel').addEventListener('click', function(){ modal.classList.remove('on'); });
-  modal.addEventListener('click', function(e){ if(e.target === modal) modal.classList.remove('on'); });
-  document.getElementById('qmSend').addEventListener('click', function(){
-    var msgEl = document.getElementById('qmMsg');
-    var text = document.getElementById('qmText').value.trim();
-    if(text.length < 5){ A.showMsg(msgEl, 'error', A.t('err.message')); return; }
-    var body = { postId: targetPost.id, message: text };
-    if(qKind === 'quote'){
-      var price = document.getElementById('qmPrice').value.trim();
-      var qty = document.getElementById('qmQty').value.trim();
-      if(!price || parseFloat(price) <= 0){ A.showMsg(msgEl, 'error', A.t('err.required')); return; }
-      if(!qty || parseFloat(qty) <= 0){ A.showMsg(msgEl, 'error', A.t('err.required')); return; }
-      body.pricePerUnit = price;
-      body.availableQty = qty;
-      body.moq = document.getElementById('qmMoq').value.trim();
-      body.deliveryTime = document.getElementById('qmDelivery').value.trim();
-      body.validUntil = document.getElementById('qmValid').value;
-    } else {
-      var rq = document.getElementById('qmReqQty').value.trim();
-      if(!rq || parseFloat(rq) <= 0){ A.showMsg(msgEl, 'error', A.t('err.required')); return; }
-      body.reqQty = rq;
-      body.preferredDelivery = document.getElementById('qmPrefDel').value.trim();
-      body.budget = document.getElementById('qmBudget').value.trim();
-    }
-    var btn = document.getElementById('qmSend');
-    A.setLoading(btn, true);
-    A.api('/api/quotes', body).then(function(r){
-      A.setLoading(btn, false);
-      if(r.status === 201){
-        A.toast(A.t(qKind === 'quote' ? 'qt.sentOk' : 'qt.reqSentOk'), 'ok');
-        modal.classList.remove('on');
-      } else if(r.status === 401){
-        location.href = '/login.html?next=/marketplace.html';
-      } else if(r.status === 403 && r.data.error === 'role_not_allowed'){
-        A.showMsg(msgEl, 'error', A.t(qKind === 'quote' ? 'qt.roleBlocked' : 'qt.roleBlockedReq'));
-      } else {
-        A.showMsg(msgEl, 'error', A.errMsg(r.data.error));
-      }
-    });
-  });
-
-  /* orange button variant (used in cards) */
-  load();
 })();
 </script>
 </body>
