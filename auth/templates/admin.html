@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahoor Admin</title>
+<meta name="theme-color" content="#0A1122">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1430'/%3E%3Cpath d='M16 8.5 9.6 23.5h12.8z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='9.6' cy='23.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='22.4' cy='23.5' r='2.6' fill='%23FF8A4C'/%3E%3C/svg%3E">
+<style>
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,__INTER__) format('woff2')}
+@font-face{font-family:'Noto Sans Bengali';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,__NSB__) format('woff2')}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:#F1F4F9;color:#101828;min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+html[lang="bn"] body{font-family:'Noto Sans Bengali','Inter',system-ui,sans-serif;line-height:1.65}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit}
+a{text-decoration:none;color:inherit}
+::selection{background:#2F6BFF;color:#fff}
+:focus-visible{outline:2px solid #2F6BFF;outline-offset:2px;border-radius:6px}
+
+/* layout */
+.admin-top{background:#0A1122;color:#fff;padding:0 18px;height:58px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50}
+.admin-top .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.1rem;letter-spacing:-.02em}
+.admin-top .brand em{font-style:normal;font-weight:500;color:#8FA3CE}
+.admin-top .at-spacer{flex:1}
+.admin-top .at-tag{font-size:.68rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#9DB7FF;background:rgba(47,107,255,.18);border:1px solid rgba(91,140,255,.4);padding:5px 12px;border-radius:999px}
+.lang-switch{display:inline-flex;align-items:center;gap:2px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:3px}
+.lang-switch button{font-size:.78rem;font-weight:650;color:#C7D2EC;padding:5px 11px;border-radius:999px;border:none;background:transparent}
+.lang-switch button.on{background:linear-gradient(135deg,#4C84FF,#2F6BFF);color:#fff}
+.lang-switch .sep{color:#5B6B93;font-size:.7rem}
+.at-out{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#E9EEFB;border-radius:999px;padding:8px 16px;font-size:.8rem;font-weight:650;transition:background .25s}
+.at-out:hover{background:rgba(255,255,255,.15)}
+
+.admin-body{display:flex;flex:1;min-height:calc(100vh - 58px)}
+.admin-side{width:226px;background:#0E1830;color:#C3CDE2;padding:16px 12px;flex-shrink:0;display:flex;flex-direction:column;gap:4px}
+.admin-side .side-title{font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#5F7196;padding:8px 12px 4px}
+.side-btn{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:none;border:none;color:#B9C6E3;padding:11px 12px;border-radius:11px;font-size:.9rem;font-weight:600;transition:all .2s}
+.side-btn:hover{background:rgba(255,255,255,.06);color:#fff}
+.side-btn.on{background:linear-gradient(135deg,rgba(47,107,255,.35),rgba(47,107,255,.15));color:#fff;box-shadow:inset 3px 0 0 #2F6BFF}
+.side-btn .si{font-size:1.05rem;width:22px;text-align:center}
+.admin-main{flex:1;padding:22px clamp(14px,3vw,30px);overflow-x:hidden}
+.page{display:none}
+.page.on{display:block;animation:pg .35s cubic-bezier(.16,1,.3,1)}
+@keyframes pg{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.page-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.page-head h1{font-size:1.35rem;font-weight:800;letter-spacing:-.02em}
+.page-head .ph-sub{color:#57627A;font-size:.85rem;margin-top:3px}
+
+/* cards & stats */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.stat-card{background:#fff;border:1px solid #E4E9F2;border-radius:14px;padding:15px 16px;box-shadow:0 4px 14px -10px rgba(10,17,34,.08)}
+.stat-card b{display:block;font-size:1.45rem;font-weight:800;letter-spacing:-.02em;color:#0A1122}
+.stat-card span{font-size:.74rem;color:#8A95AC;font-weight:600;line-height:1.4}
+.stat-card .sc-ic{float:right;font-size:1.2rem;opacity:.7}
+.panel{background:#fff;border:1px solid #E4E9F2;border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 4px 14px -10px rgba(10,17,34,.06)}
+.panel h2{font-size:1rem;font-weight:800;margin-bottom:12px}
+.mini-list{display:grid;gap:8px}
+.mini-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid #EDF0F6;border-radius:11px;font-size:.84rem}
+.mini-item .mi-av{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.75rem;background:linear-gradient(135deg,#4C84FF,#2F6BFF);overflow:hidden;flex-shrink:0}
+.mini-item .mi-av img{width:100%;height:100%;object-fit:cover}
+.mini-item .mi-info{flex:1;min-width:0}
+.mini-item .mi-info b{display:block;font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-item .mi-info span{font-size:.7rem;color:#8A95AC}
+.mini-item .mi-time{font-size:.68rem;color:#A6B1C7;flex-shrink:0}
+
+/* tables */
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.toolbar input[type=text]{padding:10px 14px;border:1.5px solid #E4E9F2;border-radius:11px;font-size:.86rem;min-width:200px;background:#fff}
+.toolbar input[type=text]:focus{outline:none;border-color:#2F6BFF;box-shadow:0 0 0 3px rgba(47,107,255,.1)}
+.toolbar select{padding:10px 12px;border:1.5px solid #E4E9F2;border-radius:11px;font-size:.85rem;background:#fff;color:#101828}
+.tbl-wrap{overflow-x:auto;border:1px solid #E4E9F2;border-radius:14px;background:#fff}
+table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:680px}
+thead th{background:#F7F9FC;text-align:left;padding:11px 14px;font-size:.7rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#8A95AC;border-bottom:1px solid #EDF0F6;white-space:nowrap}
+tbody td{padding:11px 14px;border-bottom:1px solid #F2F4F9;vertical-align:middle}
+tbody tr:hover{background:#F8FAFF}
+tbody tr:last-child td{border-bottom:none}
+.t-av{display:flex;align-items:center;gap:10px}
+.t-av .ta{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.75rem;background:linear-gradient(135deg,#4C84FF,#2F6BFF);overflow:hidden;flex-shrink:0}
+.t-av .ta img{width:100%;height:100%;object-fit:cover}
+.t-av b{font-size:.85rem;white-space:nowrap}
+.t-av span{display:block;font-size:.7rem;color:#8A95AC}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:.66rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.badge.active{color:#0B7A5E;background:#E6F7F0}
+.badge.suspended{color:#B45309;background:#FFF1E7}
+.badge.disabled{color:#C03221;background:#FDECEC}
+.badge.verified{color:#0B7A5E;background:#E6F7F0}
+.badge.pending{color:#B45309;background:#FFF1E7}
+.badge.unverified,.badge.rejected{color:#8A95AC;background:#F0F3F9}
+.badge.open{color:#0B7A5E;background:#E6F7F0}
+.badge.closed{color:#57627A;background:#EDF0F6}
+.badge.removed{color:#C03221;background:#FDECEC}
+.badge.buyer{color:#1E4FD8;background:#EBF1FF}
+.badge.supplier{color:#B45309;background:#FFF1E7}
+.badge.admin{color:#5A3ED0;background:#EFEBFF}
+.mini-btn{background:none;border:1px solid #E4E9F2;border-radius:9px;padding:6px 11px;font-size:.75rem;font-weight:650;color:#4A5870;transition:all .2s;white-space:nowrap}
+.mini-btn:hover{border-color:#2F6BFF;color:#2F6BFF}
+.mini-btn.danger{color:#C03221}
+.mini-btn.danger:hover{border-color:#C03221;background:#FDECEC}
+.mini-btn.ok{color:#0B7A5E}
+.mini-btn.ok:hover{border-color:#0E9F7E;background:#E6F7F0}
+.empty-box{text-align:center;padding:36px 16px;color:#8A95AC;font-size:.86rem;border:1.5px dashed #DDE3EE;border-radius:14px;background:#FBFCFE}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,90px);z-index:400;background:rgba(10,17,34,.95);color:#F4F7FF;border:1px solid rgba(255,255,255,.14);border-radius:13px;padding:12px 18px;font-size:.85rem;font-weight:600;transition:transform .4s cubic-bezier(.16,1,.3,1);box-shadow:0 18px 40px -12px rgba(8,14,28,.5);max-width:min(92vw,440px);text-align:center}
+.toast.show{transform:translate(-50%,0)}
+
+/* confirm modal */
+.modal-bg{position:fixed;inset:0;background:rgba(10,17,34,.55);backdrop-filter:blur(3px);z-index:300;display:none;align-items:center;justify-content:center;padding:18px}
+.modal-bg.on{display:flex}
+.modal{background:#fff;border-radius:18px;max-width:430px;width:100%;padding:24px;box-shadow:0 30px 70px -20px rgba(10,17,34,.4);animation:pg .3s cubic-bezier(.16,1,.3,1)}
+.modal h3{font-size:1.05rem;font-weight:800;margin-bottom:6px}
+.modal p{font-size:.86rem;color:#57627A;line-height:1.6;margin-bottom:16px}
+.modal .mrow{display:flex;gap:10px}
+.modal .mrow button{flex:1;padding:11px 16px;border-radius:11px;font-weight:650;font-size:.88rem;border:none}
+.mbtn-ok{background:linear-gradient(135deg,#4C84FF,#2F6BFF);color:#fff}
+.mbtn-cancel{background:#EDF0F7;color:#101828}
+.mbtn-danger{background:#E5484D;color:#fff}
+
+@media (max-width:900px){
+  .admin-side{width:64px;padding:14px 8px}
+  .side-btn{justify-content:center;padding:12px 8px;font-size:0}
+  .side-btn .si{font-size:1.15rem}
+  .side-title{display:none}
+}
+@media (max-width:560px){
+  .admin-top{padding:0 12px;gap:8px}
+  .at-tag{display:none}
+  .at-out{padding:7px 11px;font-size:.72rem;white-space:nowrap}
+  .admin-top .brand{font-size:.95rem}
+  .admin-body{flex-direction:column}
+  .admin-side{width:100%;flex-direction:row;flex-wrap:wrap;gap:4px;padding:8px;position:sticky;top:58px;z-index:40}
+  .side-btn{width:auto;flex:1;min-width:60px;font-size:.78rem;justify-content:center;gap:5px}
+  .side-btn .si{font-size:1rem}
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .toolbar input[type=text]{min-width:100%}
+}
+</style>
+</head>
+<body data-meta="admin">
+
+<header class="admin-top">
+  <div class="brand">
+    <svg width="30" height="30" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="9" fill="url(#ag)"/><path d="M16 8.5 9.6 23.5h12.8z" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/><circle cx="16" cy="8.5" r="2.7" fill="#fff"/><circle cx="9.6" cy="23.5" r="2.7" fill="#fff"/><circle cx="22.4" cy="23.5" r="2.7" fill="#FF8A4C"/><defs><linearGradient id="ag" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#3B77FF"/><stop offset="1" stop-color="#1E4FD8"/></linearGradient></defs></svg>
+    Ahoor<em>.</em> <span class="at-tag" data-a18n="admin.tag">Admin Panel</span>
+  </div>
+  <div class="at-spacer"></div>
+  <div class="lang-switch" id="langSwitch">
+    <button data-lang="bn">বাংলা</button><span class="sep">|</span><button data-lang="en">EN</button>
+  </div>
+  <a class="at-out" href="/index.html" data-a18n="admin.viewSite">View Site</a>
+  <button class="at-out" id="admLogout" data-a18n="admin.logout">Logout</button>
+</header>
+
+<div class="admin-body">
+  <nav class="admin-side">
+    <div class="side-title" data-a18n="admin.nav">Navigation</div>
+    <button class="side-btn on" data-page="dash"><span class="si">📊</span><span data-a18n="ad.dash">Dashboard</span></button>
+    <button class="side-btn" data-page="users"><span class="si">👥</span><span data-a18n="ad.users">Users</span></button>
+    <button class="side-btn" data-page="businesses"><span class="si">🏢</span><span data-a18n="ad.businesses">Businesses</span></button>
+    <button class="side-btn" data-page="posts"><span class="si">📦</span><span data-a18n="ad.posts">Marketplace Posts</span></button>
+    <button class="side-btn" data-page="reports"><span class="si">🚩</span><span data-a18n="ad.reports">Reports</span></button>
+    <button class="side-btn" data-page="verification"><span class="si">🛡️</span><span data-a18n="ad.verification">Verification</span></button>
+    <button class="side-btn" data-page="log"><span class="si">📜</span><span data-a18n="ad.log">Activity Log</span></button>
+  </nav>
+
+  <main class="admin-main">
+    <!-- DASHBOARD -->
+    <div class="page on" id="pg-dash">
+      <div class="page-head"><h1 data-a18n="ad.dash">Dashboard</h1></div>
+      <div class="stat-grid" id="statGrid"><div class="empty-box" data-a18n="ad.loading">Loading…</div></div>
+      <div class="panel">
+        <h2 data-a18n="ad.recentSignups">Recent Signups</h2>
+        <div class="mini-list" id="recentUsers"></div>
+      </div>
+      <div class="panel">
+        <h2 data-a18n="ad.recentPosts">Recent Posts</h2>
+        <div class="mini-list" id="recentPosts"></div>
+      </div>
+    </div>
+
+    <!-- USERS -->
+    <div class="page" id="pg-users">
+      <div class="page-head"><h1 data-a18n="ad.users">Users Management</h1></div>
+      <div class="toolbar">
+        <input type="text" id="uQ" data-a18n-ph="ad.searchUsers" placeholder="Search name, email, phone…">
+        <select id="uType"><option value="all" data-a18n="ad.allTypes">All types</option><option value="buyer" data-a18n="ad.buyer">Buyer</option><option value="supplier" data-a18n="ad.supplier">Supplier</option><option value="both" data-a18n="ad.both">Both</option></select>
+        <button class="mini-btn ok" id="uSearch" data-a18n="ad.search">Search</button>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th data-a18n="ad.user">User</th><th data-a18n="ad.type">Type</th><th data-a18n="ad.status">Status</th><th data-a18n="ad.role">Role</th><th data-a18n="ad.joined">Joined</th><th data-a18n="ad.actions">Actions</th></tr></thead>
+        <tbody id="uBody"><tr><td colspan="6"><div class="empty-box" data-a18n="ad.loading">Loading…</div></td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- BUSINESSES -->
+    <div class="page" id="pg-businesses">
+      <div class="page-head"><h1 data-a18n="ad.businesses">Business Management</h1></div>
+      <div class="toolbar">
+        <input type="text" id="bQ" data-a18n-ph="ad.searchBiz" placeholder="Search business…">
+        <select id="bType"><option value="all" data-a18n="ad.allTypes">All types</option></select>
+        <select id="bVer"><option value="all" data-a18n="ad.allVer">All verification</option><option value="verified" data-a18n="ad.verified">Verified</option><option value="pending" data-a18n="ad.pending">Pending</option><option value="unverified" data-a18n="ad.unverified">Unverified</option><option value="rejected" data-a18n="ad.rejected">Rejected</option></select>
+        <button class="mini-btn ok" id="bSearch" data-a18n="ad.search">Search</button>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th data-a18n="ad.business">Business</th><th data-a18n="ad.type">Type</th><th data-a18n="ad.category">Category</th><th data-a18n="ad.location">Location</th><th data-a18n="ad.verification">Verification</th><th data-a18n="ad.actions">Actions</th></tr></thead>
+        <tbody id="bBody"><tr><td colspan="6"><div class="empty-box" data-a18n="ad.loading">Loading…</div></td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- POSTS -->
+    <div class="page" id="pg-posts">
+      <div class="page-head"><h1 data-a18n="ad.posts">Post Management</h1></div>
+      <div class="toolbar">
+        <input type="text" id="pQ" data-a18n-ph="ad.searchPosts" placeholder="Search posts…">
+        <select id="pType"><option value="all" data-a18n="ad.allTypes">All types</option><option value="buyer" data-a18n="ad.buyer">Buyer</option><option value="supplier" data-a18n="ad.supplier">Supplier</option></select>
+        <select id="pStatus"><option value="all" data-a18n="ad.allStatus">All status</option><option value="open" data-a18n="ad.open">Open</option><option value="closed" data-a18n="ad.closed">Closed</option><option value="removed" data-a18n="ad.removed">Removed</option></select>
+        <button class="mini-btn ok" id="pSearch" data-a18n="ad.search">Search</button>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th data-a18n="ad.post">Post</th><th data-a18n="ad.type">Type</th><th data-a18n="ad.category">Category</th><th data-a18n="ad.location">Location</th><th data-a18n="ad.status">Status</th><th data-a18n="ad.actions">Actions</th></tr></thead>
+        <tbody id="pBody"><tr><td colspan="6"><div class="empty-box" data-a18n="ad.loading">Loading…</div></td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- REPORTS -->
+    <div class="page" id="pg-reports">
+      <div class="page-head"><h1 data-a18n="ad.reports">Reports</h1></div>
+      <div class="toolbar">
+        <select id="rStatus"><option value="open" data-a18n="ad.openReports">Open</option><option value="all" data-a18n="ad.allReports">All</option><option value="resolved" data-a18n="ad.resolved">Resolved</option><option value="dismissed" data-a18n="ad.dismissed">Dismissed</option></select>
+        <button class="mini-btn ok" id="rSearch" data-a18n="ad.search">Search</button>
+      </div>
+      <div id="rList"></div>
+    </div>
+
+    <!-- VERIFICATION -->
+    <div class="page" id="pg-verification">
+      <div class="page-head"><h1 data-a18n="ad.verification">Business Verification</h1></div>
+      <div id="vList"></div>
+    </div>
+
+    <!-- LOG -->
+    <div class="page" id="pg-log">
+      <div class="page-head"><h1 data-a18n="ad.log">Admin Activity Log</h1></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th data-a18n="ad.admin">Admin</th><th data-a18n="ad.action">Action</th><th data-a18n="ad.detail">Detail</th><th data-a18n="ad.time">Time</th></tr></thead>
+        <tbody id="lBody"><tr><td colspan="4"><div class="empty-box" data-a18n="ad.loading">Loading…</div></td></tr></tbody>
+      </table></div>
+    </div>
+  </main>
+</div>
+
+<!-- confirm modal -->
+<div class="modal-bg" id="cfModal">
+  <div class="modal">
+    <h3 id="cfTitle"></h3>
+    <p id="cfText"></p>
+    <div class="mrow">
+      <button class="mbtn-cancel" id="cfCancel"></button>
+      <button class="mbtn-ok" id="cfOk"></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="admToast"></div>
+
+<script>
+/* ================= ADMIN i18n ================= */
+var A_DICT = {
+ "admin.tag":["Admin Panel","অ্যাডমিন প্যানেল"],
+ "admin.viewSite":["View Site","সাইট দেখুন"],
+ "admin.logout":["Logout","লগআউট"],
+ "admin.nav":["Navigation","নেভিগেশন"],
+ "ad.dash":["Dashboard","ড্যাশবোর্ড"],
+ "ad.users":["Users","ইউজার"],
+ "ad.businesses":["Businesses","ব্যবসা"],
+ "ad.posts":["Marketplace Posts","মার্কেটপ্লেস পোস্ট"],
+ "ad.reports":["Reports","রিপোর্ট"],
+ "ad.verification":["Verification","যাচাইকরণ"],
+ "ad.log":["Activity Log","অ্যাক্টিভিটি লগ"],
+ "ad.loading":["Loading…","লোড হচ্ছে…"],
+ "ad.recentSignups":["Recent Signups","সাম্প্রতিক সাইনআপ"],
+ "ad.recentPosts":["Recent Posts","সাম্প্রতিক পোস্ট"],
+ "ad.searchUsers":["Search name, email, phone…","নাম, ইমেইল, ফোন খুঁজুন…"],
+ "ad.searchBiz":["Search business…","ব্যবসা খুঁজুন…"],
+ "ad.searchPosts":["Search posts…","পোস্ট খুঁজুন…"],
+ "ad.allTypes":["All types","সব ধরন"],
+ "ad.allVer":["All verification","সব যাচাইকরণ"],
+ "ad.allStatus":["All status","সব স্ট্যাটাস"],
+ "ad.allReports":["All","সব"],
+ "ad.openReports":["Open","খোলা"],
+ "ad.resolved":["Resolved","সমাধানকৃত"],
+ "ad.dismissed":["Dismissed","খারিজ"],
+ "ad.search":["Search","খুঁজুন"],
+ "ad.user":["User","ইউজার"],
+ "ad.type":["Type","ধরন"],
+ "ad.status":["Status","স্ট্যাটাস"],
+ "ad.role":["Role","ভূমিকা"],
+ "ad.joined":["Joined","যোগদান"],
+ "ad.actions":["Actions","অ্যাকশন"],
+ "ad.business":["Business","ব্যবসা"],
+ "ad.category":["Category","ক্যাটাগরি"],
+ "ad.location":["Location","অবস্থান"],
+ "ad.verification":["Verification","যাচাইকরণ"],
+ "ad.post":["Post","পোস্ট"],
+ "ad.admin":["Admin","অ্যাডমিন"],
+ "ad.action":["Action","অ্যাকশন"],
+ "ad.detail":["Detail","বিবরণ"],
+ "ad.time":["Time","সময়"],
+ "ad.view":["View","দেখুন"],
+ "ad.viewBiz":["View Business","ব্যবসা দেখুন"],
+ "ad.suspend":["Suspend","সাসপেন্ড"],
+ "ad.reactivate":["Reactivate","সক্রিয় করুন"],
+ "ad.disable":["Disable","নিষ্ক্রিয়"],
+ "ad.delete":["Delete","মুছে ফেলুন"],
+ "ad.remove":["Remove","সরান"],
+ "ad.close":["Close","বন্ধ করুন"],
+ "ad.open":["Open","খোলা"],
+ "ad.closed":["Closed","বন্ধ"],
+ "ad.removed":["Removed","সরানো হয়েছে"],
+ "ad.approve":["Approve","অনুমোদন"],
+ "ad.reject":["Reject","প্রত্যাখ্যান"],
+ "ad.resolve":["Mark Resolved","সমাধানকৃত করুন"],
+ "ad.dismiss":["Dismiss","খারিজ করুন"],
+ "ad.buyer":["Buyer","ক্রেতা"],
+ "ad.supplier":["Supplier","সরবরাহকারী"],
+ "ad.both":["Both","দুটোই"],
+ "ad.active":["Active","সক্রিয়"],
+ "ad.suspended":["Suspended","সাসপেন্ডেড"],
+ "ad.disabled":["Disabled","নিষ্ক্রিয়"],
+ "ad.verified":["Verified","যাচাইকৃত"],
+ "ad.pending":["Pending","অপেক্ষমাণ"],
+ "ad.unverified":["Unverified","অযাচাইকৃত"],
+ "ad.rejected":["Rejected","প্রত্যাখ্যাত"],
+ "ad.noData":["No data found.","কোনো ডেটা পাওয়া যায়নি।"],
+ "ad.confirmSuspend":["Suspend this user? They will not be able to sign in.","এই ইউজারকে সাসপেন্ড করবেন? তারা সাইন ইন করতে পারবে না।"],
+ "ad.confirmReactivate":["Reactivate this user?","এই ইউজারকে সক্রিয় করবেন?"],
+ "ad.confirmDisable":["Disable this user?","এই ইউজারকে নিষ্ক্রিয় করবেন?"],
+ "ad.confirmDeleteUser":["Delete this user permanently? All their posts and data will be removed. This cannot be undone.","এই ইউজারকে স্থায়ীভাবে মুছে ফেলবেন? তার সব পোস্ট ও ডেটা মুছে যাবে। এটি ফেরানো যাবে না।"],
+ "ad.confirmRemovePost":["Remove this post? It will be deleted permanently.","এই পোস্টটি সরিয়ে ফেলবেন? এটি স্থায়ীভাবে মুছে যাবে।"],
+ "ad.confirmClosePost":["Close this post? No new quotes will be accepted.","এই পোস্টটি বন্ধ করবেন? নতুন কোটেশন গ্রহণ করা হবে না।"],
+ "ad.confirmApprove":["Approve this business as Verified?","এই ব্যবসাটিকে যাচাইকৃত হিসেবে অনুমোদন করবেন?"],
+ "ad.confirmReject":["Reject this verification request?","এই যাচাইকরণ অনুরোধটি প্রত্যাখ্যান করবেন?"],
+ "ad.confirmResolve":["Mark this report as resolved?","এই রিপোর্টটি সমাধানকৃত হিসেবে চিহ্নিত করবেন?"],
+ "ad.confirmDismiss":["Dismiss this report?","এই রিপোর্টটি খারিজ করবেন?"],
+ "ad.ok":["Confirm","নিশ্চিত করুন"],
+ "ad.cancel":["Cancel","বাতিল"],
+ "ad.done":["Done","সম্পন্ন"],
+ "ad.err":["Action failed. Please try again.","অ্যাকশন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।"],
+ "ad.statUsers":["Total Users","মোট ইউজার"],
+ "ad.statBuyers":["Buyers","ক্রেতা"],
+ "ad.statSuppliers":["Suppliers","সরবরাহকারী"],
+ "ad.statBoth":["Both Type","দুটোই"],
+ "ad.statBusinesses":["Businesses","ব্যবসা"],
+ "ad.statPosts":["Total Posts","মোট পোস্ট"],
+ "ad.statOpenBuyer":["Open Buyer Req.","খোলা ক্রয় অনুরোধ"],
+ "ad.statSupplierOffers":["Supplier Offers","সরবরাহকারীর অফার"],
+ "ad.statQuotes":["Quotes","কোটেশন"],
+ "ad.statConvs":["Conversations","কথোপকথন"],
+ "ad.statReports":["Open Reports","খোলা রিপোর্ট"],
+ "ad.statPendingVer":["Pending Verification","অপেক্ষমাণ যাচাইকরণ"],
+ "ad.suspendReason":["Reason (optional)","কারণ (ঐচ্ছিক)"],
+ "ad.rejectReason":["Rejection reason","প্রত্যাখ্যানের কারণ"],
+ "ad.viewBizPage":["Open public profile","পাবলিক প্রোফাইল খুলুন"],
+ "ad.reportOf":["Reported","রিপোর্ট করা হয়েছে"],
+ "ad.by":["by","দ্বারা"],
+ "ad.reason":["Reason","কারণ"],
+ "ad.target":["Target","লক্ষ্য"],
+ "ad.date":["Date","তারিখ"],
+ "ad.verReq":["Verification request","যাচাইকরণ অনুরোধ"],
+ "ad.bizType":["Business Type","ব্যবসার ধরন"],
+ "ad.products":["Products","পণ্য"],
+ "ad.memberSince":["Member since","সদস্য"],
+ "ad.noReports":["No reports found.","কোনো রিপোর্ট পাওয়া যায়নি।"],
+ "ad.noVerification":["No pending verification requests.","কোনো অপেক্ষমাণ যাচাইকরণ অনুরোধ নেই।"],
+ "ad.noLog":["No admin activity yet.","এখনো কোনো অ্যাডমিন অ্যাক্টিভিটি নেই।"],
+ "ad.userSuspended":["User suspended.","ইউজার সাসপেন্ড করা হয়েছে।"],
+ "ad.userReactivated":["User reactivated.","ইউজার সক্রিয় করা হয়েছে।"],
+ "ad.userDisabled":["User disabled.","ইউজার নিষ্ক্রিয় করা হয়েছে।"],
+ "ad.userDeleted":["User deleted.","ইউজার মুছে ফেলা হয়েছে।"],
+ "ad.postRemoved":["Post removed.","পোস্ট সরানো হয়েছে।"],
+ "ad.postClosed":["Post closed.","পোস্ট বন্ধ করা হয়েছে।"],
+ "ad.verApproved":["Verification approved.","যাচাইকরণ অনুমোদিত হয়েছে।"],
+ "ad.verRejected":["Verification rejected.","যাচাইকরণ প্রত্যাখ্যাত হয়েছে।"],
+ "ad.reportResolved":["Report resolved.","রিপোর্ট সমাধানকৃত হয়েছে।"],
+ "ad.reportDismissed":["Report dismissed.","রিপোর্ট খারিজ হয়েছে।"]
+};
+function alng(){ try{var s=localStorage.getItem('ahoor-lang'); if(s==='en'||s==='bn') return s;}catch(e){} return 'bn'; }
+function at(k, p){ var v=A_DICT[k]; if(!v) return k; var s=v[alng()==='bn'?1:0]; if(p){for(var x in p) s=s.replace('{'+x+'}',p[x]);} return s; }
+function aApply(){
+  document.documentElement.lang = alng();
+  document.querySelectorAll('[data-a18n]').forEach(function(el){ el.textContent = at(el.getAttribute('data-a18n')); });
+  document.querySelectorAll('[data-a18n-ph]').forEach(function(el){ el.setAttribute('placeholder', at(el.getAttribute('data-a18n-ph'))); });
+  document.querySelectorAll('#langSwitch button').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-lang')===alng()); });
+}
+document.querySelectorAll('#langSwitch button').forEach(function(b){
+  b.addEventListener('click', function(){ try{localStorage.setItem('ahoor-lang', b.getAttribute('data-lang'));}catch(e){} aApply(); });
+});
+
+/* ================= helpers ================= */
+function esc(s){ var d=document.createElement('div'); d.textContent=s==null?'':s; return d.innerHTML; }
+function adminApi(path, body){
+  var opts = { method:'POST', headers:{'Content-Type':'application/json'}, credentials:'same-origin' };
+  if (body) opts.body = JSON.stringify(body);
+  return fetch(path, opts).then(function(r){
+    return r.json().then(function(j){ return {status:r.status, data:j}; }).catch(function(){ return {status:r.status, data:{}}; });
+  }).catch(function(){ return {status:0, data:{error:'network'}}; });
+}
+function adminGet(path){
+  return fetch(path, {credentials:'same-origin'}).then(function(r){ return r.json(); }).catch(function(){ return {}; });
+}
+function toast(msg, ok){
+  var el = document.getElementById('admToast');
+  el.textContent = msg;
+  el.style.background = ok ? 'rgba(14,159,126,.95)' : 'rgba(229,72,77,.95)';
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(function(){ el.classList.remove('show'); }, 2600);
+}
+function timeFmt(iso){
+  return new Date(iso).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+}
+function bizTypeName(v){
+  if(!v) return '—';
+  var names = {manufacturer:['Manufacturer','প্রস্তুতকারক'],supplier:['Supplier','সরবরাহকারী'],wholesaler:['Wholesaler','পাইকারি'],buyer:['Buyer','ক্রেতা'],exporter:['Exporter','রপ্তানিকারক'],importer:['Importer','আমদানিকারক'],service:['Service Provider','সেবা প্রদানকারী'],other:['Other','অন্যান্য']};
+  var n = names[v]; if(!n) return v;
+  return alng()==='bn'?n[1]:n[0];
+}
+function locName(kind, v){
+  var lists = {district:[['Dhaka','ঢাকা'],['Gazipur','গাজীপুর'],['Narayanganj','নারায়ণগঞ্জ'],['Chattogram','চট্টগ্রাম'],['Sylhet','সিলেট'],['Rajshahi','রাজশাহী'],['Khulna','খুলনা'],['Barishal','বরিশাল'],['Rangpur','রংপুর'],['Mymensingh','ময়মনসিংহ']],category:[['Garments & Apparel','গার্মেন্টস ও পোশাক'],['Textile & Fabric','টেক্সটাইল ও ফেব্রিক'],['Packaging','প্যাকেজিং'],['Leather Products','চামড়াজাত পণ্য'],['Jute Products','পাটজাত পণ্য'],['Food & Agriculture','খাদ্য ও কৃষি'],['Machinery','মেশিনারি'],['Electronics','ইলেকট্রনিক্স'],['Construction Materials','নির্মাণ সামগ্রী'],['Chemicals & Raw Materials','রাসায়নিক ও কাঁচামাল']]};
+  var list = lists[kind] || [];
+  for (var i=0;i<list.length;i++) if (list[i][0]===v) return alng()==='bn'?list[i][1]:list[i][0];
+  return v;
+}
+function statusBadge(st){
+  var map = {active:'active', suspended:'suspended', disabled:'disabled', verified:'verified', pending:'pending', unverified:'unverified', rejected:'rejected', open:'open', closed:'closed', removed:'removed'};
+  return '<span class="badge ' + (map[st]||'') + '">' + at('ad.'+st) + '</span>';
+}
+
+/* ================= confirm modal ================= */
+var cfCb = null;
+function confirmBox(title, text, okLabel, danger){
+  document.getElementById('cfTitle').textContent = title;
+  document.getElementById('cfText').textContent = text;
+  var ok = document.getElementById('cfOk');
+  ok.textContent = okLabel || at('ad.ok');
+  ok.className = danger ? 'mbtn-danger' : 'mbtn-ok';
+  document.getElementById('cfCancel').textContent = at('ad.cancel');
+  document.getElementById('cfModal').classList.add('on');
+  cfCb = null;
+  return new Promise(function(res){ cfCb = res; });
+}
+document.getElementById('cfOk').addEventListener('click', function(){ document.getElementById('cfModal').classList.remove('on'); if(cfCb) cfCb(true); });
+document.getElementById('cfCancel').addEventListener('click', function(){ document.getElementById('cfModal').classList.remove('on'); if(cfCb) cfCb(false); });
+
+/* ================= navigation ================= */
+function goPage(name){
+  document.querySelectorAll('.side-btn').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-page')===name); });
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.toggle('on', p.id==='pg-'+name); });
+  if (name==='dash') loadDash();
+  if (name==='users') loadUsers();
+  if (name==='businesses') loadBusinesses();
+  if (name==='posts') loadPosts();
+  if (name==='reports') loadReports();
+  if (name==='verification') loadVerification();
+  if (name==='log') loadLog();
+}
+document.querySelectorAll('.side-btn').forEach(function(b){ b.addEventListener('click', function(){ goPage(b.getAttribute('data-page')); }); });
+
+/* ================= DASHBOARD ================= */
+function loadDash(){
+  adminGet('/api/admin/stats').then(function(d){
+    if (!d.stats) { toast(at('ad.err'), false); return; }
+    var s = d.stats;
+    var items = [
+      ['👥', at('ad.statUsers'), s.totalUsers], ['🛒', at('ad.statBuyers'), s.buyers],
+      ['🏭', at('ad.statSuppliers'), s.suppliers], ['🔄', at('ad.statBoth'), s.both],
+      ['🏢', at('ad.statBusinesses'), s.businesses], ['📦', at('ad.statPosts'), s.totalPosts],
+      ['📋', at('ad.statOpenBuyer'), s.openBuyer], ['📤', at('ad.statSupplierOffers'), s.supplierOffers],
+      ['💬', at('ad.statQuotes'), s.quotes], ['🧾', at('ad.statConvs'), s.conversations],
+      ['🚩', at('ad.statReports'), s.reports], ['🛡️', at('ad.statPendingVer'), s.pendingVerification]
+    ];
+    document.getElementById('statGrid').innerHTML = items.map(function(it){
+      return '<div class="stat-card"><span class="sc-ic">' + it[0] + '</span><b>' + it[3] + '</b><span>' + it[1] + '</span></div>';
+    }).join('');
+    document.getElementById('recentUsers').innerHTML = (d.recentSignups||[]).map(function(u){
+      return '<div class="mini-item"><span class="mi-av">' + (u.image?'<img src="'+u.image+'">':esc((u.businessName||u.name||'?').charAt(0).toUpperCase())) + '</span><span class="mi-info"><b>' + esc(u.businessName||u.name) + '</b><span>' + esc(u.email) + '</span></span><span class="mi-time">' + timeFmt(u.createdAt) + '</span></div>';
+    }).join('') || '<div class="empty-box">' + at('ad.noData') + '</div>';
+    document.getElementById('recentPosts').innerHTML = (d.recentPosts||[]).map(function(pt){
+      return '<div class="mini-item"><span class="mi-av" style="background:linear-gradient(135deg,'+(pt.type==='buyer'?'#2F6BFF,#1E4FD8':'#FF7A3D,#EA5E1F')+')">' + (pt.type==='buyer'?'🛒':'🏭') + '</span><span class="mi-info"><b>' + esc(pt.title) + '</b><span>' + locName('category', pt.category) + ' · ' + locName('district', pt.location) + '</span></span><span class="mi-time">' + timeFmt(pt.createdAt) + '</span></div>';
+    }).join('') || '<div class="empty-box">' + at('ad.noData') + '</div>';
+  });
+}
+
+/* ================= USERS ================= */
+function loadUsers(){
+  var q = document.getElementById('uQ').value.trim();
+  var t = document.getElementById('uType').value;
+  var params = new URLSearchParams();
+  if (q) params.set('q', q);
+  if (t && t!=='all') params.set('type', t);
+  adminGet('/api/admin/users?' + params.toString()).then(function(d){
+    var body = document.getElementById('uBody');
+    if (!d.users || !d.users.length) { body.innerHTML = '<tr><td colspan="6"><div class="empty-box">' + at('ad.noData') + '</div></td></tr>'; return; }
+    body.innerHTML = d.users.map(function(u){
+      var typeLabel = u.type ? at('ad.'+u.type) : '—';
+      var roleBadge = u.role==='admin' ? ' <span class="badge admin">ADMIN</span>' : '';
+      var actions = '';
+      if (u.accountStatus==='active') actions += '<button class="mini-btn" data-act="suspend" data-id="'+u.id+'">' + at('ad.suspend') + '</button> <button class="mini-btn danger" data-act="disable" data-id="'+u.id+'">' + at('ad.disable') + '</button>';
+      if (u.accountStatus==='suspended') actions += '<button class="mini-btn ok" data-act="reactivate" data-id="'+u.id+'">' + at('ad.reactivate') + '</button>';
+      if (u.accountStatus==='disabled') actions += '<button class="mini-btn ok" data-act="reactivate" data-id="'+u.id+'">' + at('ad.reactivate') + '</button>';
+      actions += ' <button class="mini-btn danger" data-act="delete" data-id="'+u.id+'">' + at('ad.delete') + '</button>';
+      return '<tr><td><div class="t-av"><span class="ta">' + (u.image?'<img src="'+u.image+'">':esc((u.name||'?').charAt(0).toUpperCase())) + '</span><div><b>' + esc(u.name) + roleBadge + '</b><span>' + esc(u.businessName || u.email) + '</span></div></div></td><td>' + typeLabel + '</td><td>' + statusBadge(u.accountStatus) + '</td><td>' + (u.role==='admin'?'Admin':'User') + '</td><td>' + timeFmt(u.createdAt) + '</td><td>' + actions + '</td></tr>';
+    }).join('');
+    body.querySelectorAll('[data-act]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var act = btn.getAttribute('data-act');
+        var id = btn.getAttribute('data-id');
+        var u = d.users.find(function(x){ return x.id===id; });
+        if (act==='suspend') confirmBox(at('ad.suspend'), at('ad.confirmSuspend'), at('ad.ok'), false).then(function(ok){ if(ok) doUserAction(id,'suspend'); });
+        if (act==='reactivate') confirmBox(at('ad.reactivate'), at('ad.confirmReactivate'), at('ad.ok'), false).then(function(ok){ if(ok) doUserAction(id,'reactivate'); });
+        if (act==='disable') confirmBox(at('ad.disable'), at('ad.confirmDisable'), at('ad.ok'), true).then(function(ok){ if(ok) doUserAction(id,'disable'); });
+        if (act==='delete') confirmBox(at('ad.delete'), at('ad.confirmDeleteUser'), at('ad.ok'), true).then(function(ok){ if(ok) doUserAction(id,'delete'); });
+      });
+    });
+  });
+}
+function doUserAction(id, op){
+  adminApi('/api/admin/user-action', {userId:id, op:op}).then(function(r){
+    if (r.status===200) { toast(at('ad.user'+(op==='suspend'?'Suspended':op==='reactivate'?'Reactivated':op==='disable'?'Disabled':'Deleted')), true); loadUsers(); }
+    else toast(at('ad.err'), false);
+  });
+}
+document.getElementById('uSearch').addEventListener('click', loadUsers);
+document.getElementById('uType').addEventListener('change', loadUsers);
+
+/* ================= BUSINESSES ================= */
+function loadBusinesses(){
+  var q = document.getElementById('bQ').value.trim();
+  var bt = document.getElementById('bType').value;
+  var vs = document.getElementById('bVer').value;
+  var params = new URLSearchParams();
+  if (q) params.set('q', q);
+  if (bt && bt!=='all') params.set('biztype', bt);
+  if (vs && vs!=='all') params.set('verification', vs);
+  adminGet('/api/admin/businesses?' + params.toString()).then(function(d){
+    var body = document.getElementById('bBody');
+    if (!d.businesses || !d.businesses.length) { body.innerHTML = '<tr><td colspan="6"><div class="empty-box">' + at('ad.noData') + '</div></td></tr>'; return; }
+    body.innerHTML = d.businesses.map(function(u){
+      return '<tr><td><div class="t-av"><span class="ta">' + (u.image?'<img src="'+u.image+'">':esc((u.businessName||'?').charAt(0).toUpperCase())) + '</span><div><b>' + esc(u.businessName) + '</b><span>' + esc(u.name) + '</span></div></div></td><td>' + (u.businessType?bizTypeName(u.businessType):'—') + '</td><td>' + locName('category', u.category) + '</td><td>' + locName('district', u.district) + '</td><td>' + statusBadge(u.verificationStatus||'unverified') + '</td><td><a class="mini-btn" href="/business.html?id=' + u.id + '" target="_blank">' + at('ad.viewBiz') + '</a> <button class="mini-btn" data-bs="' + u.id + '">' + at('ad.suspend') + '</button></td></tr>';
+    }).join('');
+    body.querySelectorAll('[data-bs]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        confirmBox(at('ad.suspend'), at('ad.confirmSuspend'), at('ad.ok'), false).then(function(ok){ if(ok) doUserAction(btn.getAttribute('data-bs'),'suspend'); });
+      });
+    });
+  });
+}
+document.getElementById('bSearch').addEventListener('click', loadBusinesses);
+document.getElementById('bType').addEventListener('change', loadBusinesses);
+document.getElementById('bVer').addEventListener('change', loadBusinesses);
+
+/* ================= POSTS ================= */
+function loadPosts(){
+  var q = document.getElementById('pQ').value.trim();
+  var t = document.getElementById('pType').value;
+  var st = document.getElementById('pStatus').value;
+  var params = new URLSearchParams();
+  if (q) params.set('q', q);
+  if (t && t!=='all') params.set('type', t);
+  if (st && st!=='all') params.set('status', st);
+  adminGet('/api/admin/posts?' + params.toString()).then(function(d){
+    var body = document.getElementById('pBody');
+    if (!d.posts || !d.posts.length) { body.innerHTML = '<tr><td colspan="6"><div class="empty-box">' + at('ad.noData') + '</div></td></tr>'; return; }
+    body.innerHTML = d.posts.map(function(pt){
+      var actions = '';
+      if (pt.status==='open') actions += '<button class="mini-btn" data-act="close" data-id="'+pt.id+'">' + at('ad.close') + '</button> ';
+      if (pt.status==='closed') actions += '<button class="mini-btn ok" data-act="open" data-id="'+pt.id+'">' + at('ad.open') + '</button> ';
+      actions += '<button class="mini-btn danger" data-act="remove" data-id="'+pt.id+'">' + at('ad.remove') + '</button>';
+      return '<tr><td><b>' + esc(pt.title) + '</b><br><span style="font-size:.72rem;color:#8A95AC">' + esc((pt.owner&&(pt.owner.businessName||pt.owner.name))||'') + '</span></td><td><span class="badge ' + pt.type + '">' + at('ad.'+pt.type) + '</span></td><td>' + locName('category', pt.category) + '</td><td>' + locName('district', pt.location) + '</td><td>' + statusBadge(pt.status) + '</td><td>' + actions + '</td></tr>';
+    }).join('');
+    body.querySelectorAll('[data-act]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var act = btn.getAttribute('data-act');
+        var id = btn.getAttribute('data-id');
+        if (act==='close') confirmBox(at('ad.close'), at('ad.confirmClosePost'), at('ad.ok'), false).then(function(ok){ if(ok) doPostAction(id,'close'); });
+        if (act==='open') doPostAction(id,'open');
+        if (act==='remove') confirmBox(at('ad.remove'), at('ad.confirmRemovePost'), at('ad.ok'), true).then(function(ok){ if(ok) doPostAction(id,'remove'); });
+      });
+    });
+  });
+}
+function doPostAction(id, op){
+  adminApi('/api/admin/post-action', {postId:id, op:op}).then(function(r){
+    if (r.status===200) { toast(at('ad.post'+(op==='remove'?'Removed':'Closed')), true); loadPosts(); }
+    else toast(at('ad.err'), false);
+  });
+}
+document.getElementById('pSearch').addEventListener('click', loadPosts);
+document.getElementById('pType').addEventListener('change', loadPosts);
+document.getElementById('pStatus').addEventListener('change', loadPosts);
+
+/* ================= REPORTS ================= */
+function loadReports(){
+  var st = document.getElementById('rStatus').value;
+  adminGet('/api/admin/reports?status=' + st).then(function(d){
+    var box = document.getElementById('rList');
+    if (!d.reports || !d.reports.length) { box.innerHTML = '<div class="empty-box">' + at('ad.noReports') + '</div>'; return; }
+    box.innerHTML = d.reports.map(function(r){
+      var targetInfo = r.targetType==='business'
+        ? (r.target ? esc(r.target.businessName||r.target.name) : '—')
+        : (r.target ? esc(r.target.title) : '—');
+      var act = '';
+      if (r.status==='open') {
+        act += '<button class="mini-btn ok" data-ract="resolve" data-id="'+r.id+'">' + at('ad.resolve') + '</button> ';
+        act += '<button class="mini-btn" data-ract="dismiss" data-id="'+r.id+'">' + at('ad.dismiss') + '</button>';
+      }
+      return '<div class="panel" style="margin-bottom:10px"><div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap">' +
+        '<span class="badge ' + (r.status==='open'?'pending':r.status==='resolved'?'verified':'') + '">' + at(r.status==='open'?'ad.openReports':r.status==='resolved'?'ad.resolved':'ad.dismissed') + '</span>' +
+        '<div style="flex:1;min-width:200px"><b>' + at('ad.reportOf') + ': ' + (r.targetType==='business'?'🏢':'📦') + ' ' + targetInfo + '</b>' +
+        '<div style="font-size:.8rem;color:#57627A;margin-top:4px">' + at('ad.reason') + ': ' + esc(r.reason) + '</div>' +
+        '<div style="font-size:.7rem;color:#8A95AC;margin-top:3px">' + at('ad.by') + ': ' + esc(r.reporter?r.reporter.businessName||r.reporter.name:'—') + ' · ' + timeFmt(r.createdAt) + '</div></div>' +
+        (r.targetType==='business' && r.target ? '<a class="mini-btn" href="/business.html?id='+r.targetId+'" target="_blank">' + at('ad.viewBiz') + '</a>' : '') +
+        act + '</div></div>';
+    }).join('');
+    box.querySelectorAll('[data-ract]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var act = btn.getAttribute('data-ract');
+        var id = btn.getAttribute('data-id');
+        var key = act==='resolve' ? 'ad.confirmResolve' : 'ad.confirmDismiss';
+        var label = act==='resolve' ? 'ad.resolve' : 'ad.dismiss';
+        confirmBox(at(label), at(key), at('ad.ok'), act==='dismiss').then(function(ok){
+          if (!ok) return;
+          adminApi('/api/admin/report-action', {reportId:id, op:act}).then(function(r){
+            if (r.status===200) { toast(at('ad.report'+(act==='resolve'?'Resolved':'Dismissed')), true); loadReports(); }
+            else toast(at('ad.err'), false);
+          });
+        });
+      });
+    });
+  });
+}
+document.getElementById('rSearch').addEventListener('click', loadReports);
+document.getElementById('rStatus').addEventListener('change', loadReports);
+
+/* ================= VERIFICATION ================= */
+function loadVerification(){
+  adminGet('/api/admin/users?type=all').then(function(d){
+    var pending = (d.users||[]).filter(function(u){ return (u.verificationStatus||'unverified')==='pending'; });
+    var box = document.getElementById('vList');
+    if (!pending.length) { box.innerHTML = '<div class="empty-box">' + at('ad.noVerification') + '</div>'; return; }
+    box.innerHTML = pending.map(function(u){
+      return '<div class="panel" style="margin-bottom:10px"><div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap">' +
+        '<span class="t-av"><span class="ta">' + (u.image?'<img src="'+u.image+'">':esc((u.businessName||'?').charAt(0).toUpperCase())) + '</span><div><b>' + esc(u.businessName) + '</b><span>' + esc(u.name) + ' · ' + (u.businessType?bizTypeName(u.businessType):'—') + '</span></div></span>' +
+        '<div style="flex:1;min-width:200px;font-size:.8rem;color:#57627A">' +
+          (u.category ? '<div>' + at('ad.category') + ': ' + locName('category', u.category) + '</div>' : '') +
+          (u.productsServices ? '<div>' + at('ad.products') + ': ' + esc(u.productsServices) + '</div>' : '') +
+          (u.district ? '<div>' + at('ad.location') + ': ' + locName('district', u.district) + '</div>' : '') +
+        '</div>' +
+        '<div><button class="mini-btn ok" data-vact="approve" data-id="'+u.id+'">' + at('ad.approve') + '</button> <button class="mini-btn danger" data-vact="reject" data-id="'+u.id+'">' + at('ad.reject') + '</button></div>' +
+        '</div></div>';
+    }).join('');
+    box.querySelectorAll('[data-vact]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var act = btn.getAttribute('data-vact');
+        var id = btn.getAttribute('data-id');
+        confirmBox(at(act==='approve'?'ad.approve':'ad.reject'), at(act==='approve'?'ad.confirmApprove':'ad.confirmReject'), at('ad.ok'), act==='reject').then(function(ok){
+          if (!ok) return;
+          adminApi('/api/admin/verification', {userId:id, op:act}).then(function(r){
+            if (r.status===200) { toast(at('ad.ver'+(act==='approve'?'Approved':'Rejected')), true); loadVerification(); }
+            else toast(at('ad.err'), false);
+          });
+        });
+      });
+    });
+  });
+}
+
+/* ================= LOG ================= */
+function loadLog(){
+  adminGet('/api/admin/log').then(function(d){
+    var body = document.getElementById('lBody');
+    if (!d.log || !d.log.length) { body.innerHTML = '<tr><td colspan="4"><div class="empty-box">' + at('ad.noLog') + '</div></td></tr>'; return; }
+    body.innerHTML = d.log.map(function(l){
+      return '<tr><td>' + esc(l.admin) + '</td><td><span class="badge active">' + esc(l.action) + '</span></td><td style="font-size:.8rem;color:#57627A">' + esc(l.detail) + '</td><td>' + timeFmt(l.createdAt) + '</td></tr>';
+    }).join('');
+  });
+}
+
+/* ================= init ================= */
+document.getElementById('admLogout').addEventListener('click', function(){
+  adminApi('/api/logout', {}).then(function(){ location.href='/login.html'; });
+});
+aApply();
+loadDash();
+</script>
+</body>
+</html>

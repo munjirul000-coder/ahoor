@@ -123,3 +123,16 @@ Push to GitHub → Deploy on Render (free tier):
 - **Real-time via SSE**: new notifications appear instantly (30s polling fallback)
 - **Security**: users see/manage only their own notifications (404 otherwise), all links authorized
 - Fully bilingual (বাংলা/EN); 26/26 notifications E2E tests + full regression pass
+
+## Features (v6 — Admin Panel)
+
+- **Admin role**: set `ADMIN_EMAIL` env var — that email becomes admin on signup; `/admin` protected server-side (normal users redirected, API 403)
+- **Admin dashboard**: real stats (users, buyers, suppliers, businesses, posts, open buyer reqs, supplier offers, quotes, conversations, reports, pending verification) + recent signups/posts
+- **User management**: search, filter by type, suspend/reactivate/disable/delete (with confirmation), view status
+- **Business management**: search, filter by business type & verification status, view public profile, suspend
+- **Post management**: search, filter by type/category/location/status, close/open/remove (with confirmation)
+- **Reports**: users can report business/post from public pages; admin sees reporter (minimal info) + reason + target, resolve/dismiss
+- **Verification**: businesses apply from profile; admin approves/rejects (with reason); status shows on profiles
+- **Activity log**: every admin action recorded (suspend, reactivate, remove post, verification, report actions)
+- **Privacy**: no unrestricted access to private conversations (only via valid report workflow)
+- Fully bilingual (বাংলা/EN); responsive; 39/39 admin E2E tests + full regression pass

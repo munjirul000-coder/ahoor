@@ -815,6 +815,8 @@ var D = {
  "err.cooldown":["Please wait {s}s before resending.","আবার পাঠাতে {s} সেকেন্ড অপেক্ষা করুন।"],
  "err.locked":["Too many attempts. Try again in {m} min.","অনেকবার চেষ্টা হয়েছে। {m} মিনিট পর আবার চেষ্টা করুন।"],
  "err.unverified":["Your account is not verified yet.","আপনার অ্যাকাউন্ট এখনো যাচাই করা হয়নি।"],
+ "err.suspended":["Your account has been suspended. Contact support for help.","আপনার অ্যাকাউন্ট সাসপেন্ড করা হয়েছে। সাহায্যের জন্য সাপোর্টে যোগাযোগ করুন।"],
+ "err.disabled":["Your account has been disabled.","আপনার অ্যাকাউন্ট নিষ্ক্রিয় করা হয়েছে।"],
  "err.network":["Network error. Please check your connection and try again.","নেটওয়ার্ক সমস্যা। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।"],
  "err.offline":["Server not reachable — please open this page from the live Ahoor preview (run node server.js).","সার্ভারের সাথে সংযোগ হচ্ছে না — লাইভ Ahoor প্রিভিউ লিংক থেকে পেজটি খুলুন (node server.js চালু থাকতে হবে)।"],
  "err.bad_response":["The server returned an unexpected response. Please try again.","সার্ভার থেকে অপ্রত্যাশিত সাড়া এসেছে। আবার চেষ্টা করুন।"],
@@ -963,6 +965,21 @@ var Q_EXT = {
  "nt.deleted":["Notification deleted.","নোটিফিকেশন মুছে ফেলা হয়েছে।"],
  "nt.noUnread":["No unread notifications.","কোনো অপঠিত নোটিফিকেশন নেই।"],
  "nt.photo":["Photo","ছবি"],
+ "rp.title":["Report","রিপোর্ট"],
+ "rp.reason":["Reason","কারণ"],
+ "rp.reasonPh":["Describe the issue…","সমস্যাটি বর্ণনা করুন…"],
+ "rp.sent":["Report submitted. Thank you for keeping Ahoor safe.","রিপোর্ট জমা হয়েছে। Ahoor নিরাপদ রাখতে সাহায্য করার জন্য ধন্যবাদ।"],
+ "rp.reportBiz":["Report Business","ব্যবসাটি রিপোর্ট করুন"],
+ "rp.reportPost":["Report Post","পোস্টটি রিপোর্ট করুন"],
+ "rp.errShort":["Please describe the issue (at least 5 characters).","সমস্যাটি বর্ণনা করুন (কমপক্ষে ৫ অক্ষর)।"],
+ "vr.title":["Verification","যাচাইকরণ"],
+ "vr.apply":["Apply for Verification","যাচাইকরণের জন্য আবেদন করুন"],
+ "vr.pending":["Verification pending review","যাচাইকরণ পর্যালোচনাধীন"],
+ "vr.verified":["Verified Business","যাচাইকৃত ব্যবসা"],
+ "vr.rejected":["Verification rejected","যাচাইকরণ প্রত্যাখ্যাত"],
+ "vr.applied":["Verification request submitted!","যাচাইকরণ অনুরোধ জমা হয়েছে!"],
+ "vr.noBiz":["Complete your business profile first.","আগে আপনার ব্যবসার প্রোফাইল সম্পূর্ণ করুন।"],
+ "vr.already":["Request already submitted or verified.","অনুরোধ ইতিমধ্যে জমা হয়েছে বা যাচাইকৃত।"],
  "nt.quote_withdrawn":["A quote was withdrawn.","একটি কোটেশন প্রত্যাহার করা হয়েছে।"],
  "nt.onPost":["on","এর জন্য"],
  "nt.justNow":["just now","এইমাত্র"],
@@ -1265,7 +1282,7 @@ function api(path, body){
       .catch(function(){ return { status:r.status, data:{ error:'bad_response' } }; });
   }).catch(function(){ return { status:0, data:{ error:'offline' } }; });
 }
-var ERR_CODES = ['email_exists','phone_exists','invalid','not_found','weak','unverified','invalid_code','expired','too_many','network','offline','bad_response','missing','no_session','route','method','purpose','forbidden','email','phone','name','mismatch','required','type','code','locked','generic','title','category','location','desc','message','image','self_quote','post_not_found','role_not_allowed','duplicate','post_closed','quote_not_found','not_pending','own_quote','action','self_conv','conv_not_found'];
+var ERR_CODES = ['email_exists','phone_exists','invalid','not_found','weak','unverified','invalid_code','expired','too_many','network','offline','bad_response','missing','no_session','route','method','purpose','forbidden','email','phone','name','mismatch','required','type','code','locked','generic','title','category','location','desc','message','image','self_quote','post_not_found','role_not_allowed','duplicate','post_closed','quote_not_found','not_pending','own_quote','action','self_conv','conv_not_found','suspended','disabled'];
 function errMsg(e){
   e = e || 'generic';
   if(ERR_CODES.indexOf(e) >= 0) return t('err.'+e);

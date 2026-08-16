@@ -118,7 +118,7 @@ function load() {
   try {
     db = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
   } catch (e) {
-    db = { users: [], sessions: {}, codes: {}, fails: {}, posts: [], quotes: [], notifications: [], conversations: [], messages: [] };
+    db = { users: [], sessions: {}, codes: {}, fails: {}, posts: [], quotes: [], notifications: [], conversations: [], messages: [], reports: [], log: [] };
   }
   if (pgPool) {
     pgLoad().then(pgData => {
@@ -352,6 +352,18 @@ function validatePhone(p) {
   return PHONE_RE.test(digits) ? null : 'phone';
 }
 
+function requireAdmin(req, res) {
+  const sess = getSession(req);
+  if (!sess) { json(res, 401, { error: 'no_session' }); return null; }
+  const user = db.users.find(u => u.id === sess.userId);
+  if (!user || user.role !== 'admin') { json(res, 403, { error: 'forbidden' }); return null; }
+  if (user.accountStatus !== 'active') { json(res, 403, { error: 'forbidden' }); return null; }
+  return user;
+}
+function addLog(adminId, action, target, detail) {
+  db.log.push({ id: uid(), adminId, action, target: target || '', detail: detail || '', createdAt: new Date().toISOString() });
+}
+
 /* ---------------- routes ---------------- */
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
@@ -366,10 +378,18 @@ async function handle(req, res) {
 
   /* --- protected pages (server-side guard) --- */
   if (req.method === 'GET') {
-    const target = p === '/dashboard' ? '/dashboard.html' : p === '/profile-setup' ? '/profile-setup.html' : p === '/post' ? '/post.html' : p === '/messages' ? '/messages.html' : p === '/notifications' ? '/notifications.html' : p;
-    if ((target === '/dashboard.html' || target === '/profile-setup.html' || target === '/post.html' || target === '/messages.html' || target === '/notifications.html') && !getSession(req)) {
+    const target = p === '/dashboard' ? '/dashboard.html' : p === '/profile-setup' ? '/profile-setup.html' : p === '/post' ? '/post.html' : p === '/messages' ? '/messages.html' : p === '/notifications' ? '/notifications.html' : p === '/admin' ? '/admin.html' : p;
+    if ((target === '/dashboard.html' || target === '/profile-setup.html' || target === '/post.html' || target === '/messages.html' || target === '/notifications.html' || target === '/admin.html') && !getSession(req)) {
       res.writeHead(302, { Location: '/login?next=' + encodeURIComponent(target) });
       return res.end();
+    }
+    if (target === '/admin.html') {
+      const sess = getSession(req);
+      const user = sess && db.users.find(u => u.id === sess.userId);
+      if (!user || user.role !== 'admin') {
+        res.writeHead(302, { Location: '/dashboard.html' });
+        return res.end();
+      }
     }
   }
 
@@ -390,7 +410,7 @@ async function handle(req, res) {
       });
       return;
     }
-    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications' || p === '/api/business' || p === '/api/conversations' || p.indexOf('/api/conversations/') === 0 || p === '/api/stream') && req.method === 'GET')) {
+    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications' || p === '/api/business' || p === '/api/conversations' || p.indexOf('/api/conversations/') === 0 || p === '/api/stream' || p.indexOf('/api/admin/') === 0) && req.method === 'GET')) {
       return json(res, 405, { error: 'method' });
     }
     let body;
@@ -415,6 +435,8 @@ async function handle(req, res) {
       const user = {
         id: uid(), name: String(name).trim(), email: em, phone: String(phone).trim(),
         passHash: hashPassword(password), type: null, status: 'pending',
+        role: (process.env.ADMIN_EMAIL || '').toLowerCase() === em ? 'admin' : 'user',
+        accountStatus: 'active', verificationStatus: 'unverified',
         createdAt: new Date().toISOString()
       };
       db.users.push(user);
@@ -436,6 +458,8 @@ async function handle(req, res) {
         return json(res, 401, { error: 'invalid' });
       }
       if (user.status === 'pending') return json(res, 403, { error: 'unverified' });
+      if (user.accountStatus === 'suspended') return json(res, 403, { error: 'suspended' });
+      if (user.accountStatus === 'disabled') return json(res, 403, { error: 'disabled' });
       const s = createSession(user.id, body.remember !== false);
       setCookie(res, s);
       return json(res, 200, { user: publicUser(user) });
@@ -934,6 +958,205 @@ async function handle(req, res) {
       return json(res, 200, { ok: true });
     }
 
+    /* ---- user reports (any logged-in user) ---- */
+    if (p === '/api/reports' && req.method === 'POST') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const { targetType, targetId, reason } = body;
+      if (!['business','post','activity','content'].includes(targetType)) return json(res, 400, { error: 'type' });
+      if (typeof reason !== 'string' || reason.trim().length < 5) return json(res, 400, { error: 'message' });
+      const target = targetType === 'business' ? db.users.find(u => u.id === targetId) : db.posts.find(pt => pt.id === targetId);
+      if (!target) return json(res, 404, { error: 'not_found' });
+      db.reports.push({
+        id: uid(), reporterId: sess.userId, targetType, targetId,
+        reason: reason.trim().slice(0, 500), status: 'open',
+        createdAt: new Date().toISOString()
+      });
+      save();
+      return json(res, 201, { ok: true });
+    }
+
+    /* ---- admin APIs ---- */
+    const adminMatch = p.match(/^\/api\/admin\/([a-z-]+)$/);
+    if (adminMatch) {
+      const admin = requireAdmin(req, res);
+      if (!admin) return;
+      const action = adminMatch[1];
+
+      if (action === 'stats') {
+        const users = db.users;
+        const posts = db.posts;
+        return json(res, 200, {
+          stats: {
+            totalUsers: users.length,
+            buyers: users.filter(u => u.type === 'buyer').length,
+            suppliers: users.filter(u => u.type === 'supplier').length,
+            both: users.filter(u => u.type === 'both').length,
+            businesses: users.filter(u => u.businessName).length,
+            totalPosts: posts.length,
+            openBuyer: posts.filter(pt => pt.type === 'buyer' && pt.status === 'open').length,
+            supplierOffers: posts.filter(pt => pt.type === 'supplier').length,
+            quotes: db.quotes.length,
+            conversations: db.conversations.length,
+            reports: db.reports.filter(r => r.status === 'open').length,
+            pendingVerification: users.filter(u => u.verificationStatus === 'pending').length
+          },
+          recentSignups: users.slice().sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||'')).slice(0,6).map(publicUser),
+          recentPosts: posts.slice().sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||'')).slice(0,6).map(publicPost)
+        });
+      }
+
+      if (action === 'users') {
+        const u2 = new URL(req.url, 'http://x');
+        const q = (u2.searchParams.get('q') || '').toLowerCase();
+        const type = u2.searchParams.get('type') || '';
+        let list = db.users;
+        if (type && type !== 'all') list = list.filter(u => u.type === type);
+        if (q) list = list.filter(u => (u.name + ' ' + (u.businessName||'') + ' ' + u.email + ' ' + u.phone).toLowerCase().includes(q));
+        list = list.slice().sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||'')).slice(0, 200);
+        return json(res, 200, { users: list.map(publicUser) });
+      }
+
+      if (action === 'businesses') {
+        const u2 = new URL(req.url, 'http://x');
+        const q = (u2.searchParams.get('q') || '').toLowerCase();
+        const bt = u2.searchParams.get('biztype') || '';
+        const vs = u2.searchParams.get('verification') || '';
+        let list = db.users.filter(u => u.businessName);
+        if (bt && bt !== 'all') list = list.filter(u => u.businessType === bt);
+        if (vs && vs !== 'all') list = list.filter(u => (u.verificationStatus || 'unverified') === vs);
+        if (q) list = list.filter(u => (u.businessName + ' ' + u.name + ' ' + (u.category||'')).toLowerCase().includes(q));
+        list = list.slice().sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||'')).slice(0, 200);
+        return json(res, 200, { businesses: list.map(publicUser) });
+      }
+
+      if (action === 'posts') {
+        const u2 = new URL(req.url, 'http://x');
+        const q = (u2.searchParams.get('q') || '').toLowerCase();
+        const cat = u2.searchParams.get('category') || '';
+        const loc = u2.searchParams.get('location') || '';
+        const st = u2.searchParams.get('status') || '';
+        const typ = u2.searchParams.get('type') || '';
+        let list = db.posts;
+        if (typ && typ !== 'all') list = list.filter(pt => pt.type === typ);
+        if (cat && cat !== 'all') list = list.filter(pt => pt.category === cat);
+        if (loc && loc !== 'all') list = list.filter(pt => pt.location === loc);
+        if (st && st !== 'all') list = list.filter(pt => pt.status === st);
+        if (q) list = list.filter(pt => (pt.title + ' ' + pt.desc).toLowerCase().includes(q));
+        list = list.slice().sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||'')).slice(0, 200);
+        return json(res, 200, { posts: list.map(publicPost) });
+      }
+
+      if (action === 'user-action') {
+        const { userId, op, reason } = body;
+        const target = db.users.find(u => u.id === userId);
+        if (!target) return json(res, 404, { error: 'not_found' });
+        if (userId === admin.id) return json(res, 400, { error: 'self_action' });
+        if (op === 'suspend') target.accountStatus = 'suspended';
+        else if (op === 'reactivate') target.accountStatus = 'active';
+        else if (op === 'disable') target.accountStatus = 'disabled';
+        else if (op === 'delete') {
+          db.users = db.users.filter(u => u.id !== userId);
+          db.posts = db.posts.filter(pt => pt.ownerId !== userId);
+          db.quotes = db.quotes.filter(qq => qq.senderId !== userId && qq.postId && !db.posts.some(pt => pt.id === qq.postId));
+          db.notifications = db.notifications.filter(n => n.userId !== userId);
+          db.sessions = Object.fromEntries(Object.entries(db.sessions).filter(([k,v]) => v.userId !== userId));
+          addLog(admin.id, 'delete_user', userId, target.email);
+          save();
+          return json(res, 200, { ok: true });
+        } else return json(res, 400, { error: 'action' });
+        addLog(admin.id, op + '_user', userId, target.email + (reason ? ' — ' + reason : ''));
+        save();
+        return json(res, 200, { ok: true });
+      }
+
+      if (action === 'post-action') {
+        const { postId, op } = body;
+        const post = db.posts.find(pt => pt.id === postId);
+        if (!post) return json(res, 404, { error: 'not_found' });
+        if (op === 'close') post.status = 'closed';
+        else if (op === 'open') post.status = 'open';
+        else if (op === 'remove') {
+          db.posts = db.posts.filter(pt => pt.id !== postId);
+          db.quotes = db.quotes.filter(qq => qq.postId !== postId);
+          addLog(admin.id, 'remove_post', postId, post.title);
+          save();
+          return json(res, 200, { ok: true });
+        } else return json(res, 400, { error: 'action' });
+        addLog(admin.id, op + '_post', postId, post.title);
+        save();
+        return json(res, 200, { ok: true });
+      }
+
+      if (action === 'reports') {
+        const u2 = new URL(req.url, 'http://x');
+        const st = u2.searchParams.get('status') || '';
+        let list = db.reports;
+        if (st && st !== 'all') list = list.filter(r => r.status === st);
+        list = list.slice().sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||'')).slice(0, 200);
+        const full = list.map(r => {
+          const reporter = db.users.find(u => u.id === r.reporterId);
+          const target = r.targetType === 'business' ? db.users.find(u => u.id === r.targetId) : db.posts.find(pt => pt.id === r.targetId);
+          return {
+            ...r,
+            reporter: reporter ? { id: reporter.id, name: reporter.name, businessName: reporter.businessName || '' } : null,
+            target: target ? (r.targetType === 'business' ? publicUser(target) : publicPost(target)) : null
+          };
+        });
+        return json(res, 200, { reports: full });
+      }
+
+      if (action === 'report-action') {
+        const { reportId, op, note } = body;
+        const rep = db.reports.find(r => r.id === reportId);
+        if (!rep) return json(res, 404, { error: 'not_found' });
+        if (op === 'resolve') rep.status = 'resolved';
+        else if (op === 'dismiss') rep.status = 'dismissed';
+        else return json(res, 400, { error: 'action' });
+        addLog(admin.id, op + '_report', reportId, (note || ''));
+        save();
+        return json(res, 200, { ok: true });
+      }
+
+      if (action === 'verification') {
+        const { userId, op, reason } = body;
+        const target = db.users.find(u => u.id === userId);
+        if (!target) return json(res, 404, { error: 'not_found' });
+        if (op === 'approve') target.verificationStatus = 'verified';
+        else if (op === 'reject') { target.verificationStatus = 'rejected'; target.verificationNote = reason || ''; }
+        else return json(res, 400, { error: 'action' });
+        addLog(admin.id, op + '_verification', userId, target.businessName + (reason ? ' — ' + reason : ''));
+        save();
+        return json(res, 200, { ok: true });
+      }
+
+      if (action === 'log') {
+        const list = db.log.slice().sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||'')).slice(0, 200);
+        const full = list.map(l => {
+          const ad = db.users.find(u => u.id === l.adminId);
+          return { ...l, admin: ad ? (ad.businessName || ad.name) : '—' };
+        });
+        return json(res, 200, { log: full });
+      }
+
+      return json(res, 404, { error: 'route' });
+    }
+
+    /* ---- user verification request ---- */
+    if (p === '/api/verification-request' && req.method === 'POST') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const user = db.users.find(u => u.id === sess.userId);
+      if (!user) return json(res, 401, { error: 'no_session' });
+      if (!user.businessName) return json(res, 400, { error: 'no_business' });
+      if (user.verificationStatus === 'verified') return json(res, 400, { error: 'already_verified' });
+      if (user.verificationStatus === 'pending') return json(res, 400, { error: 'already_pending' });
+      user.verificationStatus = 'pending';
+      user.verificationRequestedAt = new Date().toISOString();
+      save();
+      return json(res, 200, { ok: true });
+    }
+
     return json(res, 404, { error: 'route' });
   }
 
@@ -985,7 +1208,8 @@ function publicUser(u) {
     businessPhone: u.businessPhone || '', businessEmail: u.businessEmail || '',
     website: u.website || '', facebook: u.facebook || '',
     phoneVisibility: u.phoneVisibility || 'members', emailVisibility: u.emailVisibility || 'members',
-    verificationStatus: u.verificationStatus || 'basic', completionPercent: profileCompletion(u)
+    verificationStatus: u.verificationStatus || 'unverified', completionPercent: profileCompletion(u),
+    role: u.role || 'user', accountStatus: u.accountStatus || 'active'
   };
 }
 function publicBusinessProfile(u, viewerId) {

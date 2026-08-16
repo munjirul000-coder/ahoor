@@ -270,6 +270,33 @@ __JS__
     return el;
   }
 
+  /* report modal */
+  var rpModal = document.createElement('div');
+  rpModal.className = 'modal-bg';
+  rpModal.id = 'rpModal';
+  rpModal.innerHTML = '<div class="modal"><h3 data-i18n="rp.reportPost">Report Post</h3><div class="field"><label class="flabel" data-i18n="rp.reason">Reason</label><textarea id="rpText" style="min-height:90px" data-i18n-ph="rp.reasonPh" placeholder="Describe the issue…"></textarea></div><div class="modal-actions"><button type="button" class="btn btn-ghost" id="rpCancel" data-i18n="mp.cancel">Cancel</button><button type="button" class="btn btn-primary" id="rpSend" style="flex:1"><span class="spinner"></span><span class="btn-label" data-i18n="rp.title">Report</span></button></div></div>';
+  document.body.appendChild(rpModal);
+  var rpTarget = null;
+  function openReport(targetType, targetId){
+    rpTarget = { targetType: targetType, targetId: targetId };
+    document.getElementById('rpText').value = '';
+    rpModal.classList.add('on');
+  }
+  document.getElementById('rpCancel').addEventListener('click', function(){ rpModal.classList.remove('on'); });
+  rpModal.addEventListener('click', function(e){ if (e.target === rpModal) rpModal.classList.remove('on'); });
+  document.getElementById('rpSend').addEventListener('click', function(){
+    var txt = document.getElementById('rpText').value.trim();
+    if (txt.length < 5) { A.toast(A.t('rp.errShort'), 'er'); return; }
+    var btn = document.getElementById('rpSend');
+    A.setLoading(btn, true);
+    A.api('/api/reports', { targetType: rpTarget.targetType, targetId: rpTarget.targetId, reason: txt }).then(function(r){
+      A.setLoading(btn, false);
+      if (r.status === 201) { rpModal.classList.remove('on'); A.toast(A.t('rp.sent'), 'ok'); }
+      else if (r.status === 401) { location.href = '/login.html?next=/marketplace.html'; }
+      else A.toast(A.errMsg(r.data.error), 'er');
+    });
+  });
+
   /* quote modal */
   var modal = document.getElementById('quoteModal');
   var qKind = 'quote'; // quote = supplier->buyer post, request = buyer->supplier post

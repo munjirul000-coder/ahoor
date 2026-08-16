@@ -244,6 +244,11 @@ __CSS__
       </div>
     </div>
 
+    <div class="warn-strip" id="vrStrip" style="display:none;margin-top:22px">
+      <span id="vrIc">🛡️</span>
+      <span><span id="vrText"></span> <button type="button" class="link-blue" id="vrApply" style="background:none;border:none;cursor:pointer;font-weight:700;color:#2F6BFF;text-decoration:underline"></button></span>
+    </div>
+
     <button type="button" class="btn btn-primary btn-block" id="ppSave" style="margin-top:22px">
       <span class="spinner"></span><span class="btn-label" data-i18n="bp.save">Save Business Profile</span>
     </button>
@@ -301,6 +306,7 @@ __JS__
       b.classList.toggle('on', b.getAttribute('data-role') === role);
     });
     updateComp();
+    renderVerification();
   }
 
   function updateComp(){
@@ -337,6 +343,42 @@ __JS__
     };
     rd.readAsDataURL(f);
   });
+
+  function renderVerification(){
+    if (!me) return;
+    var strip = document.getElementById('vrStrip');
+    var text = document.getElementById('vrText');
+    var btn = document.getElementById('vrApply');
+    var ic = document.getElementById('vrIc');
+    var st = me.verificationStatus || 'unverified';
+    if (st === 'verified') {
+      strip.style.display = ''; ic.textContent = '✅';
+      text.textContent = A.t('vr.verified');
+      btn.style.display = 'none';
+    } else if (st === 'pending') {
+      strip.style.display = ''; ic.textContent = '⏳';
+      text.textContent = A.t('vr.pending');
+      btn.style.display = 'none';
+    } else if (st === 'rejected') {
+      strip.style.display = ''; ic.textContent = '❌';
+      text.textContent = A.t('vr.rejected') + (me.verificationNote ? ' — ' + me.verificationNote : '');
+      btn.textContent = A.t('vr.apply');
+      btn.style.display = '';
+    } else {
+      strip.style.display = ''; ic.textContent = '🛡️';
+      text.textContent = '';
+      btn.textContent = A.t('vr.apply');
+      btn.style.display = '';
+    }
+    btn.onclick = function(){
+      if (!me.businessName) { A.toast(A.t('vr.noBiz'), 'er'); return; }
+      A.api('/api/verification-request', {}).then(function(r){
+        if (r.status === 200) { A.toast(A.t('vr.applied'), 'ok'); me.verificationStatus = 'pending'; renderVerification(); }
+        else if (r.status === 400) A.toast(A.t('vr.already'), 'er');
+        else A.toast(A.errMsg(r.data.error), 'er');
+      });
+    };
+  }
 
   document.getElementById('ppSave').addEventListener('click', function(){
     var name = document.getElementById('ppName').value.trim();
