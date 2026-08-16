@@ -29,6 +29,7 @@ __CSS__
       <span class="brand-name">Ahoor<em>.</em></span>
     </a>
     <div class="auth-nav-right">
+      <div id="bellSlot" style="display:contents"></div>
       <a class="back-home" href="/dashboard.html">
         <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
         <span data-i18n="nav.dash">Dashboard</span>
@@ -149,9 +150,13 @@ __JS__
   A.api('/api/session').then(function(r){
     if (!r.data || !r.data.user) { location.href = '/login.html?next=/messages.html'; return; }
     me = r.data.user;
+    A.initNotificationBell(document.getElementById('bellSlot'));
     loadConversations().then(function(){
-      var withId = new URLSearchParams(location.search).get('with');
+      var params = new URLSearchParams(location.search);
+      var withId = params.get('with');
+      var convId = params.get('conv');
       if (withId && withId !== me.id) openWith(withId);
+      else if (convId) { var c = convs.find(function(x){ return x.id === convId; }); if (c) openConv(convId); }
     });
     connectSSE();
     setInterval(function(){ if (!document.hidden) loadConversations(true); }, 20000);

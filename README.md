@@ -113,3 +113,13 @@ Push to GitHub → Deploy on Render (free tier):
 - **Unread counts**: badge on conversation items + dashboard Messages card; auto-cleared on read
 - **Security**: participants-only access (403 otherwise), unauthenticated redirect, safe image validation, input limits — no secrets exposed
 - Fully bilingual (বাংলা/EN); 28/28 chat E2E tests + full regression pass
+
+## Features (v5.1 — Real-time In-App Notification System)
+
+- **Notification events**: new quote, quote request, quote accepted/rejected (with business name), new message — created automatically on each action
+- **Dedicated page** `/notifications.html`: All / Unread / Read tabs, mark-one-read (click), mark-all-read, delete individual notifications, empty states
+- **Bell everywhere**: dashboard bell + messages page bell — unread count, dropdown panel, "View all" link
+- **Deep links**: notification click opens the right resource — quote → dashboard quotes section, accepted/rejected → sent quotes, message → chat conversation
+- **Real-time via SSE**: new notifications appear instantly (30s polling fallback)
+- **Security**: users see/manage only their own notifications (404 otherwise), all links authorized
+- Fully bilingual (বাংলা/EN); 26/26 notifications E2E tests + full regression pass

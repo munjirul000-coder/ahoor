@@ -366,8 +366,8 @@ async function handle(req, res) {
 
   /* --- protected pages (server-side guard) --- */
   if (req.method === 'GET') {
-    const target = p === '/dashboard' ? '/dashboard.html' : p === '/profile-setup' ? '/profile-setup.html' : p === '/post' ? '/post.html' : p === '/messages' ? '/messages.html' : p;
-    if ((target === '/dashboard.html' || target === '/profile-setup.html' || target === '/post.html' || target === '/messages.html') && !getSession(req)) {
+    const target = p === '/dashboard' ? '/dashboard.html' : p === '/profile-setup' ? '/profile-setup.html' : p === '/post' ? '/post.html' : p === '/messages' ? '/messages.html' : p === '/notifications' ? '/notifications.html' : p;
+    if ((target === '/dashboard.html' || target === '/profile-setup.html' || target === '/post.html' || target === '/messages.html' || target === '/notifications.html') && !getSession(req)) {
       res.writeHead(302, { Location: '/login?next=' + encodeURIComponent(target) });
       return res.end();
     }
@@ -758,6 +758,7 @@ async function handle(req, res) {
       addNotification(post.ownerId, kind === 'quote' ? 'quote_received' : 'request_received', quote.id,
         { senderName: user.businessName || user.name, postTitle: post.title });
       save();
+      sseSend(post.ownerId, { type: 'notification' });
       return json(res, 201, { quote: publicQuote(quote) });
     }
 
@@ -796,10 +797,11 @@ async function handle(req, res) {
       if (action !== 'accept' && action !== 'reject') return json(res, 400, { error: 'action' });
       quote.status = action === 'accept' ? 'accepted' : 'rejected';
       quote.respondedAt = new Date().toISOString();
-      const sender = db.users.find(u => u.id === quote.senderId);
+      const owner = db.users.find(u => u.id === post.ownerId);
       addNotification(quote.senderId, action === 'accept' ? 'quote_accepted' : 'quote_rejected', quote.id,
-        { postTitle: post.title, recipientName: (sender ? '' : '') });
+        { postTitle: post.title, actorName: owner ? (owner.businessName || owner.name) : '' });
       save();
+      sseSend(quote.senderId, { type: 'notification' });
       return json(res, 200, { quote: publicQuote(quote) });
     }
 
@@ -905,9 +907,31 @@ async function handle(req, res) {
         conv.updatedAt = message.createdAt;
         save();
         pushMessageToParticipants(conv, publicMessage(message));
+        // notify the other participant
+        const otherId = conv.participants.find(pid => pid !== sess.userId);
+        if (otherId) {
+          const sender = db.users.find(u => u.id === sess.userId);
+          addNotification(otherId, 'message_received', message.id, {
+            senderName: sender ? (sender.businessName || sender.name) : 'Business',
+            conversationId: conv.id,
+            preview: mtype === 'text' ? mtext.slice(0, 100) : ''
+          });
+          sseSend(otherId, { type: 'notification' });
+        }
         return json(res, 201, { message: publicMessage(message) });
       }
       return json(res, 405, { error: 'method' });
+    }
+
+    if (p === '/api/notifications/delete' && req.method === 'POST') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const { id } = body;
+      const idx = db.notifications.findIndex(n => n.id === id && n.userId === sess.userId);
+      if (idx < 0) return json(res, 404, { error: 'not_found' });
+      db.notifications.splice(idx, 1);
+      save();
+      return json(res, 200, { ok: true });
     }
 
     return json(res, 404, { error: 'route' });

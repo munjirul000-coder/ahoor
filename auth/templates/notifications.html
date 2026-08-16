@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahoor — Notifications</title>
+<meta name="theme-color" content="#0A1122">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1430'/%3E%3Cpath d='M16 8.5 9.6 23.5h12.8z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='9.6' cy='23.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='22.4' cy='23.5' r='2.6' fill='%23FF8A4C'/%3E%3C/svg%3E">
+<style>
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,__INTER__) format('woff2')}
+@font-face{font-family:'Noto Sans Bengali';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,__NSB__) format('woff2')}
+:root{--ink:#0A1122;--bg:#F4F6FA;--text:#101828;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+html[lang="bn"]{--font:'Noto Sans Bengali','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+html[lang="bn"] body{line-height:1.72}
+__CSS__
+.nt-wrap{max-width:720px;margin:0 auto;padding:0 clamp(14px,3.5vw,28px)}
+.nt-page-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.nt-page-head h1{font-size:1.35rem;font-weight:800;color:#101828;letter-spacing:-.02em}
+.nt-page-head .nt-actions{display:flex;gap:10px;align-items:center}
+.nt-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.nt-listpage{display:grid;gap:10px}
+.nt-card{display:flex;gap:13px;align-items:flex-start;background:#fff;border:1.5px solid #E4E9F2;border-radius:15px;padding:14px 16px;cursor:pointer;transition:all .25s;position:relative}
+.nt-card:hover{border-color:#C9D8F2;box-shadow:0 10px 24px -16px rgba(10,17,34,.16)}
+.nt-card.unread{background:#F2F6FF;border-color:#CBD9F8}
+.nt-card .nt-ic{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:#EBF1FF;font-size:1.05rem;flex-shrink:0;margin-top:1px}
+.nt-card .nt-body{flex:1;min-width:0}
+.nt-card .nt-body b{display:block;font-size:.9rem;font-weight:700;color:#101828;line-height:1.45}
+.nt-card .nt-body p{font-size:.8rem;color:#57627A;margin-top:3px;line-height:1.55}
+.nt-card .nt-body span{display:block;font-size:.7rem;color:#8A95AC;margin-top:5px}
+.nt-card .nt-del{background:none;border:none;color:#A6B1C7;cursor:pointer;font-size:1rem;padding:4px 6px;border-radius:8px;flex-shrink:0;transition:all .2s}
+.nt-card .nt-del:hover{color:#C03221;background:#FDECEC}
+.nt-card .nt-dot{width:8px;height:8px;border-radius:50%;background:#E5484D;flex-shrink:0;margin-top:7px;box-shadow:0 0 0 3px rgba(229,72,77,.15)}
+.nt-card.read .nt-dot{display:none}
+@media(max-width:520px){.nt-page-head{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body data-meta="nt.title">
+
+<header class="auth-nav">
+  <div class="container">
+    <a class="brand" href="/index.html" aria-label="Ahoor — home">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="9" fill="url(#lg1)"/>
+        <path d="M16 8.5 9.6 23.5h12.8z" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/>
+        <circle cx="16" cy="8.5" r="2.7" fill="#fff"/><circle cx="9.6" cy="23.5" r="2.7" fill="#fff"/><circle cx="22.4" cy="23.5" r="2.7" fill="#FF8A4C"/>
+        <defs><linearGradient id="lg1" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#3B77FF"/><stop offset="1" stop-color="#1E4FD8"/></linearGradient></defs>
+      </svg>
+      <span class="brand-name">Ahoor<em>.</em></span>
+    </a>
+    <div class="auth-nav-right">
+      <a class="back-home" href="/dashboard.html">
+        <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        <span data-i18n="nav.dash">Dashboard</span>
+      </a>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" class="lang-btn on" data-lang="bn" aria-pressed="true">বাংলা</button>
+        <span class="lsep" aria-hidden="true">|</span>
+        <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="auth-main" style="display:block;padding-top:20px">
+  <div class="nt-wrap">
+    <div class="nt-page-head">
+      <h1 data-i18n="nt.title">Notifications</h1>
+      <div class="nt-actions">
+        <button type="button" class="btn btn-outline btn-sm" id="ntMarkAllPage"><span data-i18n="nt.markAll">Mark all as read</span></button>
+      </div>
+    </div>
+
+    <div class="nt-tabs">
+      <button class="tab on" data-f="all" data-i18n="nt.all">All</button>
+      <button class="tab" data-f="unread" data-i18n="nt.unreadTab">Unread</button>
+      <button class="tab" data-f="read" data-i18n="nt.readTab">Read</button>
+    </div>
+
+    <div class="nt-listpage" id="ntListPage"></div>
+    <div class="empty-box" id="ntEmpty" data-i18n="nt.empty">No notifications yet.</div>
+  </div>
+</main>
+
+<footer class="auth-foot">
+  <div class="container">
+    <p data-i18n="foot.made">Made in Bangladesh</p>
+    <p style="margin-top:6px" data-i18n="foot.cr">© 2026 Ahoor. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+__JS__
+(function(){
+  'use strict';
+  var A = window.Ahoor;
+  var filter = 'all';
+  var all = [];
+
+  A.api('/api/session').then(function(r){
+    if (!r.data || !r.data.user) { location.href = '/login.html?next=/notifications.html'; return; }
+    load();
+  });
+
+  function load(){
+    fetch('/api/notifications', { credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (!d) return;
+        all = d.notifications || [];
+        render();
+      })
+      .catch(function(){});
+  }
+
+  function render(){
+    var box = document.getElementById('ntListPage');
+    var empty = document.getElementById('ntEmpty');
+    var list = all;
+    if (filter === 'unread') list = all.filter(function(n){ return !n.read; });
+    if (filter === 'read') list = all.filter(function(n){ return n.read; });
+    box.innerHTML = '';
+    if (!list.length) {
+      if (empty) { empty.style.display = ''; empty.textContent = A.t(filter === 'unread' ? 'nt.noUnread' : 'nt.empty'); }
+      return;
+    }
+    if (empty) empty.style.display = 'none';
+    list.forEach(function(n){
+      var el = document.createElement('div');
+      el.className = 'nt-card' + (n.read ? ' read' : ' unread');
+      el.innerHTML =
+        '<span class="nt-ic">' + A.notifIcon(n) + '</span>' +
+        '<div class="nt-body">' +
+          '<b>' + A.esc(A.notifTitle(n)) + '</b>' +
+          (A.notifDesc(n) ? '<p>' + A.esc(A.notifDesc(n)) + '</p>' : '') +
+          '<span>' + A.timeAgo(n.createdAt) + '</span>' +
+        '</div>' +
+        '<button class="nt-del" title="' + A.t('nt.delete') + '" aria-label="' + A.t('nt.delete') + '">✕</button>' +
+        '<span class="nt-dot"></span>';
+      el.querySelector('.nt-del').addEventListener('click', function(e){
+        e.stopPropagation();
+        fetch('/api/notifications/delete', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ id: n.id }), credentials:'same-origin' })
+          .then(function(r){ return r.json(); })
+          .then(function(d){
+            if (d.ok) { A.toast(A.t('nt.deleted'), 'ok'); load(); }
+          });
+      });
+      el.addEventListener('click', function(){
+        if (!n.read) {
+          fetch('/api/notifications/read', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ id: n.id }), credentials:'same-origin' });
+        }
+        location.href = A.notifLink(n);
+      });
+      box.appendChild(el);
+    });
+  }
+
+  document.querySelectorAll('.nt-tabs .tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      document.querySelectorAll('.nt-tabs .tab').forEach(function(x){ x.classList.remove('on'); });
+      t.classList.add('on');
+      filter = t.getAttribute('data-f');
+      render();
+    });
+  });
+
+  document.getElementById('ntMarkAllPage').addEventListener('click', function(){
+    fetch('/api/notifications/read', { method:'POST', headers:{'Content-Type':'application/json'}, body:'{}', credentials:'same-origin' })
+      .then(function(){ load(); });
+  });
+
+  // real-time: new notification -> refresh
+  A.onNotif(function(){ load(); });
+  setInterval(function(){ if (!document.hidden) load(); }, 30000);
+})();
+</script>
+</body>
+</html>

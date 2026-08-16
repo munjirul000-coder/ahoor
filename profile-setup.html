@@ -1064,8 +1064,18 @@ var Q_EXT = {
  "nt.empty":["No notifications yet.","এখনো কোনো নোটিফিকেশন নেই।"],
  "nt.quote_received":["You received a new quote from {name}.","{name} থেকে একটি নতুন কোটেশন পেয়েছেন।"],
  "nt.request_received":["You received a new quote request from {name}.","{name} থেকে একটি নতুন কোটেশন অনুরোধ পেয়েছেন।"],
- "nt.quote_accepted":["Your quote was accepted.","আপনার কোটেশন গৃহীত হয়েছে।"],
- "nt.quote_rejected":["Your quote was rejected.","আপনার কোটেশন প্রত্যাখ্যাত হয়েছে।"],
+ "nt.quote_accepted":["Your quote was accepted by {name}.","{name} আপনার কোটেশন গ্রহণ করেছেন।"],
+ "nt.quote_rejected":["Your quote was not accepted by {name}.","{name} আপনার কোটেশন গ্রহণ করেননি।"],
+ "nt.message_received":["You received a new message from {name}.","{name} থেকে একটি নতুন মেসেজ পেয়েছেন।"],
+ "nt.title":["Notifications","নোটিফিকেশন"],
+ "nt.all":["All","সব"],
+ "nt.unreadTab":["Unread","অপঠিত"],
+ "nt.readTab":["Read","পঠিত"],
+ "nt.viewAll":["View all","সব দেখুন"],
+ "nt.delete":["Delete","মুছে ফেলুন"],
+ "nt.deleted":["Notification deleted.","নোটিফিকেশন মুছে ফেলা হয়েছে।"],
+ "nt.noUnread":["No unread notifications.","কোনো অপঠিত নোটিফিকেশন নেই।"],
+ "nt.photo":["Photo","ছবি"],
  "nt.quote_withdrawn":["A quote was withdrawn.","একটি কোটেশন প্রত্যাহার করা হয়েছে।"],
  "nt.onPost":["on","এর জন্য"],
  "nt.justNow":["just now","এইমাত্র"],
@@ -1550,12 +1560,125 @@ document.addEventListener('langchange', function(){
   document.querySelectorAll('[data-fill="visibility"]').forEach(function(s){ fillSelect(s, DATA.visibilities, s.value); });
 });
 
+/* ---------- shared notification helpers ---------- */
+function nTimeAgo(iso){
+  var diff = (Date.now() - new Date(iso).getTime()) / 60000;
+  if (diff < 1) return t('ms.justNow');
+  if (diff < 60) return t('ms.minAgo').replace('{m}', Math.floor(diff));
+  if (diff < 1440) return t('ms.hrAgo').replace('{h}', Math.floor(diff / 60));
+  return t('ms.dayAgo').replace('{d}', Math.floor(diff / 1440));
+}
+function notifTitle(n){
+  if (!n || !n.type) return '';
+  return t('nt.' + n.type).replace('{name}', n.data && (n.data.senderName || n.data.actorName) || '');
+}
+function notifDesc(n){
+  if (!n || !n.data) return '';
+  if (n.data.postTitle) return n.data.postTitle;
+  if (n.data.preview) return n.data.preview;
+  if (n.type === 'message_received' && !n.data.preview) return t('nt.photo');
+  return '';
+}
+function notifLink(n){
+  if (!n) return '/dashboard.html';
+  switch (n.type) {
+    case 'quote_received':
+    case 'request_received': return '/dashboard.html#quotesSec';
+    case 'quote_accepted':
+    case 'quote_rejected': return '/dashboard.html#sentSec';
+    case 'message_received': return '/messages.html?conv=' + (n.data && n.data.conversationId ? n.data.conversationId : '');
+    default: return '/dashboard.html';
+  }
+}
+function notifIcon(n){
+  if (!n || !n.type) return '📩';
+  if (n.type.indexOf('accepted') >= 0) return '✅';
+  if (n.type.indexOf('rejected') >= 0) return '❌';
+  if (n.type === 'message_received') return '💬';
+  if (n.type === 'request_received') return '📩';
+  return '📩';
+}
+function onNotif(cb){
+  if (typeof EventSource === 'undefined') return;
+  try {
+    var es = new EventSource('/api/stream');
+    es.onmessage = function(ev){
+      try { var d = JSON.parse(ev.data); if (d.type === 'notification') cb(d); } catch(e){}
+    };
+  } catch(e){}
+}
+function initNotificationBell(container){
+  if (!container || container.querySelector('#ntBell')) return;
+  var bell = document.createElement('div');
+  bell.className = 'nt-bell';
+  bell.id = 'ntBell';
+  bell.title = t('nt.unread');
+  bell.innerHTML = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="nt-count" id="ntCount" style="display:none">0</span>';
+  var panel = document.createElement('div');
+  panel.className = 'nt-panel';
+  panel.id = 'ntPanel';
+  panel.innerHTML = '<div class="nt-head"><b>' + t('nt.unread') + '</b><div style="display:flex;gap:10px;align-items:center"><a href="/notifications.html" style="font-size:.74rem;font-weight:650;color:#2F6BFF;white-space:nowrap">' + t('nt.viewAll') + '</a><button id="ntMarkAll" style="font-size:.74rem;font-weight:650;color:#2F6BFF;background:none;border:none;cursor:pointer;white-space:nowrap">' + t('nt.markAll') + '</button></div></div><div class="nt-list" id="ntList"></div>';
+  container.prepend(bell);
+  document.body.appendChild(panel);
+
+  var open = false;
+  function loadNotifs(){
+    fetch('/api/notifications', { credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        var count = document.getElementById('ntCount');
+        var list = document.getElementById('ntList');
+        if (!d) return;
+        count.style.display = d.unread > 0 ? '' : 'none';
+        count.textContent = d.unread > 99 ? '99+' : d.unread;
+        list.innerHTML = '';
+        if (!d.notifications || !d.notifications.length) {
+          list.innerHTML = '<div class="nt-empty">' + t('nt.empty') + '</div>';
+          return;
+        }
+        d.notifications.slice(0, 15).forEach(function(n){
+          var el = document.createElement('div');
+          el.className = 'nt-item' + (n.read ? '' : ' unread');
+          el.innerHTML = '<span class="nt-ic">' + notifIcon(n) + '</span><div><p>' + esc(notifTitle(n)) + '</p><span>' + esc(notifDesc(n)) + ' · ' + nTimeAgo(n.createdAt) + '</span></div>';
+          el.addEventListener('click', function(){
+            if (!n.read) fetch('/api/notifications/read', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ id: n.id }), credentials:'same-origin' });
+            location.href = notifLink(n);
+          });
+          list.appendChild(el);
+        });
+      })
+      .catch(function(){});
+  }
+  bell.addEventListener('click', function(e){
+    e.stopPropagation();
+    open = !open;
+    panel.classList.toggle('on', open);
+    if (open) loadNotifs();
+  });
+  document.addEventListener('click', function(e){
+    if (open && !e.target.closest('#ntPanel') && !e.target.closest('#ntBell')) {
+      open = false;
+      panel.classList.remove('on');
+    }
+  });
+  document.getElementById('ntMarkAll').addEventListener('click', function(){
+    fetch('/api/notifications/read', { method:'POST', headers:{'Content-Type':'application/json'}, body:'{}', credentials:'same-origin' })
+      .then(loadNotifs);
+  });
+  setInterval(loadNotifs, 30000);
+  onNotif(loadNotifs);
+  loadNotifs();
+  return bell;
+}
+
 window.Ahoor = {
   t:t, applyLang:applyLang, api:api, errMsg:errMsg, showMsg:showMsg, hideMsg:hideMsg,
   toast:toast, setLoading:setLoading, validEmail:validEmail, validPhone:validPhone,
   initStrength:initStrength, initPwToggles:initPwToggles, initOtp:initOtp,
   startCountdown:startCountdown, fieldErr:fieldErr, clearFieldErr:clearFieldErr, esc:esc,
-  fillSelect:fillSelect, locName:locName
+  fillSelect:fillSelect, locName:locName,
+  timeAgo:nTimeAgo, notifTitle:notifTitle, notifDesc:notifDesc, notifLink:notifLink,
+  notifIcon:notifIcon, onNotif:onNotif, initNotificationBell:initNotificationBell
 };
 window.Ahoor.AhoorData = window.AhoorData;
 window.Ahoor.fillSelect = fillSelect;
