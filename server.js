@@ -494,8 +494,8 @@ async function handle(req, res) {
 
   /* --- protected pages (server-side guard) --- */
   if (req.method === 'GET') {
-    const target = p === '/dashboard' ? '/dashboard.html' : p === '/profile-setup' ? '/profile-setup.html' : p === '/post' ? '/post.html' : p === '/messages' ? '/messages.html' : p === '/notifications' ? '/notifications.html' : p === '/matches' ? '/matches.html' : p === '/admin' ? '/admin.html' : p;
-    if ((target === '/dashboard.html' || target === '/profile-setup.html' || target === '/post.html' || target === '/messages.html' || target === '/notifications.html' || target === '/matches.html' || target === '/admin.html') && !getSession(req)) {
+    const target = p === '/dashboard' ? '/dashboard.html' : p === '/profile-setup' ? '/profile-setup.html' : p === '/post' ? '/post.html' : p === '/messages' ? '/messages.html' : p === '/notifications' ? '/notifications.html' : p === '/matches' ? '/matches.html' : p === '/verify' ? '/verify.html' : p === '/admin' ? '/admin.html' : p;
+    if ((target === '/dashboard.html' || target === '/profile-setup.html' || target === '/post.html' || target === '/messages.html' || target === '/notifications.html' || target === '/matches.html' || target === '/verify.html' || target === '/admin.html') && !getSession(req)) {
       res.writeHead(302, { Location: '/login?next=' + encodeURIComponent(target) });
       return res.end();
     }
