@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahoor — Opportunities</title>
+<meta name="theme-color" content="#0A1122">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1430'/%3E%3Cpath d='M16 8.5 9.6 23.5h12.8z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='9.6' cy='23.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='22.4' cy='23.5' r='2.6' fill='%23FF8A4C'/%3E%3C/svg%3E">
+<style>
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,__INTER__) format('woff2')}
+@font-face{font-family:'Noto Sans Bengali';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,__NSB__) format('woff2')}
+:root{--ink:#0A1122;--bg:#F4F6FA;--text:#101828;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+html[lang="bn"]{--font:'Noto Sans Bengali','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+html[lang="bn"] body{line-height:1.72}
+__CSS__
+</style>
+</head>
+<body data-meta="__META__">
+
+<header class="auth-nav">
+  <div class="container">
+    <a class="brand" href="/index.html" aria-label="Ahoor — home">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="9" fill="url(#lg1)"/>
+        <path d="M16 8.5 9.6 23.5h12.8z" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/>
+        <circle cx="16" cy="8.5" r="2.7" fill="#fff"/><circle cx="9.6" cy="23.5" r="2.7" fill="#fff"/><circle cx="22.4" cy="23.5" r="2.7" fill="#FF8A4C"/>
+        <defs><linearGradient id="lg1" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#3B77FF"/><stop offset="1" stop-color="#1E4FD8"/></linearGradient></defs>
+      </svg>
+      <span class="brand-name">Ahoor<em>.</em></span>
+    </a>
+    <nav class="mp-navlinks" style="display:flex;gap:4px;align-items:center">
+      <a href="/marketplace.html" style="font-size:.88rem;font-weight:600;color:#57627A;padding:8px 13px;border-radius:9px" data-i18n="nav.market">Marketplace</a>
+      <a href="/suppliers.html" style="font-size:.88rem;font-weight:__SUP_W__;color:__SUP_C__;padding:8px 13px;border-radius:9px;background:__SUP_BG__" data-i18n="nav.suppliersLand">Suppliers</a>
+      <a href="/opportunities.html" style="font-size:.88rem;font-weight:__OPP_W__;color:__OPP_C__;padding:8px 13px;border-radius:9px;background:__OPP_BG__" data-i18n="nav.oppsLand">Opportunities</a>
+    </nav>
+    <div class="auth-nav-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" class="lang-btn on" data-lang="bn" aria-pressed="true">বাংলা</button>
+        <span class="lsep" aria-hidden="true">|</span>
+        <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="btn btn-primary btn-sm" id="navCta" href="/signup.html"><span data-i18n="nav.join">Join Ahoor</span></a>
+    </div>
+  </div>
+</header>
+
+<main class="auth-main" style="padding-top:30px">
+  <div class="li-wrap">
+    <h1 data-i18n="__TITLE_KEY__">__TITLE_FB__</h1>
+    <p class="li-sub" data-i18n="__SUB_KEY__">__SUB_FB__</p>
+    <div id="liList"></div>
+    <div class="li-empty" id="liEmpty" style="display:none" data-i18n="__EMPTY_KEY__">__EMPTY_FB__</div>
+    <div class="li-cta">
+      <a class="btn btn-primary" id="liJoin" href="/signup.html"><span data-i18n="sp.join">Join Ahoor</span></a>
+      <a class="btn btn-outline" href="/marketplace.html"><span data-i18n="__MARKET_KEY__">Open Marketplace</span></a>
+    </div>
+  </div>
+</main>
+
+<footer class="auth-foot">
+  <div class="container">
+    <p data-i18n="foot.made">Made in Bangladesh</p>
+    <p style="margin-top:6px" data-i18n="foot.cr">© 2026 Ahoor. All rights reserved.</p>
+    <div class="flinks">
+      <a href="/about.html" data-i18n="foot.about">About</a>
+      <a href="/contact.html" data-i18n="foot.contact">Contact</a>
+      <a href="/privacy.html" data-i18n="foot.privacy">Privacy</a>
+      <a href="/terms.html" data-i18n="foot.terms">Terms</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+__JS__
+(function(){
+  'use strict';
+  var A = window.Ahoor;
+  var page = '__PAGE__'; // 'suppliers' | 'opportunities'
+  var list = document.getElementById('liList');
+  var emptyEl = document.getElementById('liEmpty');
+  var loggedIn = false;
+
+  /* real data only — fetch from the live API; nothing is fabricated */
+  fetch('/api/posts' + (page === 'suppliers' ? '?type=supplier' : ''), { credentials:'same-origin' })
+    .then(function(r){ if(!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(d){
+      var ps = (d && d.posts) || [];
+      if(!ps.length){ emptyEl.style.display = ''; return; }
+      ps.slice(0, 40).forEach(function(p){ list.appendChild(row(p)); });
+    })
+    .catch(function(err){
+      console.error('[listing] load failed:', err);
+      emptyEl.style.display = '';
+    });
+
+  function row(p){
+    var el = document.createElement('a');
+    el.className = 'li-item';
+    el.href = '/marketplace.html';
+    var biz = (p.owner && (p.owner.businessName || p.owner.name)) || '';
+    var meta = [];
+    if(p.qty) meta.push(A.esc(p.qty) + (p.unit ? ' ' + A.esc(p.unit) : ''));
+    if(p.price) meta.push('৳' + A.esc(p.price));
+    if(p.budget) meta.push('৳' + A.esc(p.budget));
+    if(p.location) meta.push(A.locName(A.AhoorData.districts, p.location));
+    el.innerHTML =
+      '<div style="flex:1;min-width:0">' +
+        '<h3>' + A.esc(p.title) + '</h3>' +
+        '<p>' + A.esc(biz) + '</p>' +
+        '<div class="li-meta">' + meta.map(function(m){ return '<span>' + m + '</span>'; }).join('') + '</div>' +
+      '</div>' +
+      '<span class="li-go" aria-hidden="true">→</span>';
+    return el;
+  }
+
+  /* auth-aware CTA: signed-in users can post directly; label follows language */
+  function paintJoin(){
+    var c = document.getElementById('liJoin');
+    if(!loggedIn){ c.href = '/signup.html'; c.innerHTML = '<span>' + A.t('sp.join') + '</span>'; return; }
+    c.href = '/post.html';
+    c.innerHTML = '<span>' + A.t(page === 'suppliers' ? 'sp.postOffer' : 'op.postReq') + '</span>';
+  }
+  A.api('/api/session').then(function(r){
+    if(r.data && r.data.user){
+      loggedIn = true;
+      paintJoin();
+    }
+  });
+  document.addEventListener('langchange', paintJoin);
+})();
+</script>
+</body>
+</html>

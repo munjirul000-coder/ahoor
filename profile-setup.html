@@ -341,6 +341,43 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 .po-info b{display:block;font-size:.82rem;color:#2A3550;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .post-card .btn{margin-top:auto}
 .mp-empty{text-align:center;padding:50px 16px;color:#8A95AC;font-size:.92rem;grid-column:1/-1}
+/* marketplace state machine: loading / empty / error — only one visible at a time */
+.mp-loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:56px 16px;color:#8A95AC;font-size:.92rem;grid-column:1/-1}
+.mp-spinner{width:22px;height:22px;border:3px solid #E4E9F2;border-top-color:#2F6BFF;border-radius:50%;animation:mp-spin .8s linear infinite}
+@keyframes mp-spin{to{transform:rotate(360deg)}}
+.mp-empty-state{text-align:center;padding:44px 16px;color:#8A95AC;font-size:.92rem;grid-column:1/-1}
+.mp-empty-ic{font-size:2rem;display:block;margin-bottom:10px}
+.mp-empty-state h3{font-size:1.05rem;font-weight:750;color:#101828;margin-bottom:6px}
+.mp-empty-state p{color:#8A95AC;margin-bottom:16px}
+.mp-empty-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.mp-empty-login{margin-top:10px;font-size:.8rem;color:#A6B1C7}
+.mp-err{text-align:center;padding:44px 16px;color:#B42318;grid-column:1/-1}
+.mp-err p{margin-bottom:16px;font-size:.92rem}
+/* footer link rows on auth/marketplace pages */
+.auth-foot .flinks{display:flex;justify-content:center;gap:18px;margin-top:10px;flex-wrap:wrap}
+.auth-foot .flinks a{color:#8A95AC;text-decoration:none;font-size:.8rem;transition:color .15s}
+.auth-foot .flinks a:hover{color:#2F6BFF}
+/* static info pages (about / contact / privacy / terms) */
+.info-card{max-width:780px;margin:0 auto;padding:34px 30px}
+.info-card h1{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;color:#101828;margin-bottom:6px}
+.info-card .lead{color:#57627A;font-size:.95rem;margin-bottom:8px}
+.info-card .updated{font-size:.78rem;color:#8A95AC;margin:0 0 18px}
+.info-card h2{font-size:1.05rem;font-weight:750;color:#101828;margin:22px 0 8px}
+.info-card p,.info-card li{color:#475069;font-size:.9rem;line-height:1.65}
+.info-card ul{margin:6px 0 12px 18px}
+.info-card a{color:#2F6BFF}
+/* compact listing pages (suppliers / opportunities) */
+.li-wrap{max-width:880px;margin:0 auto;padding:28px 16px 60px}
+.li-wrap>h1{font-size:1.45rem;font-weight:800;letter-spacing:-.02em;color:#101828}
+.li-wrap>.li-sub{color:#57627A;font-size:.92rem;margin:6px 0 22px}
+.li-item{background:#fff;border:1px solid #E4E9F2;border-radius:14px;padding:15px 18px;margin-bottom:12px;display:flex;gap:14px;align-items:flex-start;text-decoration:none;transition:box-shadow .15s,border-color .15s}
+.li-item:hover{border-color:#C9D6F5;box-shadow:0 6px 18px -10px rgba(47,107,255,.35)}
+.li-item h3{margin:0 0 4px;font-size:.96rem;font-weight:700;color:#101828}
+.li-item p{font-size:.84rem;color:#57627A;margin:0}
+.li-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;font-size:.78rem;color:#8A95AC}
+.li-go{color:#2F6BFF;font-size:1.1rem;margin-top:2px}
+.li-empty{text-align:center;padding:40px 16px;color:#8A95AC}
+.li-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
 
 /* quote modal */
 .modal-bg{position:fixed;inset:0;background:rgba(10,17,34,.55);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center;padding:18px}
@@ -969,7 +1006,93 @@ var D = {
  "ok.sent":["Code sent!","কোড পাঠানো হয়েছে!"],
  "ok.verified":["Verified!","যাচাই হয়েছে!"],
  "dev.note":["Demo mode — your code: {c} (in production it is sent by SMS/email)","ডেমো মোড — আপনার কোড: {c} (প্রকৃত পরিবেশে এটি এসএমএস/ইমেইলে যাবে)"],
- "ui.loading":["Loading…","লোড হচ্ছে…"]
+ "ui.loading":["Loading…","লোড হচ্ছে…"],
+
+ /* marketplace states */
+ "mp.emptyTitle":["No posts found","কোনো পোস্ট পাওয়া যায়নি"],
+ "mp.emptySub":["Try changing your filters, or be the first to post here.","ফিল্টার বদলে দেখুন, অথবা এখানে প্রথম পোস্টটি আপনিই করুন।"],
+ "mp.emptyLogin":["You'll need to sign in to create a post.","পোস্ট তৈরি করতে সাইন ইন করতে হবে।"],
+ "mp.clearFilters":["Clear Filters","ফিল্টার মুছুন"],
+ "mp.retry":["Retry","আবার চেষ্টা করুন"],
+ "foot.about":["About","আমাদের সম্পর্কে"],
+ "foot.contact":["Contact","যোগাযোগ"],
+ "foot.privacy":["Privacy","গোপনীয়তা"],
+ "foot.terms":["Terms","শর্তাবলি"],
+ "nav.suppliersLand":["Suppliers","সরবরাহকারী"],
+ "nav.oppsLand":["Opportunities","সুযোগ"],
+
+ /* static info pages */
+ "meta.about":["Ahoor — About","Ahoor — আমাদের সম্পর্কে"],
+ "about.updated":["Last updated: August 2026","সর্বশেষ হালনাগাদ: আগস্ট ২০২৬"],
+ "about.title":["About Ahoor","Ahoor সম্পর্কে"],
+ "about.lead":["A B2B marketplace and opportunity network built for Bangladesh.","বাংলাদেশের জন্য তৈরি একটি B2B মার্কেটপ্লেস ও ব্যবসার সুযোগের নেটওয়ার্ক।"],
+ "about.h1":["Who we are","আমরা কারা"],
+ "about.p1":["Ahoor helps Bangladeshi businesses find each other. Buyers post what they need; suppliers and manufacturers post what they offer. Our smart matching surfaces the right opportunities to the right businesses — without endless searching.","Ahoor বাংলাদেশি ব্যবসাগুলোকে একে অপরকে খুঁজে পেতে সাহায্য করে। ক্রেতারা যা প্রয়োজন তা পোস্ট করেন; সরবরাহকারী ও প্রস্তুতকারকেরা যা অফার করেন তা পোস্ট করেন। আমাদের স্মার্ট ম্যাচিং সঠিক সুযোগগুলো সঠিক ব্যবসার কাছে পৌঁছে দেয় — অন্তহীন খোঁজাখুঁজি ছাড়াই।"],
+ "about.h2":["What we do","আমরা যা করি"],
+ "about.p2":["Businesses on Ahoor can post requirements and offers, receive and compare quotations, chat directly with potential partners, get matched with relevant opportunities, and track their performance through business analytics.","Ahoor-এ ব্যবসাগুলো প্রয়োজন ও অফার পোস্ট করতে পারে, কোটেশন পেতে ও তুলনা করতে পারে, সম্ভাব্য অংশীদারদের সাথে সরাসরি চ্যাট করতে পারে, উপযুক্ত সুযোগের সাথে ম্যাচ হতে পারে এবং বিজনেস অ্যানালিটিক্সের মাধ্যমে নিজেদের পারফরম্যান্স দেখতে পারে।"],
+ "about.h3":["Who it's for","কাদের জন্য"],
+ "about.p3":["Ahoor is for manufacturers, suppliers, wholesalers, exporters, importers, and bulk buyers across Bangladesh — from textiles and garments to agro products, jute, leather, packaging, and more.","Ahoor বাংলাদেশের প্রস্তুতকারক, সরবরাহকারী, পাইকারি বিক্রেতা, রপ্তানিকারক, আমদানিকারক ও পাইকারি ক্রেতাদের জন্য — টেক্সটাইল ও গার্মেন্টস থেকে শুরু করে কৃষি পণ্য, পাট, চামড়া, প্যাকেজিংসহ আরও অনেক খাতে।"],
+ "about.h4":["Contact us","যোগাযোগ করুন"],
+ "about.p4":["Questions or feedback? Reach us through the contact page — or sign in and use in-app messaging to talk to any business on the platform.","প্রশ্ন বা মতামত আছে? যোগাযোগ পৃষ্ঠার মাধ্যমে আমাদের জানান — অথবা সাইন ইন করে প্ল্যাটফর্মের যেকোনো ব্যবসার সাথে ইন-অ্যাপ মেসেজিংয়ে কথা বলুন।"],
+
+ "meta.contact":["Ahoor — Contact","Ahoor — যোগাযোগ"],
+ "contact.title":["Contact Us","যোগাযোগ করুন"],
+ "contact.updated":["Last updated: August 2026","সর্বশেষ হালনাগাদ: আগস্ট ২০২৬"],
+ "contact.lead":["We'd love to hear from you — questions, feedback, or partnership ideas.","আমরা আপনার কাছ থেকে শুনতে চাই — প্রশ্ন, মতামত বা অংশীদারিত্বের আইডিয়া।"],
+ "contact.h1":["Email","ইমেইল"],
+ "contact.p1":["For general questions and support, email us at munjirul000@gmail.com.","সাধারণ প্রশ্ন ও সাপোর্টের জন্য ইমেইল করুন: munjirul000@gmail.com"],
+ "contact.h2":["Report a problem","সমস্যা জানান"],
+ "contact.p2":["See something wrong on the platform — a suspicious post, an unfair quotation, or a bug? Sign in and use the Report option on any post or business profile.","প্ল্যাটফর্মে কিছু ভুল দেখলে — সন্দেহজনক পোস্ট, অসাধু কোটেশন বা কোনো ত্রুটি? সাইন ইন করে যেকোনো পোস্ট বা বিজনেস প্রোফাইলে রিপোর্ট অপশন ব্যবহার করুন।"],
+ "contact.h3":["Response time","উত্তরের সময়"],
+ "contact.p3":["We typically respond within 1–2 business days.","সাধারণত ১–২ কার্যদিবসের মধ্যে আমরা উত্তর দিই।"],
+
+ "meta.privacy":["Ahoor — Privacy Policy","Ahoor — গোপনীয়তা নীতি"],
+ "privacy.title":["Privacy Policy","গোপনীয়তা নীতি"],
+ "privacy.updated":["Last updated: August 2026","সর্বশেষ হালনাগাদ: আগস্ট ২০২৬"],
+ "privacy.lead":["This policy explains what information Ahoor collects and how we use it.","এই নীতিতে বলা হয়েছে Ahoor কী তথ্য সংগ্রহ করে এবং সেগুলো কীভাবে ব্যবহার করে।"],
+ "privacy.h1":["Information we collect","আমরা যা সংগ্রহ করি"],
+ "privacy.p1":["When you create an account we collect your name, email, phone number, and the business information you choose to add (business name, category, location, products, and similar details). We also store the posts, quotations, messages, and reports you create, plus basic usage events such as profile and post views.","অ্যাকাউন্ট তৈরি করার সময় আমরা আপনার নাম, ইমেইল, ফোন নম্বর এবং আপনি যে ব্যবসায়িক তথ্য যোগ করেন (ব্যবসার নাম, ক্যাটাগরি, অবস্থান, পণ্য ইত্যাদি) সংগ্রহ করি। আপনার তৈরি পোস্ট, কোটেশন, মেসেজ ও রিপোর্ট এবং প্রোফাইল/পোস্ট ভিউয়ের মতো মৌলিক ব্যবহারের তথ্যও আমরা সংরক্ষণ করি।"],
+ "privacy.h2":["How we use it","কীভাবে ব্যবহার করি"],
+ "privacy.p2":["Your information is used to run the platform: connecting you with relevant businesses, showing your posts and profile to other members, sending notifications and quotations, matching opportunities, and showing you your own analytics. We never invent or publish fake business data.","আপনার তথ্য প্ল্যাটফর্ম চালাতে ব্যবহৃত হয়: উপযুক্ত ব্যবসার সাথে যুক্ত করা, আপনার পোস্ট ও প্রোফাইল অন্য সদস্যদের দেখানো, নোটিফিকেশন ও কোটেশন পাঠানো, সুযোগ ম্যাচ করা এবং আপনার নিজের অ্যানালিটিক্স দেখানো। আমরা কখনো ভুয়া ব্যবসার তথ্য তৈরি করি না বা প্রকাশ করি না।"],
+ "privacy.h3":["What we don't share","যা আমরা শেয়ার করি না"],
+ "privacy.p3":["We do not sell your personal data. Your phone number and email are only visible to other members according to your own visibility settings. We never expose passwords, session tokens, or private analytics of other businesses.","আমরা আপনার ব্যক্তিগত তথ্য বিক্রি করি না। আপনার ফোন নম্বর ও ইমেইল শুধুমাত্র আপনার ভিজিবিলিটি সেটিংস অনুযায়ী অন্য সদস্যদের কাছে দৃশ্যমান হয়। আমরা কখনো পাসওয়ার্ড, সেশন টোকেন বা অন্য ব্যবসার ব্যক্তিগত অ্যানালিটিক্স প্রকাশ করি না।"],
+ "privacy.h4":["Security","নিরাপত্তা"],
+ "privacy.p4":["Passwords are stored as salted hashes, sessions use secure random tokens, and all account pages require login. As with any online service, please use a strong, unique password.","পাসওয়ার্ড সল্টেড হ্যাশ হিসেবে সংরক্ষিত থাকে, সেশনে সিকিউর র্যান্ডম টোকেন ব্যবহৃত হয় এবং সব অ্যাকাউন্ট পৃষ্ঠায় লগইন আবশ্যক। যেকোনো অনলাইন সেবার মতো, দয়া করে শক্তিশালী ও আলাদা পাসওয়ার্ড ব্যবহার করুন।"],
+ "privacy.h5":["Your choices","আপনার পছন্দ"],
+ "privacy.p5":["You can edit or remove your business information from your profile anytime. To close your account or ask questions about your data, contact us from the contact page.","আপনার প্রোফাইল থেকে যেকোনো সময় ব্যবসায়িক তথ্য সম্পাদনা বা মুছে ফেলতে পারেন। অ্যাকাউন্ট বন্ধ করতে বা আপনার ডেটা নিয়ে প্রশ্ন থাকলে যোগাযোগ পৃষ্ঠা থেকে আমাদের জানান।"],
+
+ "meta.terms":["Ahoor — Terms of Service","Ahoor — ব্যবহারের শর্তাবলি"],
+ "terms.title":["Terms of Service","ব্যবহারের শর্তাবলি"],
+ "terms.updated":["Last updated: August 2026","সর্বশেষ হালনাগাদ: আগস্ট ২০২৬"],
+ "terms.lead":["By using Ahoor you agree to these terms. Please read them carefully.","Ahoor ব্যবহার করে আপনি এই শর্তগুলো মেনে নিচ্ছেন। দয়া করে মন দিয়ে পড়ুন।"],
+ "terms.h1":["Using the platform","প্ল্যাটফর্ম ব্যবহার"],
+ "terms.p1":["Ahoor connects buyers and suppliers in Bangladesh. We provide the venue; the actual business dealings, negotiations, and payments happen between the parties themselves. Always verify the credibility of your business partners before entering into any agreement.","Ahoor বাংলাদেশের ক্রেতা ও সরবরাহকারীদের সংযুক্ত করে। আমরা শুধু প্ল্যাটফর্মটি দিই; প্রকৃত ব্যবসায়িক লেনদেন, আলোচনা ও পেমেন্ট পক্ষদ্বয়ের মধ্যে হয়। কোনো চুক্তিতে যাওয়ার আগে সর্বদা আপনার ব্যবসায়িক অংশীদারের বিশ্বাসযোগ্যতা যাচাই করুন।"],
+ "terms.h2":["Accounts","অ্যাকাউন্ট"],
+ "terms.p2":["You must provide accurate information when creating an account. You are responsible for keeping your login credentials safe and for everything done from your account.","অ্যাকাউন্ট তৈরি করার সময় সঠিক তথ্য দিতে হবে। আপনার লগইন তথ্য নিরাপদ রাখা এবং আপনার অ্যাকাউন্ট থেকে যা কিছু করা হয় তার দায়িত্ব আপনার।"],
+ "terms.h3":["Acceptable use","গ্রহণযোগ্য ব্যবহার"],
+ "terms.p3":["Do not post false or misleading business information, send spam, harass other members, or use the platform for anything unlawful. Posts, quotations, and messages should represent genuine business intent.","ভুয়া বা বিভ্রান্তিকর ব্যবসায়িক তথ্য পোস্ট করা, স্প্যাম পাঠানো, অন্য সদস্যদের হয়রানি করা বা কোনো অবৈধ কাজে প্ল্যাটফর্ম ব্যবহার করা যাবে না। পোস্ট, কোটেশন ও মেসেজ প্রকৃত ব্যবসায়িক উদ্দেশ্য প্রকাশ করবে।"],
+ "terms.h4":["Reporting","রিপোর্টিং"],
+ "terms.p4":["If you see a violation, report it through the Report option on the platform. We review reports and may suspend accounts that violate these terms.","কোনো লঙ্ঘন দেখলে প্ল্যাটফর্মের রিপোর্ট অপশনের মাধ্যমে জানান। আমরা রিপোর্ট পর্যালোচনা করি এবং শর্ত লঙ্ঘনকারী অ্যাকাউন্ট স্থগিত করতে পারি।"],
+ "terms.h5":["Liability","দায়বদ্ধতা"],
+ "terms.p5":["Ahoor is provided as-is. To the extent permitted by law, we are not liable for losses arising from transactions, communications, or decisions made between businesses on the platform.","Ahoor যেমন আছে তেমনই প্রদান করা হয়। আইন যতটুকু অনুমতি দেয়, প্ল্যাটফর্মে ব্যবসাগুলোর মধ্যে হওয়া লেনদেন, যোগাযোগ বা সিদ্ধান্ত থেকে উদ্ভূত ক্ষতির জন্য আমরা দায়ী নই।"],
+ "terms.h6":["Changes","পরিবর্তন"],
+ "terms.p6":["We may update these terms as the platform grows. The latest version will always be available on this page.","প্ল্যাটফর্ম বাড়ার সাথে সাথে আমরা এই শর্তাবলি হালনাগাদ করতে পারি। সর্বশেষ সংস্করণ সবসময় এই পৃষ্ঠায় থাকবে।"],
+
+ /* suppliers / opportunities listing pages */
+ "meta.suppliers":["Ahoor — Suppliers","Ahoor — সরবরাহকারী"],
+ "sp.title":["Suppliers & Manufacturers","সরবরাহকারী ও প্রস্তুতকারক"],
+ "sp.sub":["Browse supplier offers posted on Ahoor.","Ahoor-এ পোস্ট করা সরবরাহকারীদের অফার দেখুন।"],
+ "sp.empty":["No supplier offers yet — be the first to post one.","এখনো কোনো সরবরাহকারীর অফার নেই — প্রথম অফারটি আপনিই দিন।"],
+ "sp.market":["Open Marketplace","মার্কেটপ্লেস খুলুন"],
+ "sp.join":["Join Ahoor","Ahoor-এ যোগ দিন"],
+ "sp.postOffer":["Post an Offer","অফার পোস্ট করুন"],
+ "sp.browseBuyers":["Browse Buyer Requirements","ক্রেতার প্রয়োজন দেখুন"],
+ "meta.opps":["Ahoor — Opportunities","Ahoor — ব্যবসার সুযোগ"],
+ "op.title":["All Business Opportunities","সব ব্যবসার সুযোগ"],
+ "op.sub":["Buyer requirements and supplier offers posted on Ahoor.","Ahoor-এ পোস্ট করা ক্রেতার প্রয়োজন ও সরবরাহকারীর অফার।"],
+ "op.empty":["No opportunities yet — be the first to post one.","এখনো কোনো সুযোগ নেই — প্রথম পোস্টটি আপনিই করুন।"],
+ "op.market":["Open Marketplace","মার্কেটপ্লেস খুলুন"],
+ "op.postReq":["Post a Requirement","প্রয়োজন পোস্ট করুন"]
 };
 
 var LANG = (function(){
@@ -1824,12 +1947,58 @@ function initNotificationBell(container){
   return bell;
 }
 
+/* ---- accessible modal helpers: focus trap + ESC + inert while hidden ---- */
+function modalFocusable(el){
+  return Array.prototype.slice.call(el.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'))
+    .filter(function(x){ return x.offsetParent !== null; });
+}
+function openModal(el, focusSel){
+  if(!el || el.__ahoorOpen) return;
+  el.__ahoorOpen = true;
+  el.__ahoorLast = document.activeElement;
+  el.removeAttribute('inert');
+  el.setAttribute('aria-hidden', 'false');
+  el.classList.add('on');
+  var f = focusSel ? el.querySelector(focusSel) : null;
+  if(!f || f.offsetParent === null){ var fb = modalFocusable(el); f = fb[0] || null; }
+  if(f && f.focus) f.focus();
+  function onKey(e){
+    if(e.key === 'Escape'){ e.preventDefault(); closeModal(el); return; }
+    if(e.key !== 'Tab') return;
+    var items = modalFocusable(el);
+    if(!items.length) return;
+    var first = items[0], last = items[items.length - 1];
+    var idx = items.indexOf(document.activeElement);
+    if(e.shiftKey){ if(idx <= 0){ e.preventDefault(); last.focus(); } }
+    else if(idx === -1 || idx === items.length - 1){ e.preventDefault(); first.focus(); }
+  }
+  el.__ahoorKey = onKey;
+  document.addEventListener('keydown', onKey, true);
+}
+function closeModal(el){
+  if(!el || !el.__ahoorOpen) return;
+  el.__ahoorOpen = false;
+  if(el.__ahoorKey){ document.removeEventListener('keydown', el.__ahoorKey, true); el.__ahoorKey = null; }
+  el.classList.remove('on');
+  el.setAttribute('aria-hidden', 'true');
+  el.setAttribute('inert', '');
+  var last = el.__ahoorLast; el.__ahoorLast = null;
+  if(last && last.focus) try{ last.focus(); }catch(e){}
+}
+/* show/hide a flow step: display + hidden/inert so inactive steps stay unfocusable */
+function setStep(el, on){
+  if(!el) return;
+  if(on){ el.style.display = ''; el.removeAttribute('hidden'); el.removeAttribute('inert'); }
+  else { el.style.display = 'none'; el.setAttribute('hidden', ''); el.setAttribute('inert', ''); }
+}
+
 window.Ahoor = {
   t:t, applyLang:applyLang, api:api, errMsg:errMsg, showMsg:showMsg, hideMsg:hideMsg,
   toast:toast, setLoading:setLoading, validEmail:validEmail, validPhone:validPhone,
   initStrength:initStrength, initPwToggles:initPwToggles, initOtp:initOtp,
   startCountdown:startCountdown, fieldErr:fieldErr, clearFieldErr:clearFieldErr, esc:esc,
   fillSelect:fillSelect, locName:locName,
+  openModal:openModal, closeModal:closeModal, setStep:setStep,
   timeAgo:nTimeAgo, notifTitle:notifTitle, notifDesc:notifDesc, notifLink:notifLink,
   notifIcon:notifIcon, onNotif:onNotif, initNotificationBell:initNotificationBell
 };

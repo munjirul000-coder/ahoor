@@ -77,7 +77,7 @@ __CSS__
     </form>
 
     <!-- step 2: verify code -->
-    <div id="fp2" style="display:none">
+    <div id="fp2" style="display:none" hidden="" inert="">
       <div class="dev-note" id="devNote2"></div>
       <div class="field">
         <label class="flabel" data-i18n="su.code">Verification code</label>
@@ -93,7 +93,7 @@ __CSS__
     </div>
 
     <!-- step 3: new password -->
-    <div id="fp3" style="display:none">
+    <div id="fp3" style="display:none" hidden="" inert="">
       <div class="field">
         <label class="flabel" for="np1" data-i18n="fp.newPw">New Password</label>
         <div class="input-wrap">
@@ -127,7 +127,7 @@ __CSS__
     </div>
 
     <!-- done -->
-    <div id="fpDone" style="display:none;text-align:center;padding:14px 0 6px">
+    <div id="fpDone" style="display:none;text-align:center;padding:14px 0 6px" hidden="" inert="">
       <span class="success-ic check-pulse">
         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
       </span>
@@ -142,6 +142,12 @@ __CSS__
   <div class="container">
     <p data-i18n="foot.made">Made in Bangladesh</p>
     <p style="margin-top:6px" data-i18n="foot.cr">© 2026 Ahoor. All rights reserved.</p>
+    <div class="flinks">
+      <a href="/about.html" data-i18n="foot.about">About</a>
+      <a href="/contact.html" data-i18n="foot.contact">Contact</a>
+      <a href="/privacy.html" data-i18n="foot.privacy">Privacy</a>
+      <a href="/terms.html" data-i18n="foot.terms">Terms</a>
+    </div>
   </div>
 </footer>
 
@@ -158,13 +164,18 @@ __JS__
 
   function renderStep(n){
     step=n;
-    document.getElementById('fp1').style.display=n===1?'':'none';
-    document.getElementById('fp2').style.display=n===2?'':'none';
-    document.getElementById('fp3').style.display=n===3?'':'none';
+    /* only the active step is visible; inactive steps get display:none + hidden + inert */
+    A.setStep(document.getElementById('fp1'), n===1);
+    A.setStep(document.getElementById('fp2'), n===2);
+    A.setStep(document.getElementById('fp3'), n===3);
+    A.setStep(document.getElementById('fpDone'), false);
     document.getElementById('stepLabel').textContent=A.t(labels[n]);
     dots.forEach(function(d,i){d.className='step-dot'+(i<n?' done':i===n-1?' on':'');});
     seps.forEach(function(s,i){s.className='step-sep'+(i<n-1?' done':'');});
     A.hideMsg(msg);
+    var target = n===1 ? '#fpId' : n===2 ? '#otpRow2 input' : n===3 ? '#np1' : null;
+    var el = target && document.querySelector(target);
+    if(el) el.focus();
   }
 
   /* step 1 */
@@ -242,10 +253,10 @@ __JS__
     A.api('/api/reset-password',{identifier:identifier,code:otp2.map(function(x){return x.value;}).join(''),password:p1}).then(function(r){
       A.setLoading(btn,false);
       if(r.status===200){
-        document.getElementById('fp3').style.display='none';
+        A.setStep(document.getElementById('fp3'), false);
+        A.setStep(document.getElementById('fpDone'), true);
         document.getElementById('stepLabel').style.display='none';
         document.querySelector('.steps').style.display='none';
-        document.getElementById('fpDone').style.display='';
       } else {
         A.showMsg(msg,'error',A.errMsg(r.data.error));
       }

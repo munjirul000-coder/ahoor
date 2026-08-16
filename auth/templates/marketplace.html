@@ -74,8 +74,22 @@ __CSS__
 
   <div class="mp-wrap">
     <div class="mp-grid" id="mpGrid"></div>
-    <div class="mp-empty" id="mpEmpty" style="display:none" data-i18n="mp.empty">No posts found. Try changing filters.</div>
-    <div class="mp-empty" id="mpLoad" data-i18n="ui.loading">Loading…</div>
+    <!-- exactly one of the three states below is visible at a time -->
+    <div class="mp-loading" id="mpLoad" style="display:none"><span class="mp-spinner" aria-hidden="true"></span><span data-i18n="ui.loading">Loading…</span></div>
+    <div class="mp-empty-state" id="mpEmpty" style="display:none" role="status">
+      <span class="mp-empty-ic" aria-hidden="true">📭</span>
+      <h3 data-i18n="mp.emptyTitle">No posts found</h3>
+      <p data-i18n="mp.emptySub">Try changing your filters, or be the first to post here.</p>
+      <div class="mp-empty-actions">
+        <a class="btn btn-primary" id="mpEmptyNew" href="/post.html"><span data-i18n="mp.newPost">Create Post</span></a>
+        <button type="button" class="btn btn-outline" id="mpEmptyClear" style="display:none"><span data-i18n="mp.clearFilters">Clear Filters</span></button>
+      </div>
+      <p class="mp-empty-login" id="mpEmptyLogin" style="display:none" data-i18n="mp.emptyLogin">You'll need to sign in to create a post.</p>
+    </div>
+    <div class="mp-err" id="mpErr" style="display:none" role="alert">
+      <p id="mpErrText"></p>
+      <button type="button" class="btn btn-outline" id="mpRetry"><span data-i18n="mp.retry">Retry</span></button>
+    </div>
   </div>
 </main>
 
@@ -83,11 +97,17 @@ __CSS__
   <div class="container">
     <p data-i18n="foot.made">Made in Bangladesh</p>
     <p style="margin-top:6px" data-i18n="foot.cr">© 2026 Ahoor. All rights reserved.</p>
+    <div class="flinks">
+      <a href="/about.html" data-i18n="foot.about">About</a>
+      <a href="/contact.html" data-i18n="foot.contact">Contact</a>
+      <a href="/privacy.html" data-i18n="foot.privacy">Privacy</a>
+      <a href="/terms.html" data-i18n="foot.terms">Terms</a>
+    </div>
   </div>
 </footer>
 
-<!-- quote / request modal -->
-<div class="modal-bg" id="quoteModal">
+<!-- quote / request modal (hidden by default: display:none + inert; opened via A.openModal) -->
+<div class="modal-bg" id="quoteModal" role="dialog" aria-modal="true" aria-labelledby="qmTitle" aria-hidden="true" inert>
   <div class="modal">
     <h3 id="qmTitle">Send Quote</h3>
     <p class="sub" id="qmSub"></p>
@@ -156,6 +176,8 @@ __JS__
   var grid = document.getElementById('mpGrid');
   var empty = document.getElementById('mpEmpty');
   var loadEl = document.getElementById('mpLoad');
+  var errEl = document.getElementById('mpErr');
+  var errText = document.getElementById('mpErrText');
   var current = { type:'all', q:'', cat:'', loc:'' };
   var me = null;
   var targetPost = null;
@@ -168,6 +190,8 @@ __JS__
       cta.href = '/dashboard.html';
       cta.innerHTML = '<span data-i18n="nav.dash">Dashboard</span>';
       applyNav();
+      // session may resolve after the first empty state was rendered — refresh auth hints
+      if(state === 'empty') renderState('empty');
     }
   });
   function applyNav(){ document.querySelectorAll('[data-i18n]').forEach(function(el){ var v = window.Ahoor && A.t(el.getAttribute('data-i18n')); if(v) el.innerHTML = v; }); }
@@ -204,25 +228,61 @@ __JS__
   catSel.addEventListener('change', function(){ current.cat = this.value; load(); });
   locSel.addEventListener('change', function(){ current.loc = this.value; load(); });
 
-  /* load posts */
+  /* state machine: exactly one of loading / content / empty / error is visible */
+  var state = 'loading';
+  var loadGen = 0; // increments per load(); stale responses are ignored
+  function renderState(s, errMsg){
+    state = s;
+    loadEl.style.display = s === 'loading' ? '' : 'none';
+    empty.style.display = s === 'empty' ? '' : 'none';
+    errEl.style.display = s === 'error' ? '' : 'none';
+    if(s === 'error'){
+      errText.textContent = errMsg || A.t('err.network');
+      console.error('[marketplace] load failed:', errMsg || 'network error');
+    }
+    if(s === 'empty'){
+      var loggedOut = !me;
+      var btn = document.getElementById('mpEmptyNew');
+      btn.href = loggedOut ? '/login?next=/post.html' : '/post.html';
+      document.getElementById('mpEmptyLogin').style.display = loggedOut ? '' : 'none';
+      document.getElementById('mpEmptyClear').style.display = (current.q || current.cat || current.loc) ? '' : 'none';
+    }
+  }
   function load(){
-    grid.innerHTML = '';
-    empty.style.display = 'none';
-    loadEl.style.display = '';
+    var gen = ++loadGen;
+    grid.innerHTML = ''; // drop stale cards before showing the loading state
+    renderState('loading');
     var params = new URLSearchParams();
     if(current.type !== 'all') params.set('type', current.type);
     if(current.q) params.set('q', current.q);
     if(current.cat) params.set('category', current.cat);
     if(current.loc) params.set('location', current.loc);
     fetch('/api/posts?' + params.toString(), { credentials:'same-origin' })
-      .then(function(r){ return r.json(); })
-      .then(function(d){
-        loadEl.style.display = 'none';
-        if(!d.posts || d.posts.length === 0){ empty.style.display = ''; return; }
-        d.posts.forEach(function(p){ grid.appendChild(card(p)); });
+      .then(function(r){
+        if(!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
       })
-      .catch(function(){ loadEl.textContent = A.t('err.network'); });
+      .then(function(d){
+        if(gen !== loadGen) return; // stale response — ignore
+        if(!d.posts || d.posts.length === 0){ renderState('empty'); return; }
+        d.posts.forEach(function(p){ grid.appendChild(card(p)); });
+        renderState('content');
+      })
+      .catch(function(err){
+        if(gen !== loadGen) return;
+        renderState('error', err && err.message ? A.t('err.network') : A.t('err.network'));
+      });
   }
+  document.getElementById('mpRetry').addEventListener('click', function(){ load(); });
+  document.getElementById('mpEmptyNew').addEventListener('click', function(e){
+    if(!me){ e.preventDefault(); location.href = '/login?next=/post.html'; }
+  });
+  document.getElementById('mpEmptyClear').addEventListener('click', function(){
+    current.q = ''; current.cat = ''; current.loc = '';
+    document.getElementById('mpQ').value = '';
+    catSel.value = ''; locSel.value = '';
+    load();
+  });
 
   function bizTypeShort(owner){
     if(!owner || !owner.businessType) return '';
@@ -270,20 +330,25 @@ __JS__
     return el;
   }
 
-  /* report modal */
+  /* report modal (uses shared openModal/closeModal: focus trap + ESC + inert) */
   var rpModal = document.createElement('div');
   rpModal.className = 'modal-bg';
   rpModal.id = 'rpModal';
-  rpModal.innerHTML = '<div class="modal"><h3 data-i18n="rp.reportPost">Report Post</h3><div class="field"><label class="flabel" data-i18n="rp.reason">Reason</label><textarea id="rpText" style="min-height:90px" data-i18n-ph="rp.reasonPh" placeholder="Describe the issue…"></textarea></div><div class="modal-actions"><button type="button" class="btn btn-ghost" id="rpCancel" data-i18n="mp.cancel">Cancel</button><button type="button" class="btn btn-primary" id="rpSend" style="flex:1"><span class="spinner"></span><span class="btn-label" data-i18n="rp.title">Report</span></button></div></div>';
+  rpModal.setAttribute('role','dialog');
+  rpModal.setAttribute('aria-modal','true');
+  rpModal.setAttribute('aria-labelledby','rpTitle');
+  rpModal.setAttribute('aria-hidden','true');
+  rpModal.setAttribute('inert','');
+  rpModal.innerHTML = '<div class="modal"><h3 id="rpTitle" data-i18n="rp.reportPost">Report Post</h3><div class="field"><label class="flabel" data-i18n="rp.reason">Reason</label><textarea id="rpText" style="min-height:90px" data-i18n-ph="rp.reasonPh" placeholder="Describe the issue…"></textarea></div><div class="modal-actions"><button type="button" class="btn btn-ghost" id="rpCancel" data-i18n="mp.cancel">Cancel</button><button type="button" class="btn btn-primary" id="rpSend" style="flex:1"><span class="spinner"></span><span class="btn-label" data-i18n="rp.title">Report</span></button></div></div>';
   document.body.appendChild(rpModal);
   var rpTarget = null;
   function openReport(targetType, targetId){
     rpTarget = { targetType: targetType, targetId: targetId };
     document.getElementById('rpText').value = '';
-    rpModal.classList.add('on');
+    A.openModal(rpModal, '#rpText');
   }
-  document.getElementById('rpCancel').addEventListener('click', function(){ rpModal.classList.remove('on'); });
-  rpModal.addEventListener('click', function(e){ if (e.target === rpModal) rpModal.classList.remove('on'); });
+  document.getElementById('rpCancel').addEventListener('click', function(){ A.closeModal(rpModal); });
+  rpModal.addEventListener('click', function(e){ if (e.target === rpModal) A.closeModal(rpModal); });
   document.getElementById('rpSend').addEventListener('click', function(){
     var txt = document.getElementById('rpText').value.trim();
     if (txt.length < 5) { A.toast(A.t('rp.errShort'), 'er'); return; }
@@ -291,7 +356,7 @@ __JS__
     A.setLoading(btn, true);
     A.api('/api/reports', { targetType: rpTarget.targetType, targetId: rpTarget.targetId, reason: txt }).then(function(r){
       A.setLoading(btn, false);
-      if (r.status === 201) { rpModal.classList.remove('on'); A.toast(A.t('rp.sent'), 'ok'); }
+      if (r.status === 201) { A.closeModal(rpModal); A.toast(A.t('rp.sent'), 'ok'); }
       else if (r.status === 401) { location.href = '/login.html?next=/marketplace.html'; }
       else A.toast(A.errMsg(r.data.error), 'er');
     });
@@ -324,7 +389,7 @@ __JS__
     if(qKind === 'request' && me.type !== 'buyer' && me.type !== 'both'){
       A.toast(A.t('qt.roleBlockedReq'), 'er'); return;
     }
-    modal.classList.add('on');
+    A.openModal(modal, qKind === 'quote' ? '#qmPrice' : '#qmReqQty');
   }
   /* auto total = price x qty */
   function calcTotal(){
@@ -339,8 +404,8 @@ __JS__
   }
   document.getElementById('qmPrice').addEventListener('input', calcTotal);
   document.getElementById('qmQty').addEventListener('input', calcTotal);
-  document.getElementById('qmCancel').addEventListener('click', function(){ modal.classList.remove('on'); });
-  modal.addEventListener('click', function(e){ if(e.target === modal) modal.classList.remove('on'); });
+  document.getElementById('qmCancel').addEventListener('click', function(){ A.closeModal(modal); });
+  modal.addEventListener('click', function(e){ if(e.target === modal) A.closeModal(modal); });
   document.getElementById('qmSend').addEventListener('click', function(){
     var msgEl = document.getElementById('qmMsg');
     var text = document.getElementById('qmText').value.trim();
@@ -369,7 +434,7 @@ __JS__
       A.setLoading(btn, false);
       if(r.status === 201){
         A.toast(A.t(qKind === 'quote' ? 'qt.sentOk' : 'qt.reqSentOk'), 'ok');
-        modal.classList.remove('on');
+        A.closeModal(modal);
       } else if(r.status === 401){
         location.href = '/login.html?next=/marketplace.html';
       } else if(r.status === 403 && r.data.error === 'role_not_allowed'){

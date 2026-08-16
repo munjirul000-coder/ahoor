@@ -173,8 +173,10 @@ with sync_playwright() as p:
     pgB.goto(BASE + '/profile-setup.html', wait_until='domcontentloaded'); pgB.wait_for_timeout(1100)
     hasApply = pgB.evaluate("document.getElementById('vrApply') ? getComputedStyle(document.getElementById('vrApply')).display !== 'none' : false")
     check("B has verification apply button", hasApply)
-    pgB.evaluate("document.getElementById('vrApply').click()")
-    pgB.wait_for_timeout(1000)
+    # B submits a verification request (fill + submit on /verify.html)
+    pgB.goto(BASE + '/verify.html', wait_until='domcontentloaded'); pgB.wait_for_timeout(1200)
+    pgB.fill('#vrBiz', 'Beta Textiles'); pgB.fill('#vrContact', 'User Beta'); pgB.fill('#vrLoc', 'Dhaka')
+    pgB.click('#vrSubmit'); pgB.wait_for_timeout(1500)
     verStatus = pgB.evaluate("fetch('/api/session',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}).then(r=>r.json()).then(d=>d.user.verificationStatus)")
     check("B verification pending", verStatus == 'pending', str(verStatus))
     # admin approves

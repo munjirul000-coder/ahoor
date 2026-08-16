@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ahoor — অ্যাকাউন্ট তৈরি করুন</title>
+<title>Ahoor — Opportunities</title>
 <meta name="theme-color" content="#0A1122">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1430'/%3E%3Cpath d='M16 8.5 9.6 23.5h12.8z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='9.6' cy='23.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='22.4' cy='23.5' r='2.6' fill='%23FF8A4C'/%3E%3C/svg%3E">
 <style>
@@ -12,7 +12,6 @@
 :root{--ink:#0A1122;--bg:#F4F6FA;--text:#101828;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
 html[lang="bn"]{--font:'Noto Sans Bengali','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
 html[lang="bn"] body{line-height:1.72}
-html[lang="bn"] .auth-head h1{letter-spacing:-.005em}
 /* ============================================================
    Ahoor — Auth pages shared styles (inline: Fonts come from landing build)
    ============================================================ */
@@ -555,9 +554,8 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 
 </style>
 </head>
-<body data-meta="meta.signup">
+<body data-meta="meta.suppliers">
 
-<!-- ============ NAV ============ -->
 <header class="auth-nav">
   <div class="container">
     <a class="brand" href="/index.html" aria-label="Ahoor — home">
@@ -569,213 +567,31 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
       </svg>
       <span class="brand-name">Ahoor<em>.</em></span>
     </a>
+    <nav class="mp-navlinks" style="display:flex;gap:4px;align-items:center">
+      <a href="/marketplace.html" style="font-size:.88rem;font-weight:600;color:#57627A;padding:8px 13px;border-radius:9px" data-i18n="nav.market">Marketplace</a>
+      <a href="/suppliers.html" style="font-size:.88rem;font-weight:700;color:#2F6BFF;padding:8px 13px;border-radius:9px;background:#EBF1FF" data-i18n="nav.suppliersLand">Suppliers</a>
+      <a href="/opportunities.html" style="font-size:.88rem;font-weight:600;color:#57627A;padding:8px 13px;border-radius:9px;background:transparent" data-i18n="nav.oppsLand">Opportunities</a>
+    </nav>
     <div class="auth-nav-right">
-      <a class="back-home" href="/index.html">
-        <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-        <span data-i18n="back.home">← Back to Home</span>
-      </a>
       <div class="lang-switch" role="group" aria-label="Language">
         <button type="button" class="lang-btn on" data-lang="bn" aria-pressed="true">বাংলা</button>
         <span class="lsep" aria-hidden="true">|</span>
         <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
       </div>
+      <a class="btn btn-primary btn-sm" id="navCta" href="/signup.html"><span data-i18n="nav.join">Join Ahoor</span></a>
     </div>
   </div>
 </header>
 
-<!-- ============ MAIN ============ -->
-<main class="auth-main">
-  <div class="auth-card wide">
-    <div class="auth-head">
-      <span class="logo-ic">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 11v6"/><path d="M9 14h6"/></svg>
-      </span>
-      <h1 data-i18n="su.title">Create Account</h1>
-      <p data-i18n="su.sub">Start your Ahoor journey in minutes.</p>
-    </div>
-
-    <div class="step-label" id="stepLabel"></div>
-    <div class="steps" aria-hidden="true">
-      <span class="step-dot on" id="sd1"></span><span class="step-sep" id="ss1"></span>
-      <span class="step-dot" id="sd2"></span><span class="step-sep" id="ss2"></span>
-      <span class="step-dot" id="sd3"></span><span class="step-sep" id="ss3"></span>
-      <span class="step-dot" id="sd4"></span>
-    </div>
-
-    <div id="msgBox" class="msg" role="alert"></div>
-
-    <!-- ===== STEP 1 : ACCOUNT ===== -->
-    <form id="step1" novalidate>
-      <div class="field">
-        <label class="flabel" for="nameF" data-i18n="su.name">Full Name</label>
-        <div class="input-wrap">
-          <span class="ficon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
-          <input id="nameF" type="text" autocomplete="name" data-i18n-ph="su.namePh" placeholder="e.g. Rahim Uddin">
-        </div>
-        <p class="field-err"></p>
-      </div>
-      <div class="field">
-        <label class="flabel" for="emailF" data-i18n="su.email">Email Address</label>
-        <div class="input-wrap">
-          <span class="ficon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg></span>
-          <input id="emailF" type="email" autocomplete="email" inputmode="email" data-i18n-ph="su.emailPh" placeholder="you@company.com">
-        </div>
-        <p class="field-err"></p>
-      </div>
-      <div class="field">
-        <label class="flabel" for="phoneF" data-i18n="su.phone">Mobile Number</label>
-        <div class="input-wrap">
-          <span class="ficon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg></span>
-          <input id="phoneF" type="tel" autocomplete="tel" inputmode="tel" data-i18n-ph="su.phonePh" placeholder="01XXXXXXXXX">
-        </div>
-        <p class="field-err"></p>
-      </div>
-      <div class="field">
-        <label class="flabel" for="pw1" data-i18n="su.pw">Password</label>
-        <div class="input-wrap">
-          <span class="ficon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
-          <input id="pw1" type="password" autocomplete="new-password" data-reqs="1" data-i18n-ph="su.pwPh" placeholder="Create a strong password">
-          <button type="button" class="pw-toggle" data-target="pw1" aria-label="Show password">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
-        </div>
-        <div class="strength">
-          <div class="strength-bars"><i></i><i></i><i></i><i></i></div>
-          <div class="strength-label"><span data-i18n="su.strength">Password strength</span><em></em></div>
-        </div>
-        <ul class="reqs">
-          <li data-req="len"><span class="ric"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span data-i18n="su.req1">At least 8 characters</span></li>
-          <li data-req="mix"><span class="ric"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span data-i18n="su.req2">A letter and a number</span></li>
-        </ul>
-        <p class="field-err"></p>
-      </div>
-      <div class="field">
-        <label class="flabel" for="pw2" data-i18n="su.pw2">Confirm Password</label>
-        <div class="input-wrap">
-          <span class="ficon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="m9.5 15.5 2 2 3-3.5"/></svg></span>
-          <input id="pw2" type="password" autocomplete="new-password" data-i18n-ph="su.pw2Ph" placeholder="Re-enter your password">
-          <button type="button" class="pw-toggle" data-target="pw2" aria-label="Show password">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
-        </div>
-        <p class="field-err"></p>
-      </div>
-      <button type="submit" class="btn btn-primary btn-block" id="btnS1">
-        <span class="spinner"></span><span class="btn-label" data-i18n="su.continue">Continue</span>
-      </button>
-    </form>
-
-    <!-- ===== STEP 2 : ACCOUNT TYPE ===== -->
-    <div id="step2" style="display:none" hidden="" inert="">
-      <h2 style="font-size:1.25rem;font-weight:750;text-align:center;margin-bottom:6px" data-i18n="su.typeTitle">How will you use Ahoor?</h2>
-      <p style="text-align:center;font-size:.85rem;color:#57627A;margin-bottom:20px" data-i18n="su.typeSub">Choose one — you can change this later.</p>
-      <div class="type-cards">
-        <button type="button" class="type-card" data-type="buyer">
-          <span class="type-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="m7 11 5 5 5-5"/><path d="M12 4v12"/></svg></span>
-          <span class="type-info"><b data-i18n="su.typeBuyer">Buyer</b><span data-i18n="su.typeBuyerD">I want to find products, suppliers, manufacturers, or business services.</span></span>
-          <span class="type-radio"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-        </button>
-        <button type="button" class="type-card" data-type="supplier">
-          <span class="type-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 20h20"/><path d="M4 20V10l5 3v-3l5 3V4h6v16"/></svg></span>
-          <span class="type-info"><b data-i18n="su.typeSupplier">Supplier / Manufacturer</b><span data-i18n="su.typeSupplierD">I want to offer products, services, or manufacturing capabilities.</span></span>
-          <span class="type-radio"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-        </button>
-        <button type="button" class="type-card" data-type="both">
-          <span class="type-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 4-4 4"/><path d="M4 7h16"/><path d="m16 21-4-4 4-4"/><path d="M20 17H4"/></svg></span>
-          <span class="type-info"><b data-i18n="su.typeBoth">Both</b><span data-i18n="su.typeBothD">I want to both buy and sell through Ahoor.</span></span>
-          <span class="type-radio"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-        </button>
-      </div>
-      <div style="display:flex;gap:12px">
-        <button type="button" class="btn btn-ghost" id="btnS2back"><span class="btn-label" data-i18n="su.back">Back</span></button>
-        <button type="button" class="btn btn-primary" id="btnS2" style="flex:1"><span class="spinner"></span><span class="btn-label" data-i18n="su.continue">Continue</span></button>
-      </div>
-    </div>
-
-    <!-- ===== STEP 3 : BUSINESS INFO ===== -->
-    <div id="stepBiz" style="display:none" hidden="" inert="">
-      <div class="auth-head" style="margin-bottom:16px">
-        <h1 style="font-size:1.3rem" data-i18n="su.bizTitle">Tell us about your business</h1>
-        <p data-i18n="su.bizSub">You can edit these anytime from your business profile.</p>
-      </div>
-      <div class="field">
-        <label class="flabel" data-i18n="su.bizName">Company / Business Name</label>
-        <input type="text" id="bizName" data-i18n-ph="su.bizNamePh" placeholder="e.g. Rahim Garments">
-      </div>
-
-      <div id="bizBuyerSec">
-        <div class="sec-title" style="margin:18px 0 12px"><span class="st-ic">🛒</span><span data-i18n="su.buyerSec">Buying Information</span></div>
-        <div class="field">
-          <label class="flabel" data-i18n="su.buyProducts">What products do you usually want to buy?</label>
-          <input type="text" id="bizBuyProducts" data-i18n-ph="su.buyProductsPh" placeholder="e.g. Cotton T-Shirts, Yarn, Packaging">
-        </div>
-        <div class="field">
-          <label class="flabel" data-i18n="su.typicalQty">Typical required quantity</label>
-          <input type="text" id="bizTypicalQty" data-i18n-ph="su.typicalQtyPh" placeholder="e.g. 1,000 pcs">
-        </div>
-      </div>
-
-      <div id="bizSupplierSec" style="display:none">
-        <div class="sec-title" style="margin:18px 0 12px"><span class="st-ic">🏭</span><span data-i18n="su.supplierSec">Supplier / Manufacturing Information</span></div>
-        <div class="field">
-          <label class="flabel" data-i18n="su.supplyProducts">What products do you make or supply?</label>
-          <input type="text" id="bizSupplyProducts" data-i18n-ph="su.supplyProductsPh" placeholder="e.g. T-Shirts, Hoodies, Polo Shirts">
-        </div>
-        <div class="field">
-          <label class="flabel" data-i18n="su.moq">Minimum Order Quantity (MOQ)</label>
-          <input type="text" id="bizMoq" data-i18n-ph="su.moqPh" placeholder="e.g. 100 pcs">
-        </div>
-      </div>
-
-      <div class="grid2">
-        <div class="field">
-          <label class="flabel" data-i18n="su.category">Product Category</label>
-          <div class="select-wrap">
-            <select id="bizCat" data-fill="category"></select>
-          </div>
-        </div>
-        <div class="field">
-          <label class="flabel" data-i18n="su.location">Location</label>
-          <div class="select-wrap">
-            <select id="bizLoc" data-fill="district"></select>
-          </div>
-        </div>
-      </div>
-
-      <button type="button" class="btn btn-primary btn-block" id="btnBizNext">
-        <span class="spinner"></span><span class="btn-label" data-i18n="su.continue">Continue</span>
-      </button>
-      <button type="button" class="btn btn-ghost btn-block" id="btnBizSkip" style="margin-top:6px"><span data-i18n="su.bizSkip">Skip for now — complete later</span></button>
-      <button type="button" class="btn btn-ghost btn-block" id="btnBizBack" style="margin-top:4px"><span class="btn-label" data-i18n="su.back">Back</span></button>
-    </div>
-
-    <!-- ===== STEP 4 : VERIFY ===== -->
-    <div id="stepVerify" style="display:none" hidden="" inert="">
-      <div class="auth-head" style="margin-bottom:18px">
-        <h1 style="font-size:1.3rem" data-i18n="su.verifyTitle">Verify Your Account</h1>
-        <p id="verifySub" data-i18n="su.verifySub">We sent a 6-digit verification code to your email.</p>
-      </div>
-      <div class="dev-note" id="devNote"></div>
-      <div class="field">
-        <label class="flabel" data-i18n="su.code">Verification code</label>
-        <div class="otp-row" id="otpRow"></div>
-        <div class="resend-row">
-          <button type="button" id="btnResend" disabled data-i18n="su.resend">Resend code</button>
-        </div>
-      </div>
-      <button type="button" class="btn btn-primary btn-block" id="btnS3">
-        <span class="spinner"></span><span class="btn-label" data-i18n="su.verifyBtn">Verify &amp; Create Account</span>
-      </button>
-      <button type="button" class="btn btn-ghost btn-block" id="btnS3back" style="margin-top:8px"><span class="btn-label" data-i18n="su.back">Back</span></button>
-    </div>
-
-    <!-- ===== DONE ===== -->
-    <div id="stepDone" style="display:none;text-align:center;padding:14px 0 6px" hidden="" inert="">
-      <span class="success-ic check-pulse">
-        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-      </span>
-      <h1 style="font-size:1.4rem;font-weight:800;letter-spacing:-.02em;color:#101828" data-i18n="su.done">Account Created Successfully</h1>
-      <p style="margin-top:8px;color:#57627A;font-size:.92rem" data-i18n="su.doneSub">Setting up your account…</p>
+<main class="auth-main" style="padding-top:30px">
+  <div class="li-wrap">
+    <h1 data-i18n="sp.title">Suppliers & Manufacturers</h1>
+    <p class="li-sub" data-i18n="sp.sub">Browse supplier offers posted on Ahoor.</p>
+    <div id="liList"></div>
+    <div class="li-empty" id="liEmpty" style="display:none" data-i18n="sp.empty">No supplier offers yet — be the first to post one.</div>
+    <div class="li-cta">
+      <a class="btn btn-primary" id="liJoin" href="/signup.html"><span data-i18n="sp.join">Join Ahoor</span></a>
+      <a class="btn btn-outline" href="/marketplace.html"><span data-i18n="sp.market">Open Marketplace</span></a>
     </div>
   </div>
 </main>
@@ -2009,203 +1825,58 @@ applyLang();
 (function(){
   'use strict';
   var A = window.Ahoor;
-  var step = 1, accountType = null, userId = null;
+  var page = 'suppliers'; // 'suppliers' | 'opportunities'
+  var list = document.getElementById('liList');
+  var emptyEl = document.getElementById('liEmpty');
+  var loggedIn = false;
 
-  var msg = document.getElementById('msgBox');
-  var labels = { 1:'su.s1l', 2:'su.s2l', 3:'su.s3l', 4:'su.s4l' };
-  var dots = [document.getElementById('sd1'), document.getElementById('sd2'), document.getElementById('sd3'), document.getElementById('sd4')];
-  var seps = [document.getElementById('ss1'), document.getElementById('ss2'), document.getElementById('ss3')];
+  /* real data only — fetch from the live API; nothing is fabricated */
+  fetch('/api/posts' + (page === 'suppliers' ? '?type=supplier' : ''), { credentials:'same-origin' })
+    .then(function(r){ if(!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(d){
+      var ps = (d && d.posts) || [];
+      if(!ps.length){ emptyEl.style.display = ''; return; }
+      ps.slice(0, 40).forEach(function(p){ list.appendChild(row(p)); });
+    })
+    .catch(function(err){
+      console.error('[listing] load failed:', err);
+      emptyEl.style.display = '';
+    });
 
-  function renderStep(n){
-    step = n;
-    /* only the active step is visible; inactive steps get display:none + hidden + inert
-       so they cannot be tabbed into. Step 1 stays visible without JS (progressive enhancement). */
-    A.setStep(document.getElementById('step1'), n===1);
-    A.setStep(document.getElementById('step2'), n===2);
-    A.setStep(document.getElementById('stepBiz'), n===3);
-    A.setStep(document.getElementById('stepVerify'), n===4);
-    A.setStep(document.getElementById('stepDone'), false);
-    document.getElementById('stepLabel').innerHTML = A.t(labels[n]);
-    dots.forEach(function(d, i){ d.className = 'step-dot' + (i < n ? ' done' : i===n-1 ? ' on' : ''); });
-    seps.forEach(function(s, i){ s.className = 'step-sep' + (i < n-1 ? ' done' : ''); });
-    A.hideMsg(msg);
-    if(n===3) showBizFields();
-    /* move focus into the active step */
-    var target = n===1 ? '#nameF' : n===2 ? '.type-card' : n===3 ? '#bizName' : n===4 ? '#otpRow input' : null;
-    var el = target && document.querySelector(target);
-    if(el) el.focus();
+  function row(p){
+    var el = document.createElement('a');
+    el.className = 'li-item';
+    el.href = '/marketplace.html';
+    var biz = (p.owner && (p.owner.businessName || p.owner.name)) || '';
+    var meta = [];
+    if(p.qty) meta.push(A.esc(p.qty) + (p.unit ? ' ' + A.esc(p.unit) : ''));
+    if(p.price) meta.push('৳' + A.esc(p.price));
+    if(p.budget) meta.push('৳' + A.esc(p.budget));
+    if(p.location) meta.push(A.locName(A.AhoorData.districts, p.location));
+    el.innerHTML =
+      '<div style="flex:1;min-width:0">' +
+        '<h3>' + A.esc(p.title) + '</h3>' +
+        '<p>' + A.esc(biz) + '</p>' +
+        '<div class="li-meta">' + meta.map(function(m){ return '<span>' + m + '</span>'; }).join('') + '</div>' +
+      '</div>' +
+      '<span class="li-go" aria-hidden="true">→</span>';
+    return el;
   }
 
-  function showBizFields(){
-    var isBuyer = accountType === 'buyer' || accountType === 'both';
-    var isSupplier = accountType === 'supplier' || accountType === 'both';
-    document.getElementById('bizBuyerSec').style.display = isBuyer ? '' : 'none';
-    document.getElementById('bizSupplierSec').style.display = isSupplier ? '' : 'none';
+  /* auth-aware CTA: signed-in users can post directly; label follows language */
+  function paintJoin(){
+    var c = document.getElementById('liJoin');
+    if(!loggedIn){ c.href = '/signup.html'; c.innerHTML = '<span>' + A.t('sp.join') + '</span>'; return; }
+    c.href = '/post.html';
+    c.innerHTML = '<span>' + A.t(page === 'suppliers' ? 'sp.postOffer' : 'op.postReq') + '</span>';
   }
-
-  function saveBizInfo(){
-    var body = {
-      businessName: document.getElementById('bizName').value.trim(),
-      category: document.getElementById('bizCat').value,
-      district: document.getElementById('bizLoc').value,
-      buyProducts: document.getElementById('bizBuyProducts').value.trim(),
-      typicalQty: document.getElementById('bizTypicalQty').value.trim(),
-      productsServices: document.getElementById('bizSupplyProducts').value.trim(),
-      moq: document.getElementById('bizMoq').value.trim()
-    };
-    return A.api('/api/profile', body);
-  }
-
-  /* ---------- step 1 ---------- */
-  A.initPwToggles(document);
-  A.initStrength(document.getElementById('pw1'), document.querySelector('.strength-bars'), document.querySelector('.strength-label'));
-
-  document.getElementById('step1').addEventListener('submit', function(e){
-    e.preventDefault();
-    var name = document.getElementById('nameF').value.trim();
-    var email = document.getElementById('emailF').value.trim();
-    var phone = document.getElementById('phoneF').value.trim();
-    var pw1 = document.getElementById('pw1').value;
-    var pw2 = document.getElementById('pw2').value;
-    var ok = true;
-    if(name.length < 2){ A.fieldErr(document.getElementById('nameF'),'err.name'); ok=false; }
-    if(!A.validEmail(email)){ A.fieldErr(document.getElementById('emailF'),'err.email'); ok=false; }
-    if(!A.validPhone(phone)){ A.fieldErr(document.getElementById('phoneF'),'err.phone'); ok=false; }
-    if(!pw1 || pw1.length<8 || !/[A-Za-z]/.test(pw1) || !/\d/.test(pw1)){ A.fieldErr(document.getElementById('pw1'),'err.weak'); ok=false; }
-    if(pw1 !== pw2){ A.fieldErr(document.getElementById('pw2'),'err.mismatch'); ok=false; }
-    if(!ok) return;
-    var btn = document.getElementById('btnS1');
-    A.setLoading(btn, true, 'su.continueLoad');
-    A.api('/api/register', { name:name, email:email, phone:phone, password:pw1 }).then(function(r){
-      A.setLoading(btn, false);
-      if(r.status===201){
-        userId = r.data.userId;
-        renderStep(2);
-      } else {
-        A.showMsg(msg,'error', A.errMsg(r.data.error));
-        if(r.data.error==='email_exists') A.fieldErr(document.getElementById('emailF'),'err.email_exists');
-        if(r.data.error==='phone_exists') A.fieldErr(document.getElementById('phoneF'),'err.phone_exists');
-      }
-    });
-  });
-
-  /* ---------- step 2 ---------- */
-  var cards = document.querySelectorAll('.type-card');
-  var presetType = new URLSearchParams(location.search).get('type');
-  if(['buyer','supplier','both'].indexOf(presetType) >= 0){
-    var presetCard = document.querySelector('.type-card[data-type="'+presetType+'"]');
-    if(presetCard){ presetCard.classList.add('sel'); accountType = presetType; }
-  }
-  cards.forEach(function(c){
-    c.addEventListener('click', function(){
-      cards.forEach(function(x){ x.classList.remove('sel'); });
-      c.classList.add('sel');
-      accountType = c.getAttribute('data-type');
-    });
-  });
-  document.getElementById('btnS2back').addEventListener('click', function(){ renderStep(1); });
-  document.getElementById('btnS2').addEventListener('click', function(){
-    if(!accountType){ A.toast(A.t('err.type'),'er'); return; }
-    var btn = this;
-    A.setLoading(btn, true);
-    A.api('/api/type', { type:accountType }).then(function(r){
-      A.setLoading(btn, false);
-      if(r.status===200){ renderStep(3); }
-      else A.showMsg(msg,'error', A.errMsg(r.data.error));
-    });
-  });
-
-  /* step 3: business info -> save & continue, or skip */
-  A.fillSelect(document.getElementById('bizCat'), A.AhoorData.categories, '');
-  A.fillSelect(document.getElementById('bizLoc'), A.AhoorData.districts, '');
-  (function(){
-    var cat = document.getElementById('bizCat');
-    var o1 = document.createElement('option'); o1.value=''; o1.textContent = A.t('pt.selCat'); cat.prepend(o1); cat.value='';
-    var loc = document.getElementById('bizLoc');
-    var o2 = document.createElement('option'); o2.value=''; o2.textContent = A.t('pt.selLoc'); loc.prepend(o2); loc.value='';
-  })();
-  function goVerify(){
-    renderStep(4);
-    initVerify();
-  }
-  document.getElementById('btnBizNext').addEventListener('click', function(){
-    var btn = this;
-    A.setLoading(btn, true);
-    saveBizInfo().then(function(r){
-      A.setLoading(btn, false);
-      if(r.status===200){ goVerify(); }
-      else if(r.status===401){ location.href='/login.html?next=/signup.html'; }
-      else { A.showMsg(msg,'error', A.errMsg(r.data.error)); }
-    });
-  });
-  document.getElementById('btnBizSkip').addEventListener('click', goVerify);
-  document.getElementById('btnBizBack').addEventListener('click', function(){ renderStep(2); });
-
-  /* ---------- step 3 ---------- */
-  var otpInputs = [], verifyInit = false, verifyTimer = null;
-  function initVerify(){
-    if(verifyInit) return;
-    verifyInit = true;
-    for(var i=0;i<6;i++){
-      var inp = document.createElement('input');
-      inp.type='text'; otpInputs.push(inp);
-      document.getElementById('otpRow').appendChild(inp);
-    }
-    A.initOtp(otpInputs, function(code){ doVerify(code); });
-    document.getElementById('btnS3back').addEventListener('click', function(){ renderStep(3); });
-    document.getElementById('btnS3').addEventListener('click', function(){
-      doVerify(otpInputs.map(function(x){return x.value;}).join(''));
-    });
-    var resend = document.getElementById('btnResend');
-    A.startCountdown(resend, 60, 'su.resendIn');
-    resend.addEventListener('click', function(){
-      A.api('/api/send-code', { purpose:'signup' }).then(function(r){
-        if(r.status===200){
-          if(r.data.devCode){ var n=document.getElementById('devNote'); n.textContent=A.t('dev.note',{c:r.data.devCode}); n.classList.add('show'); }
-          A.startCountdown(resend, r.data.retryIn || 60);
-          A.toast(A.t('ok.sent'),'ok');
-        } else if(r.data.error==='cooldown'){
-          A.startCountdown(resend, r.data.retryIn||60);
-        } else A.toast(A.errMsg(r.data.error),'er');
-      });
-    });
-    A.api('/api/send-code', { purpose:'signup' }).then(function(r){
-      if(r.status===200 && r.data.devCode){
-        var n=document.getElementById('devNote');
-        n.textContent=A.t('dev.note',{c:r.data.devCode});
-        n.classList.add('show');
-      }
-    });
-  }
-  function doVerify(code){
-    if(code.length!==6){ A.toast(A.t('err.code'),'er'); return; }
-    var btn=document.getElementById('btnS3');
-    A.setLoading(btn, true, 'su.verifyLoad');
-    A.api('/api/verify-code', { purpose:'signup', code:code }).then(function(r){
-      A.setLoading(btn, false);
-      if(r.status===200){
-        A.setStep(document.getElementById('stepVerify'), false);
-        A.setStep(document.getElementById('stepDone'), true);
-        document.getElementById('stepLabel').style.display='none';
-        document.querySelector('.steps').style.display='none';
-        setTimeout(function(){ location.href='/profile-setup.html'; }, 1900);
-      } else {
-        A.showMsg(msg,'error', A.errMsg(r.data.error));
-        otpInputs.forEach(function(x){ x.value=''; x.classList.remove('filled'); });
-        otpInputs[0].focus();
-      }
-    });
-  }
-
-  /* resume mid-flow on refresh: if session exists and account pending, skip to verify */
   A.api('/api/session').then(function(r){
-    if(r.status===200){
-      var u=r.data.user;
-      if(u && u.status==='pending'){
-        userId=u.id; renderStep(4); initVerify();
-      }
+    if(r.data && r.data.user){
+      loggedIn = true;
+      paintJoin();
     }
   });
+  document.addEventListener('langchange', paintJoin);
 })();
 </script>
 </body>

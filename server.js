@@ -599,7 +599,7 @@ async function handle(req, res) {
       });
       return;
     }
-    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications' || p === '/api/business' || p === '/api/conversations' || p.indexOf('/api/conversations/') === 0 || p === '/api/stream' || p.indexOf('/api/admin/') === 0 || p === '/api/matches' || p === '/api/saved' || p === '/api/verification-request' || p === '/api/analytics' || p === '/api/posts/insights') && req.method === 'GET')) {
+    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications' || p === '/api/business' || p === '/api/conversations' || p.indexOf('/api/conversations/') === 0 || p === '/api/stream' || p.indexOf('/api/admin/') === 0 || p === '/api/matches' || p === '/api/saved' || p === '/api/verification-request' || p === '/api/analytics' || p === '/api/posts/insights' || p === '/api/quotes/received' || p === '/api/quotes/sent') && req.method === 'GET')) {
       return json(res, 405, { error: 'method' });
     }
     let body;
@@ -721,6 +721,12 @@ async function handle(req, res) {
         if (r.status !== 200) return json(res, r.status, { error: r.err });
         user.status = 'active';
         save();
+        // If there was no live session (e.g. verifying from the login page after
+        // the signup session was lost), log the user in so the redirect lands.
+        if (!s) {
+          const ns = createSession(user.id, true);
+          setCookie(res, ns);
+        }
         return json(res, 200, { user: publicUser(user) });
       }
       if (purpose === 'reset') {
@@ -1590,7 +1596,8 @@ function publicUser(u) {
     website: u.website || '', facebook: u.facebook || '',
     phoneVisibility: u.phoneVisibility || 'members', emailVisibility: u.emailVisibility || 'members',
     verificationStatus: u.verificationStatus || 'unverified', completionPercent: profileCompletion(u),
-    role: (u.role === 'admin' || isAdminEmail(u.email)) ? 'admin' : 'user', accountStatus: u.accountStatus || 'active'
+    role: (u.role === 'admin' || isAdminEmail(u.email)) ? 'admin' : 'user', accountStatus: u.accountStatus || 'active',
+    status: u.status || 'active'
   };
 }
 function publicBusinessProfile(u, viewerId) {

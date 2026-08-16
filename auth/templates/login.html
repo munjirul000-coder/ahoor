@@ -115,6 +115,12 @@ __CSS__
   <div class="container">
     <p data-i18n="foot.made">Made in Bangladesh</p>
     <p style="margin-top:6px" data-i18n="foot.cr">© 2026 Ahoor. All rights reserved.</p>
+    <div class="flinks">
+      <a href="/about.html" data-i18n="foot.about">About</a>
+      <a href="/contact.html" data-i18n="foot.contact">Contact</a>
+      <a href="/privacy.html" data-i18n="foot.privacy">Privacy</a>
+      <a href="/terms.html" data-i18n="foot.terms">Terms</a>
+    </div>
   </div>
 </footer>
 
@@ -151,7 +157,7 @@ __JS__
         try{ localStorage.setItem('ahoor-remember', JSON.stringify(rem.checked ? {id:idF.value.trim()} : null)); }catch(e){}
         location.href = next;
       } else if(r.status === 403 && r.data.error === 'unverified'){
-        showVerify(r.data.identifier);
+        showVerify(idF.value.trim());
       } else {
         var d = r.data || {};
         var text = d.error==='locked' ? A.t('err.locked',{m:d.retryIn||15}) : A.errMsg(d.error);
@@ -160,46 +166,68 @@ __JS__
     });
   });
 
-    /* ---- unverified flow: verify inline then login ---- */
+    /* ---- unverified flow: verify inline then login ----
+       The verification box is hidden by default (see markup) and only appears when:
+       (a) the backend answers 403 {error:'unverified'} on sign-in, or
+       (b) a pending (registered-but-not-yet-verified) session is detected. */
     var verifyBox = document.getElementById('verifyBox');
+    var verifyIdent = null;
     var otpInputs = [], verifyInited = false;
-    function showVerify(identifier){
-      form.style.display = 'none';
-      verifyBox.style.display = 'block';
-      document.getElementById('btnVerifyBack').addEventListener('click', function(){
-        verifyBox.style.display = 'none';
-        form.style.display = '';
-      });
+    var resendBtn = document.getElementById('resendVerify');
+
+    function buildVerifyUI(){
       if(verifyInited) return;
       verifyInited = true;
       for(var i=0;i<6;i++){
         var inp = document.createElement('input');
         inp.type = 'text';
+        inp.setAttribute('autocomplete','one-time-code');
         otpInputs.push(inp);
         document.getElementById('otpVerify').appendChild(inp);
       }
       A.initOtp(otpInputs, function(){});
-      function sendCode(){
-        var note = document.getElementById('devNote');
-        A.api('/api/send-code', { purpose:'signup', identifier:identifier }).then(function(r){
-          if(r.status===200){
-            if(r.data.devCode){ note.textContent = A.t('dev.note',{c:r.data.devCode}); note.classList.add('show'); }
-            else { note.classList.remove('show'); }
-            A.toast(A.t('ok.sent'),'ok');
-            A.startCountdown(document.getElementById('resendVerify'), r.data.retryIn || 60, 'su.resendIn');
-          } else if(r.data.error==='cooldown'){
-            A.startCountdown(document.getElementById('resendVerify'), r.data.retryIn||60, 'su.resendIn');
-          } else {
-            A.toast(A.errMsg(r.data.error),'er');
-          }
-        });
+      document.getElementById('btnVerifyBack').addEventListener('click', function(){ hideVerify(); });
+      resendBtn.addEventListener('click', sendVerifyCode);
+      document.getElementById('btnVerifyCode').addEventListener('click', verifyNow);
+    }
+    function showVerify(identifier){
+      verifyIdent = identifier || null;
+      form.style.display = 'none';
+      verifyBox.style.display = 'block';
+      buildVerifyUI();
+      resendBtn.disabled = true; // never enabled unless we can actually send
+      if(verifyIdent){
+        sendVerifyCode();
       }
-      document.getElementById('resendVerify').addEventListener('click', sendCode);
-      document.getElementById('btnVerifyCode').addEventListener('click', function(){
+      otpInputs[0] && otpInputs[0].focus();
+    }
+    function hideVerify(){
+      verifyBox.style.display = 'none';
+      form.style.display = '';
+      document.getElementById('idField').focus();
+    }
+    function sendVerifyCode(){
+      var note = document.getElementById('devNote');
+      resendBtn.disabled = true;
+      A.api('/api/send-code', { purpose:'signup', identifier:verifyIdent }).then(function(r){
+        if(r.status===200){
+          if(r.data.devCode){ note.textContent = A.t('dev.note',{c:r.data.devCode}); note.classList.add('show'); }
+          else note.classList.remove('show');
+          A.toast(A.t('ok.sent'),'ok');
+          A.startCountdown(resendBtn, r.data.retryIn || 60, 'su.resendIn');
+        } else if(r.data.error==='cooldown'){
+          A.startCountdown(resendBtn, r.data.retryIn||60, 'su.resendIn');
+        } else {
+          resendBtn.disabled = false;
+          A.toast(A.errMsg(r.data.error),'er');
+        }
+      });
+    }
+    function verifyNow(){
       var code = otpInputs.map(function(x){return x.value;}).join('');
       if(code.length!==6){ A.toast(A.t('err.code'),'er'); return; }
       A.setLoading(document.getElementById('btnVerifyCode'), true, 'su.verifyLoad');
-      A.api('/api/verify-code', { purpose:'signup', identifier:identifier, code:code }).then(function(r){
+      A.api('/api/verify-code', { purpose:'signup', identifier:verifyIdent, code:code }).then(function(r){
         A.setLoading(document.getElementById('btnVerifyCode'), false);
         if(r.status===200){
           A.toast(A.t('login.verifiedOk'),'ok');
@@ -210,9 +238,13 @@ __JS__
           otpInputs[0].focus();
         }
       });
+    }
+    /* (b) pending session from an interrupted signup flow */
+    A.api('/api/session').then(function(r){
+      if(r.data && r.data.user && r.data.user.status === 'pending'){
+        showVerify(r.data.user.email);
+      }
     });
-    sendCode();
-  }
 })();
 </script>
 </body>

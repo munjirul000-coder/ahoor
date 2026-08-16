@@ -32,7 +32,7 @@ T = {
  "hero.sellTitle": ("Show What You Offer", "যা অফার করেন, দেখান"),
  "hero.sellDesc": ("Showcase your products, services, manufacturing capabilities, or available production capacity.", "আপনার পণ্য, সেবা, উৎপাদন সক্ষমতা বা খালি উৎপাদন ক্ষমতা তুলে ধরুন।"),
  "hero.sellCta": ("Create a Business Offer", "ব্যবসায়িক অফার তৈরি করুন"),
- "hero.note": ("No storefronts. No listings clutter. Just businesses finding the right businesses.", "কোনো দোকানের ঝামেলা নেই, তালিকার বিশৃঙ্খলা নেই — শুধুই সঠিক ব্যবসার সাথে ব্যবসার মিলন।"),
+ "hero.note": ("No storefronts. No endless catalogs. Just real buyer requirements & supplier offers.", "দোকানের ঝামেলা নেই, অন্তহীন ক্যাটালগ নেই — শুধুই প্রকৃত ক্রেতার প্রয়োজন ও সরবরাহকারীর অফার।"),
 
  "trust.1t": ("Built for Bangladeshi Businesses", "বাংলাদেশি ব্যবসার জন্য তৈরি"),
  "trust.1d": ("Made for the local market, by people who know it.", "দেশীয় বাজারের জন্য তৈরি — যারা বাজার চেনেন, তাদের হাতে।"),

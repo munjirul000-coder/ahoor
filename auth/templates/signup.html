@@ -127,7 +127,7 @@ __CSS__
     </form>
 
     <!-- ===== STEP 2 : ACCOUNT TYPE ===== -->
-    <div id="step2" style="display:none">
+    <div id="step2" style="display:none" hidden="" inert="">
       <h2 style="font-size:1.25rem;font-weight:750;text-align:center;margin-bottom:6px" data-i18n="su.typeTitle">How will you use Ahoor?</h2>
       <p style="text-align:center;font-size:.85rem;color:#57627A;margin-bottom:20px" data-i18n="su.typeSub">Choose one — you can change this later.</p>
       <div class="type-cards">
@@ -154,7 +154,7 @@ __CSS__
     </div>
 
     <!-- ===== STEP 3 : BUSINESS INFO ===== -->
-    <div id="stepBiz" style="display:none">
+    <div id="stepBiz" style="display:none" hidden="" inert="">
       <div class="auth-head" style="margin-bottom:16px">
         <h1 style="font-size:1.3rem" data-i18n="su.bizTitle">Tell us about your business</h1>
         <p data-i18n="su.bizSub">You can edit these anytime from your business profile.</p>
@@ -211,7 +211,7 @@ __CSS__
     </div>
 
     <!-- ===== STEP 4 : VERIFY ===== -->
-    <div id="stepVerify" style="display:none">
+    <div id="stepVerify" style="display:none" hidden="" inert="">
       <div class="auth-head" style="margin-bottom:18px">
         <h1 style="font-size:1.3rem" data-i18n="su.verifyTitle">Verify Your Account</h1>
         <p id="verifySub" data-i18n="su.verifySub">We sent a 6-digit verification code to your email.</p>
@@ -231,7 +231,7 @@ __CSS__
     </div>
 
     <!-- ===== DONE ===== -->
-    <div id="stepDone" style="display:none;text-align:center;padding:14px 0 6px">
+    <div id="stepDone" style="display:none;text-align:center;padding:14px 0 6px" hidden="" inert="">
       <span class="success-ic check-pulse">
         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
       </span>
@@ -245,6 +245,12 @@ __CSS__
   <div class="container">
     <p data-i18n="foot.made">Made in Bangladesh</p>
     <p style="margin-top:6px" data-i18n="foot.cr">© 2026 Ahoor. All rights reserved.</p>
+    <div class="flinks">
+      <a href="/about.html" data-i18n="foot.about">About</a>
+      <a href="/contact.html" data-i18n="foot.contact">Contact</a>
+      <a href="/privacy.html" data-i18n="foot.privacy">Privacy</a>
+      <a href="/terms.html" data-i18n="foot.terms">Terms</a>
+    </div>
   </div>
 </footer>
 
@@ -262,15 +268,22 @@ __JS__
 
   function renderStep(n){
     step = n;
-    document.getElementById('step1').style.display = n===1 ? '' : 'none';
-    document.getElementById('step2').style.display = n===2 ? '' : 'none';
-    document.getElementById('stepBiz').style.display = n===3 ? '' : 'none';
-    document.getElementById('stepVerify').style.display = n===4 ? '' : 'none';
+    /* only the active step is visible; inactive steps get display:none + hidden + inert
+       so they cannot be tabbed into. Step 1 stays visible without JS (progressive enhancement). */
+    A.setStep(document.getElementById('step1'), n===1);
+    A.setStep(document.getElementById('step2'), n===2);
+    A.setStep(document.getElementById('stepBiz'), n===3);
+    A.setStep(document.getElementById('stepVerify'), n===4);
+    A.setStep(document.getElementById('stepDone'), false);
     document.getElementById('stepLabel').innerHTML = A.t(labels[n]);
     dots.forEach(function(d, i){ d.className = 'step-dot' + (i < n ? ' done' : i===n-1 ? ' on' : ''); });
     seps.forEach(function(s, i){ s.className = 'step-sep' + (i < n-1 ? ' done' : ''); });
     A.hideMsg(msg);
     if(n===3) showBizFields();
+    /* move focus into the active step */
+    var target = n===1 ? '#nameF' : n===2 ? '.type-card' : n===3 ? '#bizName' : n===4 ? '#otpRow input' : null;
+    var el = target && document.querySelector(target);
+    if(el) el.focus();
   }
 
   function showBizFields(){
@@ -421,8 +434,10 @@ __JS__
     A.api('/api/verify-code', { purpose:'signup', code:code }).then(function(r){
       A.setLoading(btn, false);
       if(r.status===200){
-        document.getElementById('stepVerify').style.display='none';
-        document.getElementById('stepDone').style.display='';
+        A.setStep(document.getElementById('stepVerify'), false);
+        A.setStep(document.getElementById('stepDone'), true);
+        document.getElementById('stepLabel').style.display='none';
+        document.querySelector('.steps').style.display='none';
         setTimeout(function(){ location.href='/profile-setup.html'; }, 1900);
       } else {
         A.showMsg(msg,'error', A.errMsg(r.data.error));
