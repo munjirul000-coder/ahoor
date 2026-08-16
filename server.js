@@ -366,8 +366,8 @@ async function handle(req, res) {
 
   /* --- protected pages (server-side guard) --- */
   if (req.method === 'GET') {
-    const target = p === '/dashboard' ? '/dashboard.html' : p === '/profile-setup' ? '/profile-setup.html' : p === '/post' ? '/post.html' : p;
-    if ((target === '/dashboard.html' || target === '/profile-setup.html' || target === '/post.html') && !getSession(req)) {
+    const target = p === '/dashboard' ? '/dashboard.html' : p === '/profile-setup' ? '/profile-setup.html' : p === '/post' ? '/post.html' : p === '/messages' ? '/messages.html' : p;
+    if ((target === '/dashboard.html' || target === '/profile-setup.html' || target === '/post.html' || target === '/messages.html') && !getSession(req)) {
       res.writeHead(302, { Location: '/login?next=' + encodeURIComponent(target) });
       return res.end();
     }
