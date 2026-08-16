@@ -1047,6 +1047,19 @@ async function handle(req, res) {
         return json(res, 200, { posts: list.map(publicPost) });
       }
 
+      if (action === 'role-action') {
+        const { userId, op } = body;
+        const target = db.users.find(u => u.id === userId);
+        if (!target) return json(res, 404, { error: 'not_found' });
+        if (userId === admin.id) return json(res, 400, { error: 'self_action' });
+        if (op === 'promote') target.role = 'admin';
+        else if (op === 'demote') target.role = 'user';
+        else return json(res, 400, { error: 'action' });
+        addLog(admin.id, op + '_user_role', userId, target.email);
+        save();
+        return json(res, 200, { ok: true });
+      }
+
       if (action === 'user-action') {
         const { userId, op, reason } = body;
         const target = db.users.find(u => u.id === userId);

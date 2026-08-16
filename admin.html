@@ -508,6 +508,8 @@ function loadUsers(){
       if (u.accountStatus==='active') actions += '<button class="mini-btn" data-act="suspend" data-id="'+u.id+'">' + at('ad.suspend') + '</button> <button class="mini-btn danger" data-act="disable" data-id="'+u.id+'">' + at('ad.disable') + '</button>';
       if (u.accountStatus==='suspended') actions += '<button class="mini-btn ok" data-act="reactivate" data-id="'+u.id+'">' + at('ad.reactivate') + '</button>';
       if (u.accountStatus==='disabled') actions += '<button class="mini-btn ok" data-act="reactivate" data-id="'+u.id+'">' + at('ad.reactivate') + '</button>';
+      if (u.role !== 'admin') actions += ' <button class="mini-btn ok" data-act="promote" data-id="'+u.id+'">' + at('ad.promote') + '</button>';
+      else actions += ' <button class="mini-btn" data-act="demote" data-id="'+u.id+'">' + at('ad.demote') + '</button>';
       actions += ' <button class="mini-btn danger" data-act="delete" data-id="'+u.id+'">' + at('ad.delete') + '</button>';
       return '<tr><td><div class="t-av"><span class="ta">' + (u.image?'<img src="'+u.image+'">':esc((u.name||'?').charAt(0).toUpperCase())) + '</span><div><b>' + esc(u.name) + roleBadge + '</b><span>' + esc(u.businessName || u.email) + '</span></div></div></td><td>' + typeLabel + '</td><td>' + statusBadge(u.accountStatus) + '</td><td>' + (u.role==='admin'?'Admin':'User') + '</td><td>' + timeFmt(u.createdAt) + '</td><td>' + actions + '</td></tr>';
     }).join('');
@@ -520,8 +522,16 @@ function loadUsers(){
         if (act==='reactivate') confirmBox(at('ad.reactivate'), at('ad.confirmReactivate'), at('ad.ok'), false).then(function(ok){ if(ok) doUserAction(id,'reactivate'); });
         if (act==='disable') confirmBox(at('ad.disable'), at('ad.confirmDisable'), at('ad.ok'), true).then(function(ok){ if(ok) doUserAction(id,'disable'); });
         if (act==='delete') confirmBox(at('ad.delete'), at('ad.confirmDeleteUser'), at('ad.ok'), true).then(function(ok){ if(ok) doUserAction(id,'delete'); });
+        if (act==='promote') confirmBox(at('ad.promote'), at('ad.confirmPromote'), at('ad.ok'), false).then(function(ok){ if(ok) doRoleAction(id,'promote'); });
+        if (act==='demote') confirmBox(at('ad.demote'), at('ad.confirmDemote'), at('ad.ok'), true).then(function(ok){ if(ok) doRoleAction(id,'demote'); });
       });
     });
+  });
+}
+function doRoleAction(id, op){
+  adminApi('/api/admin/role-action', {userId:id, op:op}).then(function(r){
+    if (r.status===200) { toast(at('ad.roleDone'), true); loadUsers(); }
+    else toast(at('ad.err'), false);
   });
 }
 function doUserAction(id, op){
