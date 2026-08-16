@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahoor — Matched Opportunities</title>
+<meta name="theme-color" content="#0A1122">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1430'/%3E%3Cpath d='M16 8.5 9.6 23.5h12.8z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='9.6' cy='23.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='22.4' cy='23.5' r='2.6' fill='%23FF8A4C'/%3E%3C/svg%3E">
+<style>
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,__INTER__) format('woff2')}
+@font-face{font-family:'Noto Sans Bengali';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,__NSB__) format('woff2')}
+:root{--ink:#0A1122;--bg:#F4F6FA;--text:#101828;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+html[lang="bn"]{--font:'Noto Sans Bengali','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+html[lang="bn"] body{line-height:1.72}
+__CSS__
+.mt-wrap{max-width:1120px;margin:0 auto;padding:0 clamp(14px,3.5vw,28px)}
+.mt-head{text-align:center;margin-bottom:14px}
+.mt-head h1{font-size:clamp(1.35rem,3vw,1.7rem);font-weight:800;letter-spacing:-.02em;color:#101828}
+.mt-head p{color:#57627A;font-size:.88rem;margin-top:5px}
+.mt-note{display:flex;align-items:center;gap:9px;justify-content:center;background:#EBF1FF;border:1.5px dashed #9DBDFF;border-radius:12px;padding:10px 14px;font-size:.8rem;color:#1E4FD8;font-weight:600;margin-bottom:16px}
+.mt-controls{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:9px;margin-bottom:14px}
+@media(max-width:700px){.mt-controls{grid-template-columns:1fr 1fr}.mt-controls .btn{grid-column:1/-1}}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.mt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:15px}
+.mt-card{background:#fff;border:1px solid #E4E9F2;border-radius:17px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 4px 14px -10px rgba(10,17,34,.08);transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s,border-color .3s;position:relative}
+.mt-card:hover{transform:translateY(-3px);box-shadow:0 16px 32px -16px rgba(10,17,34,.18);border-color:#C9D8F2}
+.mt-top{display:flex;align-items:center;gap:11px}
+.mt-av{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:1rem;font-weight:800;color:#fff;background:linear-gradient(135deg,#4C84FF,#2F6BFF);overflow:hidden;flex-shrink:0}
+.mt-av img{width:100%;height:100%;object-fit:cover}
+.mt-who{flex:1;min-width:0}
+.mt-who b{display:block;font-size:.93rem;font-weight:750;color:#101828;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mt-who span{font-size:.72rem;color:#8A95AC}
+.mt-lvl{font-size:.64rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;flex-shrink:0}
+.mt-lvl.high{color:#0B7A5E;background:#E6F7F0}
+.mt-lvl.medium{color:#B45309;background:#FFF1E7}
+.mt-lvl.low{color:#8A95AC;background:#F0F3F9}
+.mt-save{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:9px;background:#F0F3F9;border:1px solid #E4E9F2;color:#8A95AC;cursor:pointer;display:grid;place-items:center;font-size:.85rem;transition:all .2s}
+.mt-save.on{background:#FFF1E7;border-color:#FFD7B8;color:#EA5E1F}
+.mt-card h3{font-size:1rem;font-weight:750;letter-spacing:-.015em;line-height:1.35;color:#101828;padding-right:26px}
+.mt-meta{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:.76rem;color:#57627A;font-weight:550}
+.mt-meta b{color:#101828;font-weight:700}
+.mt-desc{font-size:.82rem;color:#57627A;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mt-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.mt-actions .btn{padding:9px 14px;font-size:.78rem;flex:1;min-width:90px}
+.mt-empty{text-align:center;padding:46px 18px;color:#8A95AC;font-size:.88rem;line-height:1.7;grid-column:1/-1}
+.mt-empty b{display:block;font-size:.98rem;color:#57627A;margin-bottom:5px}
+</style>
+</head>
+<body data-meta="mt.title">
+
+<header class="auth-nav">
+  <div class="container">
+    <a class="brand" href="/index.html" aria-label="Ahoor — home">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="9" fill="url(#lg1)"/>
+        <path d="M16 8.5 9.6 23.5h12.8z" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/>
+        <circle cx="16" cy="8.5" r="2.7" fill="#fff"/><circle cx="9.6" cy="23.5" r="2.7" fill="#fff"/><circle cx="22.4" cy="23.5" r="2.7" fill="#FF8A4C"/>
+        <defs><linearGradient id="lg1" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#3B77FF"/><stop offset="1" stop-color="#1E4FD8"/></linearGradient></defs>
+      </svg>
+      <span class="brand-name">Ahoor<em>.</em></span>
+    </a>
+    <div class="auth-nav-right">
+      <a class="back-home" href="/dashboard.html">
+        <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        <span data-i18n="nav.dash">Dashboard</span>
+      </a>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" class="lang-btn on" data-lang="bn" aria-pressed="true">বাংলা</button>
+        <span class="lsep" aria-hidden="true">|</span>
+        <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="auth-main" style="display:block;padding-top:22px">
+  <div class="mt-wrap">
+    <div class="mt-head">
+      <h1 data-i18n="mt.title">Matched Opportunities</h1>
+      <p data-i18n="mt.sub">Opportunities matched to your business profile</p>
+    </div>
+    <div class="mt-note">⚡ <span data-i18n="mt.explain">Matched based on your business profile and products.</span></div>
+
+    <div class="mt-controls">
+      <div class="select-wrap"><select id="mtCat" data-fill="category"></select></div>
+      <div class="select-wrap"><select id="mtLoc" data-fill="district"></select></div>
+      <div class="select-wrap">
+        <select id="mtLevel">
+          <option value="all" data-i18n="mt.levelAll">All levels</option>
+          <option value="high" data-i18n="mt.level.high">High Match</option>
+          <option value="medium" data-i18n="mt.level.medium">Medium Match</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-sm" id="mtSearch"><span data-i18n="ad.search">Search</span></button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab on" data-t="all" data-i18n="mt.best">Best Matches</button>
+      <button class="tab" data-t="buyer" data-i18n="mt.buyerOpps">Buyer Opportunities</button>
+      <button class="tab" data-t="supplier" data-i18n="mt.supplierOpps">Supplier Opportunities</button>
+      <button class="tab" data-t="saved" data-i18n="mt.saved">Saved Opportunities</button>
+    </div>
+
+    <div class="mt-grid" id="mtGrid"></div>
+  </div>
+</main>
+
+<footer class="auth-foot">
+  <div class="container">
+    <p data-i18n="foot.made">Made in Bangladesh</p>
+    <p style="margin-top:6px" data-i18n="foot.cr">© 2026 Ahoor. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+__JS__
+(function(){
+  'use strict';
+  var A = window.Ahoor;
+  var cur = { type:'all', category:'', location:'', level:'all' };
+  var savedIds = new Set();
+  var me = null;
+
+  A.api('/api/session').then(function(r){
+    if (!r.data || !r.data.user) { location.href = '/login.html?next=/matches.html'; return; }
+    me = r.data.user;
+    loadSaved();
+    load();
+  });
+
+  A.fillSelect(document.getElementById('mtCat'), A.AhoorData.categories, '');
+  A.fillSelect(document.getElementById('mtLoc'), A.AhoorData.districts, '');
+  (function(){
+    var cat = document.getElementById('mtCat');
+    var o1 = document.createElement('option'); o1.value=''; o1.textContent = A.t('mt.catAll'); cat.prepend(o1); cat.value='';
+    var loc = document.getElementById('mtLoc');
+    var o2 = document.createElement('option'); o2.value=''; o2.textContent = A.t('mt.locAll'); loc.prepend(o2); loc.value='';
+  })();
+
+  document.querySelectorAll('.tabs .tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      document.querySelectorAll('.tabs .tab').forEach(function(x){ x.classList.remove('on'); });
+      t.classList.add('on');
+      cur.type = t.getAttribute('data-t');
+      render();
+    });
+  });
+  document.getElementById('mtSearch').addEventListener('click', function(){
+    cur.category = document.getElementById('mtCat').value;
+    cur.location = document.getElementById('mtLoc').value;
+    cur.level = document.getElementById('mtLevel').value;
+    render();
+  });
+
+  function loadSaved(){
+    fetch('/api/saved', { credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        savedIds = new Set((d.posts || []).map(function(p){ return p.id; }));
+      });
+  }
+  function toggleSave(postId){
+    var isSaved = savedIds.has(postId);
+    fetch('/api/saved' + (isSaved ? '/remove' : ''), { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ postId: postId }), credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (d.ok) {
+          if (isSaved) savedIds.delete(postId); else savedIds.add(postId);
+          A.toast(A.t(isSaved ? 'mt.removedOk' : 'mt.savedOk'), 'ok');
+          if (cur.type === 'saved') render(); else refreshSaveButtons();
+        }
+      });
+  }
+  function refreshSaveButtons(){
+    document.querySelectorAll('.mt-save').forEach(function(b){
+      var id = b.getAttribute('data-id');
+      b.classList.toggle('on', savedIds.has(id));
+      b.textContent = savedIds.has(id) ? '★' : '☆';
+    });
+  }
+
+  function load(){
+    var grid = document.getElementById('mtGrid');
+    grid.innerHTML = '<div class="mt-empty"><b data-i18n="ui.loading">Loading…</b></div>';
+    fetch('/api/matches', { credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ data = d.matches || []; render(); });
+  }
+  var data = [];
+
+  function bizNameOf(m){ return m.kind === 'post' ? ((m.post.owner && (m.post.owner.businessName || m.post.owner.name)) || '—') : (m.business.businessName || m.business.name || '—'); }
+  function avOf(m){
+    var img = m.kind === 'post' ? (m.post.owner && m.post.owner.image) : m.business.image;
+    var n = bizNameOf(m);
+    return img ? '<img src="' + img + '" alt="">' : A.esc(n.charAt(0).toUpperCase());
+  }
+  function bizId(m){ return m.kind === 'post' ? (m.post.owner ? m.post.owner.id : '') : m.business.id; }
+  function bizType(m){ return m.kind === 'post' ? (m.post.owner && m.post.owner.businessType) : m.business.businessType; }
+  function bizTypeName(v){
+    if (!v) return '';
+    var t = A.AhoorData.businessTypes.find(function(x){ return x[0] === v; });
+    if (!t) return v;
+    return A.LANG === 'bn' ? t[1] : (A.AhoorData.businessTypeNames[v] || v);
+  }
+
+  function render(){
+    var grid = document.getElementById('mtGrid');
+    grid.innerHTML = '';
+    if (cur.type === 'saved') {
+      fetch('/api/saved', { credentials:'same-origin' })
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          var posts = d.posts || [];
+          if (!posts.length) {
+            grid.innerHTML = '<div class="mt-empty"><b data-i18n="mt.noSaved">You haven\'t saved any opportunities yet.</b></div>';
+            return;
+          }
+          posts.forEach(function(pt){ grid.appendChild(savedCard(pt)); });
+        });
+      return;
+    }
+    var list = data;
+    if (cur.type !== 'all') list = list.filter(function(m){ return m.kind === 'post' && m.post.type === cur.type; });
+    if (cur.category) list = list.filter(function(m){ return m.kind === 'post' ? m.post.category === cur.category : (m.business.category||'') === cur.category; });
+    if (cur.location) list = list.filter(function(m){ return m.kind === 'post' ? m.post.location === cur.location : (m.business.district||'') === cur.location; });
+    if (cur.level && cur.level !== 'all') list = list.filter(function(m){ return m.level === cur.level; });
+    if (!list.length) {
+      grid.innerHTML = '<div class="mt-empty"><b data-i18n="mt.noMatches">No matching opportunities right now.</b><span data-i18n="mt.openMarket">Browse Marketplace</span></div>';
+      return;
+    }
+    list.forEach(function(m){ grid.appendChild(card(m)); });
+  }
+
+  function card(m){
+    var el = document.createElement('div');
+    el.className = 'mt-card';
+    var isPost = m.kind === 'post';
+    var title = isPost ? m.post.title : (m.business.productsServices || m.business.category || '');
+    var meta = '';
+    if (isPost) {
+      meta += '<span>' + A.t('mp.qty') + ': <b>' + A.esc(m.post.qty || '') + (m.post.unit ? ' ' + A.esc(m.post.unit) : '') + '</b></span>';
+      if (m.post.moq) meta += '<span>' + A.t('mp.moq') + ': <b>' + A.esc(m.post.moq) + '</b></span>';
+      meta += '<span>' + A.locName(A.AhoorData.districts, m.post.location) + '</span>';
+    } else {
+      if (m.business.moq) meta += '<span>' + A.t('mp.moq') + ': <b>' + A.esc(m.business.moq) + '</b></span>';
+      if (m.business.productionCapacity) meta += '<span>' + A.t('bp.capacity') + ': <b>' + A.esc(m.business.productionCapacity) + '</b></span>';
+      meta += '<span>' + A.locName(A.AhoorData.districts, m.business.district) + '</span>';
+    }
+    var postId = isPost ? m.post.id : '';
+    var actions = '';
+    if (isPost) {
+      var isBuyer = m.post.type === 'buyer';
+      actions = '<a class="btn btn-primary" href="/marketplace.html">' + A.t(isBuyer ? 'mt.viewRequirement' : 'mt.viewOffer') + '</a>' +
+                '<a class="btn btn-outline" href="/messages.html?with=' + bizId(m) + '">' + A.t('mt.message') + '</a>';
+    } else {
+      actions = '<a class="btn btn-primary" href="/business.html?id=' + bizId(m) + '">' + A.t('mt.viewBusiness') + '</a>' +
+                '<a class="btn btn-outline" href="/messages.html?with=' + bizId(m) + '">' + A.t('mt.message') + '</a>';
+    }
+    el.innerHTML =
+      '<button class="mt-save" data-id="' + postId + '">' + (savedIds.has(postId) ? '★' : '☆') + '</button>' +
+      '<div class="mt-top">' +
+        '<span class="mt-av">' + avOf(m) + '</span>' +
+        '<span class="mt-who"><b>' + A.esc(bizNameOf(m)) + '</b><span>' + bizTypeName(bizType(m)) + '</span></span>' +
+        '<span class="mt-lvl ' + m.level + '">' + A.t('mt.level.' + m.level) + '</span>' +
+      '</div>' +
+      '<h3>' + A.esc(title) + '</h3>' +
+      (isPost && m.post.desc ? '<p class="mt-desc">' + A.esc(m.post.desc) + '</p>' : '') +
+      '<div class="mt-meta">' + meta + '</div>' +
+      '<div class="mt-actions">' + actions + '</div>';
+    var saveBtn = el.querySelector('.mt-save');
+    if (postId) {
+      saveBtn.addEventListener('click', function(){ toggleSave(postId); });
+    } else {
+      saveBtn.style.display = 'none';
+    }
+    return el;
+  }
+
+  function savedCard(pt){
+    var el = document.createElement('div');
+    el.className = 'mt-card';
+    var owner = pt.owner || {};
+    el.innerHTML =
+      '<button class="mt-save on" data-id="' + pt.id + '">★</button>' +
+      '<div class="mt-top">' +
+        '<span class="mt-av">' + (owner.image ? '<img src="' + owner.image + '" alt="">' : A.esc((owner.businessName || owner.name || '?').charAt(0).toUpperCase())) + '</span>' +
+        '<span class="mt-who"><b>' + A.esc(owner.businessName || owner.name || '—') + '</b><span>' + bizTypeName(owner.businessType) + '</span></span>' +
+        '<span class="mt-lvl high">' + A.t('mt.saved') + '</span>' +
+      '</div>' +
+      '<h3>' + A.esc(pt.title) + '</h3>' +
+      '<div class="mt-meta"><span>' + A.t('mp.qty') + ': <b>' + A.esc(pt.qty || '') + (pt.unit ? ' ' + A.esc(pt.unit) : '') + '</b></span><span>' + A.locName(A.AhoorData.districts, pt.location) + '</span></div>' +
+      '<div class="mt-actions">' +
+        '<a class="btn btn-primary" href="/marketplace.html">' + A.t('mt.viewOffer') + '</a>' +
+        '<a class="btn btn-outline" href="/messages.html?with=' + (owner.id || '') + '">' + A.t('mt.message') + '</a>' +
+      '</div>';
+    el.querySelector('.mt-save').addEventListener('click', function(){ toggleSave(pt.id); });
+    return el;
+  }
+})();
+</script>
+</body>
+</html>

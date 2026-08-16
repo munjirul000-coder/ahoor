@@ -985,6 +985,35 @@ var Q_EXT = {
  "ad.confirmPromote":["Promote this user to Admin? They will get full access to the admin panel.","এই ইউজারকে অ্যাডমিন করবেন? তারা অ্যাডমিন প্যানেলে সম্পূর্ণ অ্যাক্সেস পাবে।"],
  "ad.confirmDemote":["Remove admin access from this user?","এই ইউজারের অ্যাডমিন অ্যাক্সেস সরাবেন?"],
  "ad.roleDone":["Admin role updated.","অ্যাডমিন ভূমিকা আপডেট হয়েছে।"],
+ "mt.title":["Matched Opportunities","ম্যাচকৃত সুযোগ"],
+ "mt.sub":["Opportunities matched to your business profile","আপনার ব্যবসার প্রোফাইলের সাথে মিলে যাওয়া সুযোগ"],
+ "mt.explain":["Matched based on your business profile and products.","আপনার ব্যবসার প্রোফাইল ও পণ্যের ভিত্তিতে ম্যাচ করা হয়েছে।"],
+ "mt.best":["Best Matches","সেরা ম্যাচ"],
+ "mt.buyerOpps":["Buyer Opportunities","ক্রেতার সুযোগ"],
+ "mt.supplierOpps":["Supplier Opportunities","সরবরাহকারীর সুযোগ"],
+ "mt.saved":["Saved Opportunities","সংরক্ষিত সুযোগ"],
+ "mt.recommended":["Recommended for You","আপনার জন্য সুপারিশকৃত"],
+ "mt.newMatches":["{n} New Matches","{n}টি নতুন ম্যাচ"],
+ "mt.viewAll":["View All Matches","সব ম্যাচ দেখুন"],
+ "mt.level.high":["High Match","উচ্চ ম্যাচ"],
+ "mt.level.medium":["Medium Match","মাঝারি ম্যাচ"],
+ "mt.level.low":["Low Match","কম ম্যাচ"],
+ "mt.levelAll":["All levels","সব স্তর"],
+ "mt.catAll":["All Categories","সব ক্যাটাগরি"],
+ "mt.locAll":["All Locations","সব জেলা"],
+ "mt.viewBusiness":["View Business","ব্যবসা দেখুন"],
+ "mt.viewOffer":["View Offer","অফার দেখুন"],
+ "mt.viewRequirement":["View Requirement","প্রয়োজন দেখুন"],
+ "mt.message":["Message","মেসেজ"],
+ "mt.save":["Save","সংরক্ষণ"],
+ "mt.savedYes":["Saved","সংরক্ষিত"],
+ "mt.remove":["Remove","সরান"],
+ "mt.savedOk":["Opportunity saved.","সুযোগটি সংরক্ষিত হয়েছে।"],
+ "mt.removedOk":["Opportunity removed from saved.","সংরক্ষিত থেকে সুযোগটি সরানো হয়েছে।"],
+ "mt.noMatches":["No matching opportunities right now. Check back soon.","এখন কোনো ম্যাচিং সুযোগ নেই। কিছুক্ষণ পর আবার দেখুন।"],
+ "mt.noSaved":["You haven't saved any opportunities yet.","আপনি এখনো কোনো সুযোগ সংরক্ষণ করেননি।"],
+ "mt.openMarket":["Browse Marketplace","মার্কেটপ্লেস দেখুন"],
+ "nt.opportunity_match":["A new business opportunity may match what you offer.","একটি নতুন ব্যবসার সুযোগ আপনার অফারের সাথে মিলতে পারে।"],
  "nt.quote_withdrawn":["A quote was withdrawn.","একটি কোটেশন প্রত্যাহার করা হয়েছে।"],
  "nt.onPost":["on","এর জন্য"],
  "nt.justNow":["just now","এইমাত্র"],
@@ -1496,11 +1525,13 @@ function notifLink(n){
     case 'quote_accepted':
     case 'quote_rejected': return '/dashboard.html#sentSec';
     case 'message_received': return '/messages.html?conv=' + (n.data && n.data.conversationId ? n.data.conversationId : '');
+    case 'opportunity_match': return '/matches.html';
     default: return '/dashboard.html';
   }
 }
 function notifIcon(n){
   if (!n || !n.type) return '📩';
+  if (n.type === 'opportunity_match') return '🔥';
   if (n.type.indexOf('accepted') >= 0) return '✅';
   if (n.type.indexOf('rejected') >= 0) return '❌';
   if (n.type === 'message_received') return '💬';

@@ -607,6 +607,12 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
         </a>
       </div>
 
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <h3 style="font-size:1.02rem;font-weight:750">🔥 <span data-i18n="mt.recommended">Recommended for You</span> <span class="badge active" id="recCount" style="display:none"></span></h3>
+        <a class="link-blue" href="/matches.html" style="font-size:.82rem;font-weight:650" data-i18n="mt.viewAll">View All Matches</a>
+      </div>
+      <div class="dash-list" id="recList"></div>
+
       <h3 style="font-size:1.02rem;font-weight:750;margin-bottom:12px" data-i18n="db.posts">My Posts</h3>
       <div class="dash-list" id="myPosts"></div>
       <div class="empty-box" id="noPosts" style="display:none" data-i18n="db.noPosts">You haven't posted anything yet.</div>
@@ -975,6 +981,35 @@ var Q_EXT = {
  "ad.confirmPromote":["Promote this user to Admin? They will get full access to the admin panel.","এই ইউজারকে অ্যাডমিন করবেন? তারা অ্যাডমিন প্যানেলে সম্পূর্ণ অ্যাক্সেস পাবে।"],
  "ad.confirmDemote":["Remove admin access from this user?","এই ইউজারের অ্যাডমিন অ্যাক্সেস সরাবেন?"],
  "ad.roleDone":["Admin role updated.","অ্যাডমিন ভূমিকা আপডেট হয়েছে।"],
+ "mt.title":["Matched Opportunities","ম্যাচকৃত সুযোগ"],
+ "mt.sub":["Opportunities matched to your business profile","আপনার ব্যবসার প্রোফাইলের সাথে মিলে যাওয়া সুযোগ"],
+ "mt.explain":["Matched based on your business profile and products.","আপনার ব্যবসার প্রোফাইল ও পণ্যের ভিত্তিতে ম্যাচ করা হয়েছে।"],
+ "mt.best":["Best Matches","সেরা ম্যাচ"],
+ "mt.buyerOpps":["Buyer Opportunities","ক্রেতার সুযোগ"],
+ "mt.supplierOpps":["Supplier Opportunities","সরবরাহকারীর সুযোগ"],
+ "mt.saved":["Saved Opportunities","সংরক্ষিত সুযোগ"],
+ "mt.recommended":["Recommended for You","আপনার জন্য সুপারিশকৃত"],
+ "mt.newMatches":["{n} New Matches","{n}টি নতুন ম্যাচ"],
+ "mt.viewAll":["View All Matches","সব ম্যাচ দেখুন"],
+ "mt.level.high":["High Match","উচ্চ ম্যাচ"],
+ "mt.level.medium":["Medium Match","মাঝারি ম্যাচ"],
+ "mt.level.low":["Low Match","কম ম্যাচ"],
+ "mt.levelAll":["All levels","সব স্তর"],
+ "mt.catAll":["All Categories","সব ক্যাটাগরি"],
+ "mt.locAll":["All Locations","সব জেলা"],
+ "mt.viewBusiness":["View Business","ব্যবসা দেখুন"],
+ "mt.viewOffer":["View Offer","অফার দেখুন"],
+ "mt.viewRequirement":["View Requirement","প্রয়োজন দেখুন"],
+ "mt.message":["Message","মেসেজ"],
+ "mt.save":["Save","সংরক্ষণ"],
+ "mt.savedYes":["Saved","সংরক্ষিত"],
+ "mt.remove":["Remove","সরান"],
+ "mt.savedOk":["Opportunity saved.","সুযোগটি সংরক্ষিত হয়েছে।"],
+ "mt.removedOk":["Opportunity removed from saved.","সংরক্ষিত থেকে সুযোগটি সরানো হয়েছে।"],
+ "mt.noMatches":["No matching opportunities right now. Check back soon.","এখন কোনো ম্যাচিং সুযোগ নেই। কিছুক্ষণ পর আবার দেখুন।"],
+ "mt.noSaved":["You haven't saved any opportunities yet.","আপনি এখনো কোনো সুযোগ সংরক্ষণ করেননি।"],
+ "mt.openMarket":["Browse Marketplace","মার্কেটপ্লেস দেখুন"],
+ "nt.opportunity_match":["A new business opportunity may match what you offer.","একটি নতুন ব্যবসার সুযোগ আপনার অফারের সাথে মিলতে পারে।"],
  "nt.quote_withdrawn":["A quote was withdrawn.","একটি কোটেশন প্রত্যাহার করা হয়েছে।"],
  "nt.onPost":["on","এর জন্য"],
  "nt.justNow":["just now","এইমাত্র"],
@@ -1486,11 +1521,13 @@ function notifLink(n){
     case 'quote_accepted':
     case 'quote_rejected': return '/dashboard.html#sentSec';
     case 'message_received': return '/messages.html?conv=' + (n.data && n.data.conversationId ? n.data.conversationId : '');
+    case 'opportunity_match': return '/matches.html';
     default: return '/dashboard.html';
   }
 }
 function notifIcon(n){
   if (!n || !n.type) return '📩';
+  if (n.type === 'opportunity_match') return '🔥';
   if (n.type.indexOf('accepted') >= 0) return '✅';
   if (n.type.indexOf('rejected') >= 0) return '❌';
   if (n.type === 'message_received') return '💬';
@@ -1609,6 +1646,8 @@ applyLang();
     loadSent();
     loadNotifs();
     loadMsgUnread();
+    loadMatches();
+    document.addEventListener('langchange', loadMatches);
   });
 
   function render(){
@@ -1829,6 +1868,34 @@ applyLang();
   });
 
   setInterval(loadNotifs, 30000); /* notification polling */
+  function loadMatches(){
+    fetch('/api/matches?limit=4', { credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        var list = d.matches || [];
+        var cnt = document.getElementById('recCount');
+        if (list.length) { cnt.style.display = ''; cnt.textContent = A.t('mt.newMatches').replace('{n}', list.length); }
+        else cnt.style.display = 'none';
+        var box = document.getElementById('recList');
+        box.innerHTML = '';
+        if (!list.length) { box.innerHTML = '<div class="empty-box" style="padding:22px 14px">' + A.t('mt.noMatches') + '</div>'; return; }
+        list.forEach(function(m){
+          var name = m.kind === 'post' ? ((m.post.owner && (m.post.owner.businessName || m.post.owner.name)) || '—') : (m.business.businessName || m.business.name || '—');
+          var title = m.kind === 'post' ? m.post.title : (m.business.productsServices || m.business.category || '');
+          var el = document.createElement('div');
+          el.className = 'dash-post';
+          el.innerHTML =
+            '<span class="dp-badge ' + (m.kind === 'post' ? m.post.type : 'supplier') + '">' + (m.level === 'high' ? '🔥 ' : '⚡ ') + A.t('mt.level.' + m.level) + '</span>' +
+            '<div class="dp-main"><b>' + A.esc(title) + '</b><span>' + A.esc(name) + ' · ' + A.locName(A.AhoorData.districts, m.kind === 'post' ? m.post.location : m.business.district) + '</span></div>' +
+            '<div class="dp-actions">' +
+              '<a class="dp-link" href="' + (m.kind === 'post' ? '/marketplace.html' : '/business.html?id=' + m.business.id) + '">' + A.t('mt.viewOffer') + '</a>' +
+              '<a class="dp-link" href="/messages.html?with=' + (m.kind === 'post' ? (m.post.owner ? m.post.owner.id : '') : m.business.id) + '">' + A.t('mt.message') + '</a>' +
+            '</div>';
+          box.appendChild(el);
+        });
+      })
+      .catch(function(){});
+  }
   function loadMsgUnread(){
     fetch('/api/conversations', { credentials:'same-origin' })
       .then(function(r){ return r.json(); })

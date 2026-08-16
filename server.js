@@ -118,7 +118,7 @@ function load() {
   try {
     db = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
   } catch (e) {
-    db = { users: [], sessions: {}, codes: {}, fails: {}, posts: [], quotes: [], notifications: [], conversations: [], messages: [], reports: [], log: [] };
+    db = { users: [], sessions: {}, codes: {}, fails: {}, posts: [], quotes: [], notifications: [], conversations: [], messages: [], reports: [], log: [], saved: [] };
   }
   if (pgPool) {
     pgLoad().then(pgData => {
@@ -376,6 +376,110 @@ function addLog(adminId, action, target, detail) {
   db.log.push({ id: uid(), adminId, action, target: target || '', detail: detail || '', createdAt: new Date().toISOString() });
 }
 
+    /* ---------- smart matching (rule-based) ---------- */
+const MATCH_CAT_KEYWORDS = {
+  'garments & apparel': ['t-shirt','tshirt','t shirt','shirt','hoodie','polo','jersey','trouser','pant','jean','jacket','fleece','knit','apparel','clothing','vest','sweater','dress','legging','tracksuit','sportswear','uniform','socks','scarf','cap','tank top','crop top'],
+  'textile & fabric': ['fabric','textile','yarn','thread','cotton','polyester','nylon','denim','woven','knit','dye','print','silk','linen','jersey fabric','interlock','single jersey','fleece fabric','rib','pique','grey fabric'],
+  'packaging': ['packaging','pack','box','carton','poly','bag','bottle','jar','label','sticker','wrap','tape','corrugated','kraft','pouch','sachet','tin'],
+  'leather products': ['leather','shoe','belt','wallet','handbag','footwear'],
+  'jute products': ['jute','hessian','gunny','jute bag','jute yarn','sacking','geotextile'],
+  'food & agriculture': ['rice','food','tea','spice','vegetable','fruit','fish','meat','oil','sugar','flour','dal','biscuit','snack','honey','chili','onion','garlic','potato'],
+  'machinery': ['machine','machinery','cutter','sewing machine','press','generator','motor','pump','lathe','loom','knitting machine','embroidery machine'],
+  'electronics': ['electronic','led','light','mobile','phone','tv','fan','charger','cable','board','sensor','solar'],
+  'construction materials': ['cement','brick','rod','steel','tile','paint','sand','aggregate','plywood','glass','aluminum','pipe','sanitary','wire'],
+  'chemicals & raw materials': ['chemical','acid','soda','dye','pigment','resin','plastic','granule','masterbatch','additive','polymer','latex']
+};
+function normStr(v){ return String(v||'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim(); }
+function tokens(v){ return normStr(v).split(' ').filter(w => w.length > 1); }
+function catKeywordHits(cat, text){
+  const key = normStr(cat);
+  const words = MATCH_CAT_KEYWORDS[key] || [];
+  const nt = normStr(text);
+  let hits = 0;
+  for (const w of words) if (nt.includes(w)) hits++;
+  return hits;
+}
+function kwOverlap(a, b){
+  const ta = tokens(a), tb = tokens(b);
+  let hits = 0;
+  for (const w of ta) if (tb.includes(w)) hits++;
+  return hits;
+}
+const MATCH_SUPPLIER_TYPES = ['supplier','manufacturer','wholesaler','exporter','importer','service'];
+const MATCH_BUYER_TYPES = ['buyer','wholesaler','importer'];
+function userEligibleFor(post, user){
+  if (post.ownerId === user.id) return false;
+  if (post.status !== 'open') return false;
+  if (post.type === 'buyer') return MATCH_SUPPLIER_TYPES.includes(user.businessType || '') || user.type === 'supplier' || user.type === 'both';
+  return MATCH_BUYER_TYPES.includes(user.businessType || '') || user.type === 'buyer' || user.type === 'both';
+}
+function matchScore(user, post){
+  let score = 0;
+  const postText = post.title + ' ' + post.desc + ' ' + post.category;
+  const profileText = (user.productsServices || '') + ' ' + (user.buyProducts || '') + ' ' + (user.category || '') + ' ' + (user.businessType || '');
+  if (user.category && post.category && normStr(user.category) === normStr(post.category)) score += 40;
+  score += Math.min(30, catKeywordHits(post.category, profileText) * 10);
+  score += Math.min(25, kwOverlap(postText, profileText) * 8);
+  const wants = post.type === 'buyer' ? MATCH_SUPPLIER_TYPES : MATCH_BUYER_TYPES;
+  if (wants.includes(user.businessType || '')) score += 10;
+  if (user.district && post.location && normStr(user.district) === normStr(post.location)) score += 10;
+  const postQty = parseFloat(post.qty);
+  if (!isNaN(postQty)) {
+    if (post.type === 'buyer') {
+  const um = parseFloat(user.moq);
+      if (!isNaN(um)) { if (postQty >= um) score += 10; else score -= 10; }
+    } else {
+  const um = parseFloat(user.moq);
+  const tq = parseFloat(user.typicalQty);
+      if (!isNaN(um) && !isNaN(tq) && tq >= um) score += 10;
+      else if (!isNaN(um) && !isNaN(tq) && tq < um) score -= 10;
+    }
+  }
+  return score;
+}
+function matchScoreBiz(user, biz){
+  let score = 0;
+  if (user.category && biz.category && normStr(user.category) === normStr(biz.category)) score += 40;
+  score += Math.min(30, catKeywordHits(user.category || '', (biz.productsServices || '') + ' ' + (biz.category || '')) * 10);
+  score += Math.min(25, kwOverlap((user.buyProducts || '') + ' ' + (user.category || ''), (biz.productsServices || '') + ' ' + (biz.category || '')) * 8);
+  if (user.district && biz.district && normStr(user.district) === normStr(biz.district)) score += 10;
+  const tq = parseFloat(user.typicalQty), moq = parseFloat(biz.moq);
+  if (!isNaN(tq) && !isNaN(moq) && tq >= moq) score += 10;
+  return score;
+}
+function matchLevel(score){ return score >= 70 ? 'high' : score >= 40 ? 'medium' : 'low'; }
+function matchesForUser(user, opts){
+  opts = opts || {};
+  let out = [];
+  for (const post of db.posts) {
+    if (!userEligibleFor(post, user)) continue;
+const sc = matchScore(user, post);
+const lv = matchLevel(sc);
+    if (lv === 'low') continue;
+    out.push({ kind: 'post', post: publicPost(post), level: lv });
+  }
+  if (user.type === 'buyer' || user.type === 'both') {
+    for (const biz of db.users) {
+      if (biz.id === user.id || !biz.businessName || !MATCH_SUPPLIER_TYPES.includes(biz.businessType || '')) continue;
+  const sc = matchScoreBiz(user, biz);
+  const lv = matchLevel(sc);
+      if (lv === 'low') continue;
+      out.push({ kind: 'business', business: publicUser(biz), level: lv });
+    }
+  }
+  if (opts.type && opts.type !== 'all') {
+    out = out.filter(m => m.kind === 'post' ? m.post.type === opts.type : opts.type === 'supplier');
+  }
+  if (opts.category) out = out.filter(m => m.kind === 'post' ? m.post.category === opts.category : (m.business.category || '') === opts.category);
+  if (opts.location) out = out.filter(m => m.kind === 'post' ? m.post.location === opts.location : (m.business.district || '') === opts.location);
+  if (opts.level && opts.level !== 'all') out = out.filter(m => m.level === opts.level);
+  out.sort((a, b) => rankVal(b) - rankVal(a));
+  if (opts.limit) out = out.slice(0, opts.limit);
+  return out;
+  function rankVal(m){ return m.level === 'high' ? 3 : m.level === 'medium' ? 2 : 1; }
+}
+
+
 /* ---------------- routes ---------------- */
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
@@ -422,7 +526,7 @@ async function handle(req, res) {
       });
       return;
     }
-    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications' || p === '/api/business' || p === '/api/conversations' || p.indexOf('/api/conversations/') === 0 || p === '/api/stream' || p.indexOf('/api/admin/') === 0) && req.method === 'GET')) {
+    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications' || p === '/api/business' || p === '/api/conversations' || p.indexOf('/api/conversations/') === 0 || p === '/api/stream' || p.indexOf('/api/admin/') === 0 || p === '/api/matches' || p === '/api/saved') && req.method === 'GET')) {
       return json(res, 405, { error: 'method' });
     }
     let body;
@@ -666,6 +770,15 @@ async function handle(req, res) {
         status: 'open', createdAt: new Date().toISOString()
       };
       db.posts.push(post);
+      // notify highly relevant users (rule-based matching, no spam)
+      for (const u of db.users) {
+        if (u.id === user.id || !u.businessName) continue;
+        if (!userEligibleFor(post, u)) continue;
+        if (matchLevel(matchScore(u, post)) === 'high') {
+          const dup = db.notifications.some(n => n.userId === u.id && n.type === 'opportunity_match' && n.refId === post.id);
+          if (!dup) addNotification(u.id, 'opportunity_match', post.id, { postTitle: post.title, senderName: '' });
+        }
+      }
       save();
       return json(res, 201, { post: publicPost(post) });
     }
@@ -966,6 +1079,52 @@ async function handle(req, res) {
       const idx = db.notifications.findIndex(n => n.id === id && n.userId === sess.userId);
       if (idx < 0) return json(res, 404, { error: 'not_found' });
       db.notifications.splice(idx, 1);
+      save();
+      return json(res, 200, { ok: true });
+    }
+
+    if (p === '/api/matches' && req.method === 'GET') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const user = db.users.find(u => u.id === sess.userId);
+      if (!user) return json(res, 401, { error: 'no_session' });
+      const u2 = new URL(req.url, 'http://x');
+      const matches = matchesForUser(user, {
+        type: u2.searchParams.get('type') || 'all',
+        category: u2.searchParams.get('category') || '',
+        location: u2.searchParams.get('location') || '',
+        level: u2.searchParams.get('level') || 'all',
+        limit: u2.searchParams.get('limit') ? parseInt(u2.searchParams.get('limit'), 10) : 0
+      });
+      return json(res, 200, { matches });
+    }
+
+    /* ---- saved opportunities ---- */
+    if (p === '/api/saved' && req.method === 'GET') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const list = db.saved.filter(s => s.userId === sess.userId)
+        .map(s => db.posts.find(pt => pt.id === s.postId))
+        .filter(Boolean)
+        .map(publicPost);
+      return json(res, 200, { posts: list });
+    }
+    if (p === '/api/saved' && req.method === 'POST') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const { postId } = body;
+      const post = db.posts.find(pt => pt.id === postId);
+      if (!post) return json(res, 404, { error: 'post_not_found' });
+      if (!db.saved.some(s => s.userId === sess.userId && s.postId === postId)) {
+        db.saved.push({ id: uid(), userId: sess.userId, postId, createdAt: new Date().toISOString() });
+        save();
+      }
+      return json(res, 200, { ok: true });
+    }
+    if (p === '/api/saved/remove' && req.method === 'POST') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      db.saved = db.saved.filter(s => !(s.userId === sess.userId && s.postId === body.postId));
       save();
       return json(res, 200, { ok: true });
     }

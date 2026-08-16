@@ -136,3 +136,14 @@ Push to GitHub → Deploy on Render (free tier):
 - **Activity log**: every admin action recorded (suspend, reactivate, remove post, verification, report actions)
 - **Privacy**: no unrestricted access to private conversations (only via valid report workflow)
 - Fully bilingual (বাংলা/EN); responsive; 39/39 admin E2E tests + full regression pass
+
+## Features (v7 — Smart Business Matching System)
+
+- **Rule-based matching engine** (no fake AI): scores by category match (+40), product keywords via category keyword map (+30), text keyword overlap (+25), business-type relevance (+10), location match (+10), quantity/MOQ/capacity compatibility (+10/-10)
+- **Match levels**: High / Medium / Low (Low filtered out); raw scores never exposed to clients
+- **`/api/matches`**: buyer gets relevant supplier offers + supplier businesses; supplier gets relevant buyer requirements — with type/category/location/level filters
+- **Matched Opportunities page** (`/matches.html`): tabs (Best / Buyer / Supplier / Saved), filters, match-level badges, View Business / View Offer / Message actions, explanation note ("Matched based on your business profile and products.")
+- **Dashboard "Recommended for You"**: top 4 matches with 🔥 count + View All Matches link
+- **Saved Opportunities**: save/remove/bookmark, owner-only access
+- **Notifications**: high-match posts trigger `opportunity_match` notification (deduplicated per post, no spam)
+- Fully bilingual (বাংলা/EN); 26/26 matching E2E tests + full regression pass
