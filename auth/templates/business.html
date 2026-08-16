@@ -183,7 +183,9 @@ __JS__
     if(p.city) locParts.push(p.city);
     document.getElementById('bpLoc').textContent = locParts.length ? locParts.join(', ') : '—';
     document.getElementById('bpLoc').style.display = locParts.length ? '' : 'none';
-    document.getElementById('bpVrf').textContent = '✓ ' + A.t('bp.verif.' + (p.verificationStatus === 'verified' ? 'verified' : 'basic'));
+    document.getElementById('bpVrf').innerHTML = p.verificationStatus === 'verified'
+      ? '✅ ' + A.t('vr.status.verified')
+      : '🛡️ ' + A.t('vr.status.' + ((p.verificationStatus || 'unverified') === 'pending' ? 'pending' : 'unverified'));
   /* report modal */
   var rpModal = document.createElement('div');
   rpModal.className = 'modal-bg';

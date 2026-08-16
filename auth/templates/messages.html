@@ -219,7 +219,7 @@ __JS__
     var active = document.getElementById('chatActive');
     active.style.display = 'flex';
     document.getElementById('chAv').innerHTML = avatarHtml(conv.other);
-    document.getElementById('chName').textContent = bizName(conv.other);
+    document.getElementById('chName').innerHTML = A.esc(bizName(conv.other)) + (conv.other && conv.other.verificationStatus === 'verified' ? ' <span title="' + A.t('vr.verifiedBadge') + '" style="font-size:.72rem">✅</span>' : '');
     var metaParts = [];
     if (conv.other && conv.other.businessType) metaParts.push(bizTypeName(conv.other.businessType));
     if (conv.other && conv.other.district) metaParts.push(A.locName(A.AhoorData.districts, conv.other.district));

@@ -244,9 +244,10 @@ __CSS__
       </div>
     </div>
 
-    <div class="warn-strip" id="vrStrip" style="display:none;margin-top:22px">
+    <div class="warn-strip" id="vrStrip" style="display:none;margin-top:22px;align-items:center">
       <span id="vrIc">🛡️</span>
-      <span><span id="vrText"></span> <button type="button" class="link-blue" id="vrApply" style="background:none;border:none;cursor:pointer;font-weight:700;color:#2F6BFF;text-decoration:underline"></button></span>
+      <span style="flex:1"><span id="vrText"></span></span>
+      <a class="btn btn-outline btn-sm" id="vrApply" href="/verify.html" style="flex-shrink:0"></a>
     </div>
 
     <button type="button" class="btn btn-primary btn-block" id="ppSave" style="margin-top:22px">
@@ -354,30 +355,24 @@ __JS__
     if (st === 'verified') {
       strip.style.display = ''; ic.textContent = '✅';
       text.textContent = A.t('vr.verified');
-      btn.style.display = 'none';
+      btn.textContent = A.t('vr.viewRequests');
+      btn.style.display = '';
     } else if (st === 'pending') {
       strip.style.display = ''; ic.textContent = '⏳';
       text.textContent = A.t('vr.pending');
-      btn.style.display = 'none';
+      btn.textContent = A.t('vr.viewRequests');
+      btn.style.display = '';
     } else if (st === 'rejected') {
       strip.style.display = ''; ic.textContent = '❌';
       text.textContent = A.t('vr.rejected') + (me.verificationNote ? ' — ' + me.verificationNote : '');
-      btn.textContent = A.t('vr.apply');
+      btn.textContent = A.t('vr.reapply');
       btn.style.display = '';
     } else {
       strip.style.display = ''; ic.textContent = '🛡️';
-      text.textContent = '';
+      text.textContent = A.t('vr.applySub');
       btn.textContent = A.t('vr.apply');
       btn.style.display = '';
     }
-    btn.onclick = function(){
-      if (!me.businessName) { A.toast(A.t('vr.noBiz'), 'er'); return; }
-      A.api('/api/verification-request', {}).then(function(r){
-        if (r.status === 200) { A.toast(A.t('vr.applied'), 'ok'); me.verificationStatus = 'pending'; renderVerification(); }
-        else if (r.status === 400) A.toast(A.t('vr.already'), 'er');
-        else A.toast(A.errMsg(r.data.error), 'er');
-      });
-    };
   }
 
   document.getElementById('ppSave').addEventListener('click', function(){

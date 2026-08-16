@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ahoor — পাসওয়ার্ড ভুলে গেছেন</title>
+<title>Ahoor — Business Verification</title>
 <meta name="theme-color" content="#0A1122">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1430'/%3E%3Cpath d='M16 8.5 9.6 23.5h12.8z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='9.6' cy='23.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='22.4' cy='23.5' r='2.6' fill='%23FF8A4C'/%3E%3C/svg%3E">
 <style>
@@ -515,9 +515,38 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 }
 @media (max-width:520px){.chat-shell{height:calc(100vh - 108px)}}
 
+.vr-wrap{max-width:640px;margin:0 auto;padding:0 clamp(14px,3.5vw,24px)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media(max-width:520px){.grid2{grid-template-columns:1fr}}
+.vr-progress{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:20px}
+.vr-progress .vp-step{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:.68rem;font-weight:700;color:#8A95AC;text-align:center}
+.vr-progress .vp-ic{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#EDF0F7;border:2px solid #DDE3EE;color:#8A95AC;font-size:.9rem;transition:all .3s}
+.vr-progress .vp-step.done .vp-ic{background:#0E9F7E;border-color:#0E9F7E;color:#fff}
+.vr-progress .vp-step.on .vp-ic{background:linear-gradient(135deg,#4C84FF,#2F6BFF);border-color:#2F6BFF;color:#fff;box-shadow:0 6px 14px -6px rgba(47,107,255,.5)}
+.vr-progress .vp-line{width:36px;height:2px;background:#DDE3EE;border-radius:2px}
+.vr-progress .vp-line.done{background:#0E9F7E}
+.vr-status{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid #E4E9F2;border-radius:16px;padding:18px;margin-bottom:18px;box-shadow:0 6px 18px -12px rgba(10,17,34,.1)}
+.vr-status .vs-ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:1.3rem;flex-shrink:0}
+.vr-status .vs-info{flex:1}
+.vr-status .vs-info b{display:block;font-size:.98rem;color:#101828}
+.vr-status .vs-info p{font-size:.8rem;color:#57627A;margin-top:3px;line-height:1.55}
+.doc-slot{display:flex;align-items:center;gap:12px;background:#FBFCFE;border:1.5px dashed #DDE3EE;border-radius:14px;padding:14px 16px;margin-bottom:12px}
+.doc-slot .ds-info{flex:1;min-width:0}
+.doc-slot .ds-info b{display:block;font-size:.86rem;color:#101828}
+.doc-slot .ds-info span{display:block;font-size:.72rem;color:#8A95AC;margin-top:2px}
+.doc-slot .ds-file{display:flex;align-items:center;gap:8px;font-size:.78rem;color:#2F6BFF;font-weight:650}
+.doc-slot .ds-file img{width:34px;height:34px;border-radius:8px;object-fit:cover;border:1px solid #E4E9F2}
+.doc-slot .ds-remove{background:none;border:none;color:#C03221;font-size:.78rem;font-weight:650;cursor:pointer;padding:6px 8px;border-radius:8px}
+.doc-slot .ds-remove:hover{background:#FDECEC}
+.doc-hint{font-size:.72rem;color:#8A95AC;margin-bottom:14px}
+.badge-verified{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:800;color:#0B7A5E;background:#E6F7F0;border:1px solid #BDE8D6;padding:4px 11px;border-radius:999px}
+.badge-verified svg{flex-shrink:0}
+.reject-box{background:#FDECEC;border:1.5px solid #F5C6C6;border-radius:14px;padding:14px 16px;margin-bottom:16px}
+.reject-box b{color:#C03221;font-size:.9rem;display:flex;align-items:center;gap:8px}
+.reject-box p{color:#8a2f28;font-size:.82rem;margin-top:6px;line-height:1.6}
 </style>
 </head>
-<body data-meta="meta.forgot">
+<body data-meta="vr.applyTitle">
 
 <header class="auth-nav">
   <div class="container">
@@ -531,9 +560,9 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
       <span class="brand-name">Ahoor<em>.</em></span>
     </a>
     <div class="auth-nav-right">
-      <a class="back-home" href="/index.html">
+      <a class="back-home" href="/dashboard.html">
         <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-        <span data-i18n="back.home">← Back to Home</span>
+        <span data-i18n="nav.dash">Dashboard</span>
       </a>
       <div class="lang-switch" role="group" aria-label="Language">
         <button type="button" class="lang-btn on" data-lang="bn" aria-pressed="true">বাংলা</button>
@@ -544,98 +573,83 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
   </div>
 </header>
 
-<main class="auth-main">
-  <div class="auth-card">
-    <div class="auth-head">
+<main class="auth-main" style="display:block;padding-top:24px">
+  <div class="vr-wrap">
+    <div class="auth-head" style="margin-bottom:18px">
       <span class="logo-ic">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
       </span>
-      <h1 data-i18n="fp.title">Forgot Password</h1>
-      <p data-i18n="fp.sub">Enter your email or mobile number — we'll send you a verification code.</p>
+      <h1 data-i18n="vr.applyTitle">Apply for Business Verification</h1>
+      <p data-i18n="vr.applySub">Submit your business information and supporting documents for review.</p>
     </div>
 
-    <div class="step-label" id="stepLabel"></div>
-    <div class="steps" aria-hidden="true">
-      <span class="step-dot on" id="sd1"></span><span class="step-sep" id="ss1"></span>
-      <span class="step-dot" id="sd2"></span><span class="step-sep" id="ss2"></span>
-      <span class="step-dot" id="sd3"></span>
-    </div>
+    <div class="msg" id="vrMsg"></div>
 
-    <div id="msgBox" class="msg" role="alert"></div>
-
-    <!-- step 1: identifier -->
-    <form id="fp1" novalidate>
-      <div class="field">
-        <label class="flabel" for="fpId" data-i18n="fp.id">Email address or phone number</label>
-        <div class="input-wrap">
-          <span class="ficon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg></span>
-          <input id="fpId" type="text" autocomplete="username" data-i18n-ph="fp.idPh" placeholder="you@company.com or 01XXXXXXXXX">
-        </div>
-        <p class="field-err"></p>
+    <!-- status card -->
+    <div class="vr-status" id="vrStatusCard" style="display:none">
+      <span class="vs-ic" id="vsIc">🛡️</span>
+      <div class="vs-info">
+        <b id="vsTitle"></b>
+        <p id="vsDesc"></p>
       </div>
-      <button type="submit" class="btn btn-primary btn-block" id="btnFp1">
-        <span class="spinner"></span><span class="btn-label" data-i18n="fp.send">Send Code</span>
+    </div>
+
+    <!-- progress steps -->
+    <div class="vr-progress" id="vrProgress" style="display:none">
+      <div class="vp-step done" id="vp1"><span class="vp-ic">✓</span><span data-i18n="vr.step1">Step 1: Business Information</span></div>
+      <div class="vp-line done" id="vpl1"></div>
+      <div class="vp-step done" id="vp2"><span class="vp-ic">✓</span><span data-i18n="vr.step2">Step 2: Supporting Documents</span></div>
+      <div class="vp-line" id="vpl2"></div>
+      <div class="vp-step on" id="vp3"><span class="vp-ic">⏳</span><span data-i18n="vr.step3">Step 3: Under Review</span></div>
+    </div>
+
+    <!-- rejection box -->
+    <div class="reject-box" id="vrRejectBox" style="display:none">
+      <b>❌ <span data-i18n="vr.rejectedTitle">Verification Rejected</span></b>
+      <p id="vrRejectReason"></p>
+    </div>
+
+    <!-- apply form -->
+    <div id="vrFormWrap" style="display:none">
+      <div class="sec-title"><span class="st-ic">🏢</span><span data-i18n="vr.formInfo">Business Information</span></div>
+      <div class="grid2">
+        <div class="field">
+          <label class="flabel" data-i18n="pp.biz">Business Name</label>
+          <input type="text" id="vrBiz">
+        </div>
+        <div class="field">
+          <label class="flabel" data-i18n="bp.contactPerson">Contact Person Name</label>
+          <input type="text" id="vrContact">
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label class="flabel" data-i18n="bp.bizType">Business Type</label>
+          <div class="select-wrap"><select id="vrType" data-fill="businesstype"></select></div>
+        </div>
+        <div class="field">
+          <label class="flabel" data-i18n="bp.sectionLoc">Location</label>
+          <input type="text" id="vrLoc">
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label class="flabel" data-i18n="bp.bizPhone">Business Phone</label>
+          <input type="tel" id="vrPhone" placeholder="01XXXXXXXXX">
+        </div>
+        <div class="field">
+          <label class="flabel" data-i18n="bp.bizEmail">Business Email</label>
+          <input type="email" id="vrEmail">
+        </div>
+      </div>
+
+      <div class="sec-title"><span class="st-ic">📄</span><span data-i18n="vr.formDocs">Supporting Documents</span></div>
+      <div id="vrDocs"></div>
+      <div class="doc-hint">🔒 <span data-i18n="vr.docsPrivate">Documents are private — only Ahoor admins can view them.</span></div>
+
+      <button type="button" class="btn btn-primary btn-block" id="vrSubmit">
+        <span class="spinner"></span><span class="btn-label" data-i18n="vr.submit">Submit Application</span>
       </button>
-    </form>
-
-    <!-- step 2: verify code -->
-    <div id="fp2" style="display:none">
-      <div class="dev-note" id="devNote2"></div>
-      <div class="field">
-        <label class="flabel" data-i18n="su.code">Verification code</label>
-        <div class="otp-row" id="otpRow2"></div>
-        <div class="resend-row">
-          <button type="button" id="btnResend2" disabled data-i18n="su.resend">Resend code</button>
-        </div>
-      </div>
-      <div style="display:flex;gap:12px">
-        <button type="button" class="btn btn-ghost" id="btnFp2back"><span class="btn-label" data-i18n="su.back">Back</span></button>
-        <button type="button" class="btn btn-primary" id="btnFp2" style="flex:1"><span class="spinner"></span><span class="btn-label" data-i18n="fp.verifyBtn">Verify Code</span></button>
-      </div>
-    </div>
-
-    <!-- step 3: new password -->
-    <div id="fp3" style="display:none">
-      <div class="field">
-        <label class="flabel" for="np1" data-i18n="fp.newPw">New Password</label>
-        <div class="input-wrap">
-          <span class="ficon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
-          <input id="np1" type="password" autocomplete="new-password" data-reqs="1" data-i18n-ph="fp.newPwPh" placeholder="Enter a new password">
-          <button type="button" class="pw-toggle" data-target="np1" aria-label="Show password">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
-        </div>
-        <div class="strength">
-          <div class="strength-bars"><i></i><i></i><i></i><i></i></div>
-          <div class="strength-label"><span data-i18n="su.strength">Password strength</span><em></em></div>
-        </div>
-        <p class="field-err"></p>
-      </div>
-      <div class="field">
-        <label class="flabel" for="np2" data-i18n="fp.newPw2">Confirm New Password</label>
-        <div class="input-wrap">
-          <span class="ficon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="m9.5 15.5 2 2 3-3.5"/></svg></span>
-          <input id="np2" type="password" autocomplete="new-password" data-i18n-ph="su.pw2Ph" placeholder="Re-enter your password">
-          <button type="button" class="pw-toggle" data-target="np2" aria-label="Show password">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
-        </div>
-        <p class="field-err"></p>
-      </div>
-      <div style="display:flex;gap:12px">
-        <button type="button" class="btn btn-ghost" id="btnFp3back"><span class="btn-label" data-i18n="su.back">Back</span></button>
-        <button type="button" class="btn btn-primary" id="btnFp3" style="flex:1"><span class="spinner"></span><span class="btn-label" data-i18n="fp.reset">Reset Password</span></button>
-      </div>
-    </div>
-
-    <!-- done -->
-    <div id="fpDone" style="display:none;text-align:center;padding:14px 0 6px">
-      <span class="success-ic check-pulse">
-        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-      </span>
-      <h1 style="font-size:1.3rem;font-weight:800;letter-spacing:-.02em;color:#101828" data-i18n="fp.done">Password changed successfully.</h1>
-      <p style="margin-top:8px;color:#57627A;font-size:.92rem" data-i18n="fp.doneSub">You can now sign in with your new password.</p>
-      <a href="/login.html" class="btn btn-primary btn-block" style="margin-top:22px"><span data-i18n="fp.signin">Sign In</span></a>
     </div>
   </div>
 </main>
@@ -1683,104 +1697,150 @@ applyLang();
 (function(){
   'use strict';
   var A = window.Ahoor;
-  var step=1, identifier='';
-  var msg=document.getElementById('msgBox');
-  var labels={1:'fp.s1l',2:'fp.s2l',3:'fp.s3l'};
-  var dots=[document.getElementById('sd1'),document.getElementById('sd2'),document.getElementById('sd3')];
-  var seps=[document.getElementById('ss1'),document.getElementById('ss2')];
+  var me = null;
+  var docFiles = [null, null, null]; // dataURI per slot
+  var docNames = ['', '', ''];
+  var SLOTS = [
+    { key: 'vr.tradeLicense', label: 'Trade License (optional)' },
+    { key: 'vr.regDoc', label: 'Business Registration (optional)' },
+    { key: 'vr.otherDoc', label: 'Other Business Proof (optional)' }
+  ];
 
-  function renderStep(n){
-    step=n;
-    document.getElementById('fp1').style.display=n===1?'':'none';
-    document.getElementById('fp2').style.display=n===2?'':'none';
-    document.getElementById('fp3').style.display=n===3?'':'none';
-    document.getElementById('stepLabel').textContent=A.t(labels[n]);
-    dots.forEach(function(d,i){d.className='step-dot'+(i<n?' done':i===n-1?' on':'');});
-    seps.forEach(function(s,i){s.className='step-sep'+(i<n-1?' done':'');});
-    A.hideMsg(msg);
-  }
-
-  /* step 1 */
-  document.getElementById('fp1').addEventListener('submit', function(e){
-    e.preventDefault();
-    identifier=document.getElementById('fpId').value.trim();
-    if(!identifier){A.fieldErr(document.getElementById('fpId'),'err.required');return;}
-    var btn=document.getElementById('btnFp1');
-    A.setLoading(btn,true,'fp.sendLoad');
-    A.api('/api/send-code',{purpose:'reset',identifier:identifier}).then(function(r){
-      A.setLoading(btn,false);
-      if(r.status===200){
-        if(r.data.devCode){var n=document.getElementById('devNote2');n.textContent=A.t('dev.note',{c:r.data.devCode});n.classList.add('show');}
-        renderStep(2); initOtp2();
-      } else if(r.data.error==='locked'){
-        A.showMsg(msg,'error',A.t('err.locked',{m:r.data.retryIn||15}));
-      } else {
-        A.showMsg(msg,'error',A.errMsg(r.data.error));
-      }
-    });
+  A.api('/api/session').then(function(r){
+    if (!r.data || !r.data.user) { location.href = '/login.html?next=/verify.html'; return; }
+    me = r.data.user;
+    A.fillSelect(document.getElementById('vrType'), A.AhoorData.businessTypes, me.businessType || '');
+    document.getElementById('vrBiz').value = me.businessName || '';
+    document.getElementById('vrContact').value = me.name || '';
+    document.getElementById('vrLoc').value = (me.district ? A.locName(A.AhoorData.districts, me.district) : '') + (me.city ? ', ' + me.city : '');
+    document.getElementById('vrPhone').value = me.businessPhone || me.phone || '';
+    document.getElementById('vrEmail').value = me.businessEmail || '';
+    renderDocs();
+    loadStatus();
   });
 
-  /* step 2 */
-  var otp2=[], otpInit=false;
-  function initOtp2(){
-    if(otpInit) return;
-    otpInit=true;
-    for(var i=0;i<6;i++){
-      var inp=document.createElement('input'); inp.type='text'; otp2.push(inp);
-      document.getElementById('otpRow2').appendChild(inp);
-    }
-    A.initOtp(otp2,function(code){doVerify(code);});
-    document.getElementById('btnFp2back').addEventListener('click',function(){renderStep(1);});
-    document.getElementById('btnFp2').addEventListener('click',function(){doVerify(otp2.map(function(x){return x.value;}).join(''));});
-    var resend=document.getElementById('btnResend2');
-    A.startCountdown(resend,60,'su.resendIn');
-    resend.addEventListener('click',function(){
-      A.api('/api/send-code',{purpose:'reset',identifier:identifier}).then(function(r){
-        if(r.status===200){
-          if(r.data.devCode){var n=document.getElementById('devNote2');n.textContent=A.t('dev.note',{c:r.data.devCode});n.classList.add('show');}
-          A.startCountdown(resend,60);
-          A.toast(A.t('ok.sent'),'ok');
-        } else if(r.data.error==='cooldown'){ A.startCountdown(resend,r.data.retryIn||60); }
-        else A.toast(A.errMsg(r.data.error),'er');
-      });
-    });
+  function loadStatus(){
+    fetch('/api/verification-request', { credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        var reqs = d.requests || [];
+        var current = reqs.find(function(r){ return r.status === 'pending' || r.status === 'verified'; }) || reqs[0];
+        var st = me.verificationStatus || 'unverified';
+        var statusCard = document.getElementById('vrStatusCard');
+        var progress = document.getElementById('vrProgress');
+        var rejectBox = document.getElementById('vrRejectBox');
+        var form = document.getElementById('vrFormWrap');
+        var ic = document.getElementById('vsIc');
+        var title = document.getElementById('vsTitle');
+        var desc = document.getElementById('vsDesc');
+
+        if (st === 'verified') {
+          statusCard.style.display = '';
+          ic.textContent = '✅';
+          title.innerHTML = '<span class="badge-verified"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg> ' + A.t('vr.status.verified') + '</span>';
+          desc.textContent = A.t('vr.approvedToast');
+          form.style.display = 'none';
+          progress.style.display = 'none';
+          return;
+        }
+        if (st === 'pending') {
+          statusCard.style.display = '';
+          ic.textContent = '⏳';
+          title.textContent = A.t('vr.status.pending');
+          desc.textContent = A.t('vr.reviewNote');
+          progress.style.display = '';
+          form.style.display = 'none';
+          return;
+        }
+        if (st === 'rejected') {
+          rejectBox.style.display = '';
+          var reason = (current && current.rejectionReason) || me.verificationNote || '';
+          document.getElementById('vrRejectReason').textContent = A.t('vr.rejectedReason').replace('{reason}', reason || '—');
+        }
+        // unverified / rejected -> show form
+        statusCard.style.display = '';
+        ic.textContent = '🛡️';
+        title.textContent = A.t('vr.status.unverified');
+        desc.textContent = A.t('vr.applySub');
+        form.style.display = '';
+      })
+      .catch(function(){});
   }
-  function doVerify(code){
-    if(code.length!==6){A.toast(A.t('err.code'),'er');return;}
-    var btn=document.getElementById('btnFp2');
-    A.setLoading(btn,true);
-    A.api('/api/verify-code',{purpose:'reset',identifier:identifier,code:code}).then(function(r){
-      A.setLoading(btn,false);
-      if(r.status===200){renderStep(3);}
-      else{
-        A.showMsg(msg,'error',A.errMsg(r.data.error));
-        otp2.forEach(function(x){x.value='';x.classList.remove('filled');});
-        otp2[0].focus();
+
+  function renderDocs(){
+    var box = document.getElementById('vrDocs');
+    box.innerHTML = '';
+    SLOTS.forEach(function(slot, i){
+      var el = document.createElement('div');
+      el.className = 'doc-slot';
+      var isImg = docFiles[i] && docFiles[i].indexOf('image/') === 5;
+      el.innerHTML =
+        '<div class="ds-info">' +
+          '<b>' + A.t(slot.key) + '</b>' +
+          '<span class="ds-file">' +
+            (docFiles[i]
+              ? (isImg ? '<img src="' + docFiles[i] + '">' : '<span style="font-size:1.2rem">📄</span>') + '<span>' + A.esc(docNames[i]) + '</span> <button type="button" class="ds-remove" data-i="' + i + '">' + A.t('vr.removeFile') + '</button>'
+              : '<button type="button" class="btn btn-outline btn-sm" data-pick="' + i + '">' + A.t('vr.choose') + '</button>') +
+          '</span>' +
+        '</div>';
+      box.appendChild(el);
+      var pick = el.querySelector('[data-pick]');
+      if (pick) {
+        pick.addEventListener('click', function(){
+          var inp = document.createElement('input');
+          inp.type = 'file';
+          inp.accept = 'application/pdf,image/jpeg,image/png';
+          inp.addEventListener('change', function(){
+            var f = this.files[0];
+            if (!f) return;
+            if (!['application/pdf','image/jpeg','image/png'].includes(f.type)) { A.toast(A.t('vr.docTypeErr'), 'er'); return; }
+            if (f.size > 1500000) { A.toast(A.t('vr.docSizeErr'), 'er'); return; }
+            var rd = new FileReader();
+            rd.onload = function(e){ docFiles[i] = e.target.result; docNames[i] = f.name; renderDocs(); };
+            rd.readAsDataURL(f);
+          });
+          inp.click();
+        });
+      }
+      var rm = el.querySelector('[data-i]');
+      if (rm) {
+        rm.addEventListener('click', function(){
+          var idx = parseInt(rm.getAttribute('data-i'), 10);
+          docFiles[idx] = null; docNames[idx] = '';
+          renderDocs();
+        });
       }
     });
   }
 
-  /* step 3 */
-  A.initPwToggles(document);
-  A.initStrength(document.getElementById('np1'),document.querySelector('.strength-bars'),document.querySelector('.strength-label'));
-  document.getElementById('btnFp3back').addEventListener('click',function(){renderStep(2);});
-  document.getElementById('btnFp3').addEventListener('click',function(){
-    var p1=document.getElementById('np1').value, p2=document.getElementById('np2').value;
-    var ok=true;
-    if(!p1||p1.length<8||!/[A-Za-z]/.test(p1)||!/\d/.test(p1)){A.fieldErr(document.getElementById('np1'),'err.weak');ok=false;}
-    if(p1!==p2){A.fieldErr(document.getElementById('np2'),'err.mismatch');ok=false;}
-    if(!ok)return;
-    var btn=this;
-    A.setLoading(btn,true,'fp.resetLoad');
-    A.api('/api/reset-password',{identifier:identifier,code:otp2.map(function(x){return x.value;}).join(''),password:p1}).then(function(r){
-      A.setLoading(btn,false);
-      if(r.status===200){
-        document.getElementById('fp3').style.display='none';
-        document.getElementById('stepLabel').style.display='none';
-        document.querySelector('.steps').style.display='none';
-        document.getElementById('fpDone').style.display='';
+  document.getElementById('vrSubmit').addEventListener('click', function(){
+    var biz = document.getElementById('vrBiz').value.trim();
+    var contact = document.getElementById('vrContact').value.trim();
+    var loc = document.getElementById('vrLoc').value.trim();
+    if (!biz || !contact || !loc) { A.showMsg(document.getElementById('vrMsg'), 'error', A.t('err.required')); return; }
+    var documents = [];
+    for (var i = 0; i < 3; i++) {
+      if (docFiles[i]) documents.push({ name: docNames[i], data: docFiles[i] });
+    }
+    var btn = document.getElementById('vrSubmit');
+    A.setLoading(btn, true, 'vr.submitting');
+    A.api('/api/verification-request', {
+      businessName: biz,
+      contactPerson: contact,
+      businessType: document.getElementById('vrType').value,
+      location: loc,
+      phone: document.getElementById('vrPhone').value.trim(),
+      email: document.getElementById('vrEmail').value.trim(),
+      documents: documents
+    }).then(function(r){
+      A.setLoading(btn, false);
+      if (r.status === 201) {
+        A.toast(A.t('vr.submitted'), 'ok');
+        setTimeout(function(){ location.reload(); }, 1200);
+      } else if (r.status === 401) {
+        location.href = '/login.html?next=/verify.html';
       } else {
-        A.showMsg(msg,'error',A.errMsg(r.data.error));
+        A.showMsg(document.getElementById('vrMsg'), 'error', A.errMsg(r.data.error));
       }
     });
   });

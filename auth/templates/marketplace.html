@@ -257,7 +257,7 @@ __JS__
       (p.desc ? '<p class="post-desc">' + A.esc(p.desc) + '</p>' : '') +
       '<div class="post-owner">' +
         '<span class="po-av">' + (p.owner && p.owner.image ? '<img src="' + p.owner.image + '" alt="">' : (biz ? A.esc(biz.charAt(0).toUpperCase()) : '?')) + '</span>' +
-        '<span class="po-info"><a href="/business.html?id=' + (p.owner ? p.owner.id : '') + '" style="color:inherit;text-decoration:none"><b style="color:#2F6BFF">' + A.esc(biz) + '</b></a>' +
+        '<span class="po-info"><a href="/business.html?id=' + (p.owner ? p.owner.id : '') + '" style="color:inherit;text-decoration:none"><b style="color:#2F6BFF">' + A.esc(biz) + (p.owner && p.owner.verificationStatus === 'verified' ? ' <span title="' + A.t('vr.verifiedBadge') + '" style="font-size:.7rem">✅</span>' : '') + '</b></a>' +
           '<span>' + bizTypeShort(p.owner) + (p.owner && p.owner.district ? ' · ' + A.locName(A.AhoorData.districts, p.owner.district) : '') + '</span>' +
           '<span>' + A.t('mp.postedOn') + ': ' + dateTxt + '</span>' +
         '</span>' +

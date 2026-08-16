@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahoor — Business Verification</title>
+<meta name="theme-color" content="#0A1122">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1430'/%3E%3Cpath d='M16 8.5 9.6 23.5h12.8z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='9.6' cy='23.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='22.4' cy='23.5' r='2.6' fill='%23FF8A4C'/%3E%3C/svg%3E">
+<style>
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,__INTER__) format('woff2')}
+@font-face{font-family:'Noto Sans Bengali';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,__NSB__) format('woff2')}
+:root{--ink:#0A1122;--bg:#F4F6FA;--text:#101828;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+html[lang="bn"]{--font:'Noto Sans Bengali','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+html[lang="bn"] body{line-height:1.72}
+__CSS__
+.vr-wrap{max-width:640px;margin:0 auto;padding:0 clamp(14px,3.5vw,24px)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media(max-width:520px){.grid2{grid-template-columns:1fr}}
+.vr-progress{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:20px}
+.vr-progress .vp-step{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:.68rem;font-weight:700;color:#8A95AC;text-align:center}
+.vr-progress .vp-ic{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#EDF0F7;border:2px solid #DDE3EE;color:#8A95AC;font-size:.9rem;transition:all .3s}
+.vr-progress .vp-step.done .vp-ic{background:#0E9F7E;border-color:#0E9F7E;color:#fff}
+.vr-progress .vp-step.on .vp-ic{background:linear-gradient(135deg,#4C84FF,#2F6BFF);border-color:#2F6BFF;color:#fff;box-shadow:0 6px 14px -6px rgba(47,107,255,.5)}
+.vr-progress .vp-line{width:36px;height:2px;background:#DDE3EE;border-radius:2px}
+.vr-progress .vp-line.done{background:#0E9F7E}
+.vr-status{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid #E4E9F2;border-radius:16px;padding:18px;margin-bottom:18px;box-shadow:0 6px 18px -12px rgba(10,17,34,.1)}
+.vr-status .vs-ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:1.3rem;flex-shrink:0}
+.vr-status .vs-info{flex:1}
+.vr-status .vs-info b{display:block;font-size:.98rem;color:#101828}
+.vr-status .vs-info p{font-size:.8rem;color:#57627A;margin-top:3px;line-height:1.55}
+.doc-slot{display:flex;align-items:center;gap:12px;background:#FBFCFE;border:1.5px dashed #DDE3EE;border-radius:14px;padding:14px 16px;margin-bottom:12px}
+.doc-slot .ds-info{flex:1;min-width:0}
+.doc-slot .ds-info b{display:block;font-size:.86rem;color:#101828}
+.doc-slot .ds-info span{display:block;font-size:.72rem;color:#8A95AC;margin-top:2px}
+.doc-slot .ds-file{display:flex;align-items:center;gap:8px;font-size:.78rem;color:#2F6BFF;font-weight:650}
+.doc-slot .ds-file img{width:34px;height:34px;border-radius:8px;object-fit:cover;border:1px solid #E4E9F2}
+.doc-slot .ds-remove{background:none;border:none;color:#C03221;font-size:.78rem;font-weight:650;cursor:pointer;padding:6px 8px;border-radius:8px}
+.doc-slot .ds-remove:hover{background:#FDECEC}
+.doc-hint{font-size:.72rem;color:#8A95AC;margin-bottom:14px}
+.badge-verified{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:800;color:#0B7A5E;background:#E6F7F0;border:1px solid #BDE8D6;padding:4px 11px;border-radius:999px}
+.badge-verified svg{flex-shrink:0}
+.reject-box{background:#FDECEC;border:1.5px solid #F5C6C6;border-radius:14px;padding:14px 16px;margin-bottom:16px}
+.reject-box b{color:#C03221;font-size:.9rem;display:flex;align-items:center;gap:8px}
+.reject-box p{color:#8a2f28;font-size:.82rem;margin-top:6px;line-height:1.6}
+</style>
+</head>
+<body data-meta="vr.applyTitle">
+
+<header class="auth-nav">
+  <div class="container">
+    <a class="brand" href="/index.html" aria-label="Ahoor — home">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="9" fill="url(#lg1)"/>
+        <path d="M16 8.5 9.6 23.5h12.8z" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/>
+        <circle cx="16" cy="8.5" r="2.7" fill="#fff"/><circle cx="9.6" cy="23.5" r="2.7" fill="#fff"/><circle cx="22.4" cy="23.5" r="2.7" fill="#FF8A4C"/>
+        <defs><linearGradient id="lg1" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#3B77FF"/><stop offset="1" stop-color="#1E4FD8"/></linearGradient></defs>
+      </svg>
+      <span class="brand-name">Ahoor<em>.</em></span>
+    </a>
+    <div class="auth-nav-right">
+      <a class="back-home" href="/dashboard.html">
+        <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        <span data-i18n="nav.dash">Dashboard</span>
+      </a>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" class="lang-btn on" data-lang="bn" aria-pressed="true">বাংলা</button>
+        <span class="lsep" aria-hidden="true">|</span>
+        <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="auth-main" style="display:block;padding-top:24px">
+  <div class="vr-wrap">
+    <div class="auth-head" style="margin-bottom:18px">
+      <span class="logo-ic">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+      </span>
+      <h1 data-i18n="vr.applyTitle">Apply for Business Verification</h1>
+      <p data-i18n="vr.applySub">Submit your business information and supporting documents for review.</p>
+    </div>
+
+    <div class="msg" id="vrMsg"></div>
+
+    <!-- status card -->
+    <div class="vr-status" id="vrStatusCard" style="display:none">
+      <span class="vs-ic" id="vsIc">🛡️</span>
+      <div class="vs-info">
+        <b id="vsTitle"></b>
+        <p id="vsDesc"></p>
+      </div>
+    </div>
+
+    <!-- progress steps -->
+    <div class="vr-progress" id="vrProgress" style="display:none">
+      <div class="vp-step done" id="vp1"><span class="vp-ic">✓</span><span data-i18n="vr.step1">Step 1: Business Information</span></div>
+      <div class="vp-line done" id="vpl1"></div>
+      <div class="vp-step done" id="vp2"><span class="vp-ic">✓</span><span data-i18n="vr.step2">Step 2: Supporting Documents</span></div>
+      <div class="vp-line" id="vpl2"></div>
+      <div class="vp-step on" id="vp3"><span class="vp-ic">⏳</span><span data-i18n="vr.step3">Step 3: Under Review</span></div>
+    </div>
+
+    <!-- rejection box -->
+    <div class="reject-box" id="vrRejectBox" style="display:none">
+      <b>❌ <span data-i18n="vr.rejectedTitle">Verification Rejected</span></b>
+      <p id="vrRejectReason"></p>
+    </div>
+
+    <!-- apply form -->
+    <div id="vrFormWrap" style="display:none">
+      <div class="sec-title"><span class="st-ic">🏢</span><span data-i18n="vr.formInfo">Business Information</span></div>
+      <div class="grid2">
+        <div class="field">
+          <label class="flabel" data-i18n="pp.biz">Business Name</label>
+          <input type="text" id="vrBiz">
+        </div>
+        <div class="field">
+          <label class="flabel" data-i18n="bp.contactPerson">Contact Person Name</label>
+          <input type="text" id="vrContact">
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label class="flabel" data-i18n="bp.bizType">Business Type</label>
+          <div class="select-wrap"><select id="vrType" data-fill="businesstype"></select></div>
+        </div>
+        <div class="field">
+          <label class="flabel" data-i18n="bp.sectionLoc">Location</label>
+          <input type="text" id="vrLoc">
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label class="flabel" data-i18n="bp.bizPhone">Business Phone</label>
+          <input type="tel" id="vrPhone" placeholder="01XXXXXXXXX">
+        </div>
+        <div class="field">
+          <label class="flabel" data-i18n="bp.bizEmail">Business Email</label>
+          <input type="email" id="vrEmail">
+        </div>
+      </div>
+
+      <div class="sec-title"><span class="st-ic">📄</span><span data-i18n="vr.formDocs">Supporting Documents</span></div>
+      <div id="vrDocs"></div>
+      <div class="doc-hint">🔒 <span data-i18n="vr.docsPrivate">Documents are private — only Ahoor admins can view them.</span></div>
+
+      <button type="button" class="btn btn-primary btn-block" id="vrSubmit">
+        <span class="spinner"></span><span class="btn-label" data-i18n="vr.submit">Submit Application</span>
+      </button>
+    </div>
+  </div>
+</main>
+
+<footer class="auth-foot">
+  <div class="container">
+    <p data-i18n="foot.made">Made in Bangladesh</p>
+    <p style="margin-top:6px" data-i18n="foot.cr">© 2026 Ahoor. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+__JS__
+(function(){
+  'use strict';
+  var A = window.Ahoor;
+  var me = null;
+  var docFiles = [null, null, null]; // dataURI per slot
+  var docNames = ['', '', ''];
+  var SLOTS = [
+    { key: 'vr.tradeLicense', label: 'Trade License (optional)' },
+    { key: 'vr.regDoc', label: 'Business Registration (optional)' },
+    { key: 'vr.otherDoc', label: 'Other Business Proof (optional)' }
+  ];
+
+  A.api('/api/session').then(function(r){
+    if (!r.data || !r.data.user) { location.href = '/login.html?next=/verify.html'; return; }
+    me = r.data.user;
+    A.fillSelect(document.getElementById('vrType'), A.AhoorData.businessTypes, me.businessType || '');
+    document.getElementById('vrBiz').value = me.businessName || '';
+    document.getElementById('vrContact').value = me.name || '';
+    document.getElementById('vrLoc').value = (me.district ? A.locName(A.AhoorData.districts, me.district) : '') + (me.city ? ', ' + me.city : '');
+    document.getElementById('vrPhone').value = me.businessPhone || me.phone || '';
+    document.getElementById('vrEmail').value = me.businessEmail || '';
+    renderDocs();
+    loadStatus();
+  });
+
+  function loadStatus(){
+    fetch('/api/verification-request', { credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        var reqs = d.requests || [];
+        var current = reqs.find(function(r){ return r.status === 'pending' || r.status === 'verified'; }) || reqs[0];
+        var st = me.verificationStatus || 'unverified';
+        var statusCard = document.getElementById('vrStatusCard');
+        var progress = document.getElementById('vrProgress');
+        var rejectBox = document.getElementById('vrRejectBox');
+        var form = document.getElementById('vrFormWrap');
+        var ic = document.getElementById('vsIc');
+        var title = document.getElementById('vsTitle');
+        var desc = document.getElementById('vsDesc');
+
+        if (st === 'verified') {
+          statusCard.style.display = '';
+          ic.textContent = '✅';
+          title.innerHTML = '<span class="badge-verified"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg> ' + A.t('vr.status.verified') + '</span>';
+          desc.textContent = A.t('vr.approvedToast');
+          form.style.display = 'none';
+          progress.style.display = 'none';
+          return;
+        }
+        if (st === 'pending') {
+          statusCard.style.display = '';
+          ic.textContent = '⏳';
+          title.textContent = A.t('vr.status.pending');
+          desc.textContent = A.t('vr.reviewNote');
+          progress.style.display = '';
+          form.style.display = 'none';
+          return;
+        }
+        if (st === 'rejected') {
+          rejectBox.style.display = '';
+          var reason = (current && current.rejectionReason) || me.verificationNote || '';
+          document.getElementById('vrRejectReason').textContent = A.t('vr.rejectedReason').replace('{reason}', reason || '—');
+        }
+        // unverified / rejected -> show form
+        statusCard.style.display = '';
+        ic.textContent = '🛡️';
+        title.textContent = A.t('vr.status.unverified');
+        desc.textContent = A.t('vr.applySub');
+        form.style.display = '';
+      })
+      .catch(function(){});
+  }
+
+  function renderDocs(){
+    var box = document.getElementById('vrDocs');
+    box.innerHTML = '';
+    SLOTS.forEach(function(slot, i){
+      var el = document.createElement('div');
+      el.className = 'doc-slot';
+      var isImg = docFiles[i] && docFiles[i].indexOf('image/') === 5;
+      el.innerHTML =
+        '<div class="ds-info">' +
+          '<b>' + A.t(slot.key) + '</b>' +
+          '<span class="ds-file">' +
+            (docFiles[i]
+              ? (isImg ? '<img src="' + docFiles[i] + '">' : '<span style="font-size:1.2rem">📄</span>') + '<span>' + A.esc(docNames[i]) + '</span> <button type="button" class="ds-remove" data-i="' + i + '">' + A.t('vr.removeFile') + '</button>'
+              : '<button type="button" class="btn btn-outline btn-sm" data-pick="' + i + '">' + A.t('vr.choose') + '</button>') +
+          '</span>' +
+        '</div>';
+      box.appendChild(el);
+      var pick = el.querySelector('[data-pick]');
+      if (pick) {
+        pick.addEventListener('click', function(){
+          var inp = document.createElement('input');
+          inp.type = 'file';
+          inp.accept = 'application/pdf,image/jpeg,image/png';
+          inp.addEventListener('change', function(){
+            var f = this.files[0];
+            if (!f) return;
+            if (!['application/pdf','image/jpeg','image/png'].includes(f.type)) { A.toast(A.t('vr.docTypeErr'), 'er'); return; }
+            if (f.size > 1500000) { A.toast(A.t('vr.docSizeErr'), 'er'); return; }
+            var rd = new FileReader();
+            rd.onload = function(e){ docFiles[i] = e.target.result; docNames[i] = f.name; renderDocs(); };
+            rd.readAsDataURL(f);
+          });
+          inp.click();
+        });
+      }
+      var rm = el.querySelector('[data-i]');
+      if (rm) {
+        rm.addEventListener('click', function(){
+          var idx = parseInt(rm.getAttribute('data-i'), 10);
+          docFiles[idx] = null; docNames[idx] = '';
+          renderDocs();
+        });
+      }
+    });
+  }
+
+  document.getElementById('vrSubmit').addEventListener('click', function(){
+    var biz = document.getElementById('vrBiz').value.trim();
+    var contact = document.getElementById('vrContact').value.trim();
+    var loc = document.getElementById('vrLoc').value.trim();
+    if (!biz || !contact || !loc) { A.showMsg(document.getElementById('vrMsg'), 'error', A.t('err.required')); return; }
+    var documents = [];
+    for (var i = 0; i < 3; i++) {
+      if (docFiles[i]) documents.push({ name: docNames[i], data: docFiles[i] });
+    }
+    var btn = document.getElementById('vrSubmit');
+    A.setLoading(btn, true, 'vr.submitting');
+    A.api('/api/verification-request', {
+      businessName: biz,
+      contactPerson: contact,
+      businessType: document.getElementById('vrType').value,
+      location: loc,
+      phone: document.getElementById('vrPhone').value.trim(),
+      email: document.getElementById('vrEmail').value.trim(),
+      documents: documents
+    }).then(function(r){
+      A.setLoading(btn, false);
+      if (r.status === 201) {
+        A.toast(A.t('vr.submitted'), 'ok');
+        setTimeout(function(){ location.reload(); }, 1200);
+      } else if (r.status === 401) {
+        location.href = '/login.html?next=/verify.html';
+      } else {
+        A.showMsg(document.getElementById('vrMsg'), 'error', A.errMsg(r.data.error));
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

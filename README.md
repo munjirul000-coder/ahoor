@@ -147,3 +147,12 @@ Push to GitHub → Deploy on Render (free tier):
 - **Saved Opportunities**: save/remove/bookmark, owner-only access
 - **Notifications**: high-match posts trigger `opportunity_match` notification (deduplicated per post, no spam)
 - Fully bilingual (বাংলা/EN); 26/26 matching E2E tests + full regression pass
+
+## Features (v8 — Business Verification System)
+
+- **Apply flow**: Unverified → Apply (business info + documents: Trade License / Registration / Other Proof — PDF/JPG/PNG ≤1.5MB, client+server validated, private) → Pending Review → Verified / Rejected
+- **Verify page** (`/verify.html`): status card, 3-step progress (Info ✓ → Docs ✓ → Under Review), document pick/preview/remove, rejection reason + reapply, withdraw
+- **Admin review**: Verification page shows pending requests with contact info + document previews (images inline, PDF link); approve / reject with optional reason; owner gets in-app notification on submit/approve/reject
+- **Verified badge**: shown on Business Profile, Marketplace post cards, Received Quote cards, Chat header — only when truly verified
+- **Security**: documents never public — only owner (own app) and admins can view; non-admin API access blocked (403); validated uploads (no exe/svg)
+- Fully bilingual (বাংলা/EN); 24/24 verification E2E tests + full regression pass

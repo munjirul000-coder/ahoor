@@ -236,6 +236,7 @@ __JS__
         var el = document.createElement('div');
         el.className = 'qcard';
         var biz = (q.sender && (q.sender.businessName || q.sender.name)) || '—';
+        var bizBadge = (q.sender && q.sender.verificationStatus === 'verified') ? ' <span title="' + A.t('vr.verifiedBadge') + '" style="font-size:.7rem">✅</span>' : '';
         var date = new Date(q.createdAt).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
         var rows = '';
         if(q.kind === 'quote'){
@@ -252,7 +253,7 @@ __JS__
         el.innerHTML =
           '<div class="qcard-top">' +
             '<div class="qcard-biz"><span class="qb-av">' + (q.sender && q.sender.image ? '<img src="' + q.sender.image + '" alt="">' : A.esc((biz).charAt(0).toUpperCase())) + '</span>' +
-              '<div><b>' + A.esc(biz) + '</b><span>' + (q.sender && q.sender.district ? A.locName(A.AhoorData.districts, q.sender.district) : '') + ' · ' + date + '</span></div>' +
+              '<div><b>' + A.esc(biz) + bizBadge + '</b><span>' + (q.sender && q.sender.district ? A.locName(A.AhoorData.districts, q.sender.district) : '') + ' · ' + date + '</span></div>' +
             '</div>' + statusPill(q.status) +
           '</div>' +
           '<div class="qcard-rows">' + rows + '</div>' +

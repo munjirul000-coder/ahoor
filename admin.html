@@ -652,21 +652,33 @@ function loadReports(){
 document.getElementById('rSearch').addEventListener('click', loadReports);
 document.getElementById('rStatus').addEventListener('change', loadReports);
 
-/* ================= VERIFICATION ================= */
+/* ================= VERIFICATION (requests with documents) ================= */
 function loadVerification(){
-  adminGet('/api/admin/users?type=all').then(function(d){
-    var pending = (d.users||[]).filter(function(u){ return (u.verificationStatus||'unverified')==='pending'; });
+  adminGet('/api/admin/verification-requests?status=pending').then(function(d){
     var box = document.getElementById('vList');
-    if (!pending.length) { box.innerHTML = '<div class="empty-box">' + at('ad.noVerification') + '</div>'; return; }
-    box.innerHTML = pending.map(function(u){
+    var reqs = d.requests || [];
+    if (!reqs.length) { box.innerHTML = '<div class="empty-box">' + at('ad.noVerification') + '</div>'; return; }
+    box.innerHTML = reqs.map(function(v){
+      var docsHtml = (v.documents || []).map(function(doc, i){
+        var isImg = doc.data && doc.data.indexOf('data:image/') === 0;
+        return '<div style="margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">' +
+          '<span class="mini-btn" style="cursor:default">' + (isImg ? '🖼️' : '📄') + ' ' + esc(doc.name) + '</span>' +
+          (isImg
+            ? '<img src="' + doc.data + '" alt="' + esc(doc.name) + '" style="max-width:120px;max-height:80px;border-radius:8px;border:1px solid #E4E9F2">'
+            : '<a class="mini-btn ok" href="' + doc.data + '" target="_blank">' + at('ad.view') + ' PDF</a>') +
+        '</div>';
+      }).join('');
       return '<div class="panel" style="margin-bottom:10px"><div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap">' +
-        '<span class="t-av"><span class="ta">' + (u.image?'<img src="'+u.image+'">':esc((u.businessName||'?').charAt(0).toUpperCase())) + '</span><div><b>' + esc(u.businessName) + '</b><span>' + esc(u.name) + ' · ' + (u.businessType?bizTypeName(u.businessType):'—') + '</span></div></span>' +
-        '<div style="flex:1;min-width:200px;font-size:.8rem;color:#57627A">' +
-          (u.category ? '<div>' + at('ad.category') + ': ' + locName('category', u.category) + '</div>' : '') +
-          (u.productsServices ? '<div>' + at('ad.products') + ': ' + esc(u.productsServices) + '</div>' : '') +
-          (u.district ? '<div>' + at('ad.location') + ': ' + locName('district', u.district) + '</div>' : '') +
+        '<span class="t-av"><span class="ta">' + esc((v.businessName||'?').charAt(0).toUpperCase()) + '</span><div><b>' + esc(v.businessName) + '</b><span>' + at('ad.memberSince') + ' ' + timeFmt(v.createdAt) + '</span></div></span>' +
+        '<div style="flex:1;min-width:220px;font-size:.8rem;color:#57627A">' +
+          '<div>' + at('bp.contactPerson') + ': ' + esc(v.contactPerson) + '</div>' +
+          '<div>' + at('ad.bizType') + ': ' + (v.businessType ? bizTypeName(v.businessType) : '—') + '</div>' +
+          '<div>' + at('ad.location') + ': ' + esc(v.location) + '</div>' +
+          (v.phone ? '<div>📞 ' + esc(v.phone) + '</div>' : '') +
+          (v.email ? '<div>✉️ ' + esc(v.email) + '</div>' : '') +
+          (v.documents && v.documents.length ? '<div style="margin-top:6px"><b style="font-size:.72rem;color:#8A95AC">' + at('vr.formDocs') + ':</b>' + docsHtml + '</div>' : '') +
         '</div>' +
-        '<div><button class="mini-btn ok" data-vact="approve" data-id="'+u.id+'">' + at('ad.approve') + '</button> <button class="mini-btn danger" data-vact="reject" data-id="'+u.id+'">' + at('ad.reject') + '</button></div>' +
+        '<div><button class="mini-btn ok" data-vact="approve" data-id="'+v.id+'">' + at('ad.approve') + '</button> <button class="mini-btn danger" data-vact="reject" data-id="'+v.id+'">' + at('ad.reject') + '</button></div>' +
         '</div></div>';
     }).join('');
     box.querySelectorAll('[data-vact]').forEach(function(btn){
@@ -675,7 +687,13 @@ function loadVerification(){
         var id = btn.getAttribute('data-id');
         confirmBox(at(act==='approve'?'ad.approve':'ad.reject'), at(act==='approve'?'ad.confirmApprove':'ad.confirmReject'), at('ad.ok'), act==='reject').then(function(ok){
           if (!ok) return;
-          adminApi('/api/admin/verification', {userId:id, op:act}).then(function(r){
+          var payload = { requestId: id, op: act };
+          if (act === 'reject') {
+            var reason = prompt(at('ad.rejectReason'));
+            if (reason === null) return;
+            payload.reason = reason.trim();
+          }
+          adminApi('/api/admin/verification-review', payload).then(function(r){
             if (r.status===200) { toast(at('ad.ver'+(act==='approve'?'Approved':'Rejected')), true); loadVerification(); }
             else toast(at('ad.err'), false);
           });

@@ -118,7 +118,7 @@ function load() {
   try {
     db = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
   } catch (e) {
-    db = { users: [], sessions: {}, codes: {}, fails: {}, posts: [], quotes: [], notifications: [], conversations: [], messages: [], reports: [], log: [], saved: [] };
+    db = { users: [], sessions: {}, codes: {}, fails: {}, posts: [], quotes: [], notifications: [], conversations: [], messages: [], reports: [], log: [], saved: [], verifications: [] };
   }
   if (pgPool) {
     pgLoad().then(pgData => {
@@ -151,7 +151,7 @@ function publicQuote(q) {
     budget: q.budget || '', message: q.message || '',
     createdAt: q.createdAt, respondedAt: q.respondedAt || null,
     post: post ? publicPost(post) : null,
-    sender: sender ? { id: sender.id, name: sender.name, businessName: sender.businessName || '', district: sender.district || '', image: sender.image || '', phone: sender.phone } : null,
+    sender: sender ? { id: sender.id, name: sender.name, businessName: sender.businessName || '', district: sender.district || '', image: sender.image || '', phone: sender.phone, verificationStatus: sender.verificationStatus || 'unverified' } : null,
     recipient: recipient ? { id: recipient.id, name: recipient.name, businessName: recipient.businessName || '' } : null
   };
 }
@@ -526,7 +526,7 @@ async function handle(req, res) {
       });
       return;
     }
-    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications' || p === '/api/business' || p === '/api/conversations' || p.indexOf('/api/conversations/') === 0 || p === '/api/stream' || p.indexOf('/api/admin/') === 0 || p === '/api/matches' || p === '/api/saved') && req.method === 'GET')) {
+    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications' || p === '/api/business' || p === '/api/conversations' || p.indexOf('/api/conversations/') === 0 || p === '/api/stream' || p.indexOf('/api/admin/') === 0 || p === '/api/matches' || p === '/api/saved' || p === '/api/verification-request') && req.method === 'GET')) {
       return json(res, 405, { error: 'method' });
     }
     let body;
@@ -1302,6 +1302,47 @@ async function handle(req, res) {
         return json(res, 200, { ok: true });
       }
 
+      if (action === 'verification-requests') {
+        const u2 = new URL(req.url, 'http://x');
+        const st = u2.searchParams.get('status') || 'pending';
+        let list = db.verifications;
+        if (st && st !== 'all') list = list.filter(v => v.status === st);
+        list = list.slice().sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || '')).slice(0, 200);
+        const full = list.map(v => {
+          const biz = db.users.find(u => u.id === v.businessId);
+          return { ...v, business: biz ? publicUser(biz) : null };
+        });
+        return json(res, 200, { requests: full });
+      }
+
+      if (action === 'verification-review') {
+        const { requestId, op, reason } = body;
+        const ver = db.verifications.find(v => v.id === requestId);
+        if (!ver) return json(res, 404, { error: 'not_found' });
+        if (ver.status !== 'pending') return json(res, 400, { error: 'not_pending' });
+        const target = db.users.find(u => u.id === ver.businessId);
+        if (!target) return json(res, 404, { error: 'not_found' });
+        if (op === 'approve') {
+          ver.status = 'verified';
+          target.verificationStatus = 'verified';
+          target.verificationNote = '';
+          addNotification(target.id, 'verification_approved', ver.id, { senderName: '', postTitle: target.businessName });
+          addLog(admin.id, 'approve_verification', ver.id, target.businessName);
+        } else if (op === 'reject') {
+          ver.status = 'rejected';
+          ver.rejectionReason = reason || '';
+          target.verificationStatus = 'rejected';
+          target.verificationNote = reason || '';
+          addNotification(target.id, 'verification_rejected', ver.id, { senderName: '', postTitle: target.businessName });
+          addLog(admin.id, 'reject_verification', ver.id, target.businessName + (reason ? ' — ' + reason : ''));
+        } else return json(res, 400, { error: 'action' });
+        ver.reviewedBy = admin.id;
+        ver.reviewedAt = new Date().toISOString();
+        ver.updatedAt = ver.reviewedAt;
+        save();
+        return json(res, 200, { ok: true });
+      }
+
       if (action === 'verification') {
         const { userId, op, reason } = body;
         const target = db.users.find(u => u.id === userId);
@@ -1326,17 +1367,66 @@ async function handle(req, res) {
       return json(res, 404, { error: 'route' });
     }
 
-    /* ---- user verification request ---- */
+    /* ---- business verification (apply / status) ---- */
     if (p === '/api/verification-request' && req.method === 'POST') {
       const sess = getSession(req);
       if (!sess) return json(res, 401, { error: 'no_session' });
       const user = db.users.find(u => u.id === sess.userId);
       if (!user) return json(res, 401, { error: 'no_session' });
       if (!user.businessName) return json(res, 400, { error: 'no_business' });
-      if (user.verificationStatus === 'verified') return json(res, 400, { error: 'already_verified' });
-      if (user.verificationStatus === 'pending') return json(res, 400, { error: 'already_pending' });
+      const existing = db.verifications.find(v => v.businessId === user.id && (v.status === 'pending' || v.status === 'verified'));
+      if (existing) return json(res, 400, { error: 'already_pending' });
+      const { businessName, contactPerson, businessType, location, phone, email, documents } = body;
+      if (!businessName || !contactPerson || !location) return json(res, 400, { error: 'required' });
+      const docList = [];
+      if (documents && Array.isArray(documents)) {
+        if (documents.length > 3) return json(res, 400, { error: 'too_many_docs' });
+        for (const d of documents) {
+          if (!d || !d.name || !d.data) continue;
+          const ext = (d.name || '').split('.').pop().toLowerCase();
+          if (!['pdf', 'jpg', 'jpeg', 'png'].includes(ext)) return json(res, 400, { error: 'doc_type' });
+          if (typeof d.data !== 'string' || d.data.length > 1600000) return json(res, 400, { error: 'image' });
+          if (!/^data:(application\/pdf|image\/(jpeg|png));base64,/.test(d.data.slice(0, 60))) return json(res, 400, { error: 'doc_type' });
+          docList.push({ name: String(d.name).slice(0, 100), data: d.data, uploadedAt: new Date().toISOString() });
+        }
+      }
+      const ver = {
+        id: uid(), businessId: user.id, status: 'pending',
+        businessName: String(businessName).trim().slice(0, 120),
+        contactPerson: String(contactPerson).trim().slice(0, 80),
+        businessType: String(businessType || '').trim().slice(0, 40),
+        location: String(location).trim().slice(0, 120),
+        phone: String(phone || '').trim().slice(0, 40),
+        email: String(email || '').trim().slice(0, 120),
+        documents: docList, rejectionReason: '',
+        reviewedBy: null, reviewedAt: null,
+        createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
+      };
+      db.verifications.push(ver);
       user.verificationStatus = 'pending';
-      user.verificationRequestedAt = new Date().toISOString();
+      user.verificationNote = '';
+      addNotification(user.id, 'verification_submitted', ver.id, { senderName: '', postTitle: businessName });
+      save();
+      return json(res, 201, { request: ver });
+    }
+
+    if (p === '/api/verification-request' && req.method === 'GET') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const reqs = db.verifications.filter(v => v.businessId === sess.userId)
+        .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+      return json(res, 200, { requests: reqs });
+    }
+
+    if (p === '/api/verification-request/withdraw' && req.method === 'POST') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const { id } = body;
+      const ver = db.verifications.find(v => v.id === id && v.businessId === sess.userId && v.status === 'pending');
+      if (!ver) return json(res, 404, { error: 'not_found' });
+      ver.status = 'withdrawn';
+      const user = db.users.find(u => u.id === sess.userId);
+      if (user) user.verificationStatus = 'unverified';
       save();
       return json(res, 200, { ok: true });
     }
@@ -1472,7 +1562,8 @@ function convWithOther(conv, meId) {
   return {
     id: conv.id, createdAt: conv.createdAt, updatedAt: conv.updatedAt,
     other: other ? { id: other.id, name: other.name, businessName: other.businessName || '',
-      image: other.image || '', businessType: other.businessType || '', district: other.district || '' } : null,
+      image: other.image || '', businessType: other.businessType || '', district: other.district || '',
+      verificationStatus: other.verificationStatus || 'unverified' } : null,
     lastMessage: last ? publicMessage(last) : null, unread
   };
 }
