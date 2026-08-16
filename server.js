@@ -112,12 +112,13 @@ const PORT = process.env.PORT || 8080;
 
 /* ---------------- store (JSON file, atomic writes) ---------------- */
 let db = null;
+const sseClients = {}; // userId -> Set<res> (real-time message push via SSE)
 function load() {
   if (db) return db;
   try {
     db = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
   } catch (e) {
-    db = { users: [], sessions: {}, codes: {}, fails: {}, posts: [], quotes: [], notifications: [] };
+    db = { users: [], sessions: {}, codes: {}, fails: {}, posts: [], quotes: [], notifications: [], conversations: [], messages: [] };
   }
   if (pgPool) {
     pgLoad().then(pgData => {
@@ -374,7 +375,22 @@ async function handle(req, res) {
 
   /* --- API --- */
   if (p.startsWith('/api/')) {
-    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications' || p === '/api/business') && req.method === 'GET')) {
+    if (p === '/api/stream') {
+      const sess = getSession(req);
+      if (!sess) { res.writeHead(401); return res.end(); }
+      res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'X-Accel-Buffering': 'no' });
+      res.write(': connected\n\n');
+      if (!sseClients[sess.userId]) sseClients[sess.userId] = new Set();
+      sseClients[sess.userId].add(res);
+      const hb = setInterval(() => { try { res.write(': ping\n\n'); } catch (e) {} }, 25000);
+      req.on('close', () => {
+        clearInterval(hb);
+        const set = sseClients[sess.userId];
+        if (set) { set.delete(res); if (!set.size) delete sseClients[sess.userId]; }
+      });
+      return;
+    }
+    if (req.method !== 'POST' && !((p === '/api/posts' || p === '/api/notifications' || p === '/api/business' || p === '/api/conversations' || p.indexOf('/api/conversations/') === 0 || p === '/api/stream') && req.method === 'GET')) {
       return json(res, 405, { error: 'method' });
     }
     let body;
@@ -825,6 +841,75 @@ async function handle(req, res) {
       return json(res, 200, { ok: true });
     }
 
+    /* ---- conversations & messages ---- */
+    if (p === '/api/conversations' && req.method === 'GET') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const list = db.conversations.filter(c => c.participants.includes(sess.userId))
+        .sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''))
+        .map(c => convWithOther(c, sess.userId));
+      return json(res, 200, { conversations: list });
+    }
+
+    if (p === '/api/conversations' && req.method === 'POST') {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const { withUserId } = body;
+      if (!withUserId) return json(res, 400, { error: 'missing' });
+      if (withUserId === sess.userId) return json(res, 400, { error: 'self_conv' });
+      const other = db.users.find(u => u.id === withUserId);
+      if (!other) return json(res, 404, { error: 'not_found' });
+      let conv = db.conversations.find(c => c.participants.includes(sess.userId) && c.participants.includes(withUserId));
+      if (!conv) {
+        conv = { id: uid(), participants: [sess.userId, withUserId], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+        db.conversations.push(conv);
+        save();
+      }
+      return json(res, 200, { conversation: convWithOther(conv, sess.userId) });
+    }
+
+    const convMsgs = p.match(/^\/api\/conversations\/([0-9a-f-]{36})\/messages$/);
+    if (convMsgs) {
+      const sess = getSession(req);
+      if (!sess) return json(res, 401, { error: 'no_session' });
+      const conv = getConvForUser(convMsgs[1], sess.userId);
+      if (!conv) return json(res, 403, { error: 'forbidden' });
+      if (req.method === 'GET') {
+        const msgs = db.messages.filter(m => m.conversationId === conv.id);
+        // mark incoming as read
+        let changed = false;
+        msgs.forEach(m => {
+          if (m.senderId !== sess.userId && !(m.readBy || []).includes(sess.userId)) {
+            m.readBy = m.readBy || []; m.readBy.push(sess.userId); changed = true;
+          }
+        });
+        if (changed) save();
+        return json(res, 200, { conversation: convWithOther(conv, sess.userId), messages: msgs.map(publicMessage) });
+      }
+      if (req.method === 'POST') {
+        const { text, image } = body;
+        let mtype = 'text', mtext = '', mimage = '';
+        if (image) {
+          if (typeof image !== 'string' || image.length > 1600000) return json(res, 400, { error: 'image' });
+          if (!/^data:image\/(jpeg|jpg|png|webp);base64,/.test(image.slice(0, 60))) return json(res, 400, { error: 'image_type' });
+          mtype = 'image'; mimage = image;
+        } else {
+          if (typeof text !== 'string' || !text.trim() || text.trim().length > 2000) return json(res, 400, { error: 'message' });
+          mtext = text.trim().slice(0, 2000);
+        }
+        const message = {
+          id: uid(), conversationId: conv.id, senderId: sess.userId,
+          type: mtype, text: mtext, image: mimage, createdAt: new Date().toISOString(), readBy: []
+        };
+        db.messages.push(message);
+        conv.updatedAt = message.createdAt;
+        save();
+        pushMessageToParticipants(conv, publicMessage(message));
+        return json(res, 201, { message: publicMessage(message) });
+      }
+      return json(res, 405, { error: 'method' });
+    }
+
     return json(res, 404, { error: 'route' });
   }
 
@@ -931,6 +1016,39 @@ function send404(res) {
 }
 
 pgInit();
+
+/* ---------- SSE real-time push ---------- */
+function sseSend(userId, payload) {
+  const set = sseClients[userId];
+  if (!set) return;
+  const data = 'data: ' + JSON.stringify(payload) + '\n\n';
+  set.forEach(res => { try { res.write(data); } catch (e) {} });
+}
+function pushMessageToParticipants(conv, message) {
+  conv.participants.forEach(uid => sseSend(uid, { type: 'message', conversationId: conv.id, message }));
+}
+function publicMessage(m) {
+  return { id: m.id, conversationId: m.conversationId, senderId: m.senderId, type: m.type,
+    text: m.text || '', image: m.image || '', createdAt: m.createdAt, readBy: m.readBy || [] };
+}
+function convWithOther(conv, meId) {
+  const otherId = conv.participants.find(id => id !== meId);
+  const other = db.users.find(u => u.id === otherId) || null;
+  const msgs = db.messages.filter(m => m.conversationId === conv.id);
+  const last = msgs[msgs.length - 1] || null;
+  const unread = msgs.filter(m => m.senderId !== meId && !(m.readBy || []).includes(meId)).length;
+  return {
+    id: conv.id, createdAt: conv.createdAt, updatedAt: conv.updatedAt,
+    other: other ? { id: other.id, name: other.name, businessName: other.businessName || '',
+      image: other.image || '', businessType: other.businessType || '', district: other.district || '' } : null,
+    lastMessage: last ? publicMessage(last) : null, unread
+  };
+}
+function getConvForUser(convId, userId) {
+  const conv = db.conversations.find(c => c.id === convId);
+  if (!conv || !conv.participants.includes(userId)) return null;
+  return conv;
+}
 
 const server = http.createServer(handle);
 server.listen(PORT, '0.0.0.0', () => {

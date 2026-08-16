@@ -193,6 +193,8 @@ var D = {
  "err.not_pending":["This quote is no longer pending.","এই কোটেশনটি আর অপেক্ষমাণ নেই।"],
  "err.own_quote":["You cannot respond to your own quote.","নিজের কোটেশনে সাড়া দেওয়া যাবে না।"],
  "err.action":["Invalid action.","ভুল নির্দেশ।"],
+ "err.self_conv":["You cannot message yourself.","নিজেকে মেসেজ পাঠানো যাবে না।"],
+ "err.conv_not_found":["Conversation not found.","কথোপকথনটি পাওয়া যায়নি।"],
  "ok.sent":["Code sent!","কোড পাঠানো হয়েছে!"],
  "ok.verified":["Verified!","যাচাই হয়েছে!"],
  "dev.note":["Demo mode — your code: {c} (in production it is sent by SMS/email)","ডেমো মোড — আপনার কোড: {c} (প্রকৃত পরিবেশে এটি এসএমএস/ইমেইলে যাবে)"],
@@ -368,7 +370,34 @@ var Q_EXT = {
  "bp.notFound":["Business profile not found.","ব্যবসায়িক প্রোফাইল পাওয়া যায়নি।"],
  "bp.role.buyer":["Buyer","ক্রেতা"],
  "bp.role.supplier":["Supplier / Manufacturer","সরবরাহকারী / প্রস্তুতকারক"],
- "bp.role.both":["Buyer & Supplier","ক্রেতা ও সরবরাহকারী"]
+ "bp.role.both":["Buyer & Supplier","ক্রেতা ও সরবরাহকারী"],
+ "ms.title":["Messages","মেসেজ"],
+ "ms.sub":["Business conversations","ব্যবসায়িক কথোপকথন"],
+ "ms.noConv":["No conversations yet","এখনো কোনো কথোপকথন নেই"],
+ "ms.noConvD":["Message a business from their profile or a marketplace post to start.","কোনো ব্যবসার প্রোফাইল বা মার্কেটপ্লেস পোস্ট থেকে মেসেজ পাঠিয়ে শুরু করুন।"],
+ "ms.startChat":["Start the conversation","কথোপকথন শুরু করুন"],
+ "ms.startChatD":["Send a message to discuss requirements, pricing, or samples.","প্রয়োজন, দাম বা নমুনা নিয়ে আলোচনা করতে মেসেজ পাঠান।"],
+ "ms.typeMsg":["Write a message…","মেসেজ লিখুন…"],
+ "ms.send":["Send","পাঠান"],
+ "ms.attach":["Attach image","ছবি যুক্ত করুন"],
+ "ms.removeImg":["Remove image","ছবি সরান"],
+ "ms.you":["You","আপনি"],
+ "ms.back":["← Back to conversations","← কথোপকথনে ফিরুন"],
+ "ms.loading":["Loading…","লোড হচ্ছে…"],
+ "ms.sendError":["Could not send message. Please try again.","মেসেজ পাঠানো যায়নি। আবার চেষ্টা করুন।"],
+ "ms.loadError":["Could not load messages.","মেসেজ লোড করা যায়নি।"],
+ "ms.imageTooBig":["Image is too large (max 1.5MB).","ছবিটি অনেক বড় (সর্বোচ্চ ১.৫MB)।"],
+ "ms.imageType":["Only JPG, PNG or WEBP images are allowed.","শুধু JPG, PNG বা WEBP ছবি অনুমোদিত।"],
+ "ms.viewImage":["View full image","পুরো ছবি দেখুন"],
+ "ms.close":["Close","বন্ধ করুন"],
+ "ms.newChat":["Message","মেসেজ"],
+ "ms.unreadBadge":["Unread","অপঠিত"],
+ "ms.justNow":["just now","এইমাত্র"],
+ "ms.minAgo":["{m} min","{m} মি"],
+ "ms.hrAgo":["{h} hr","{h} ঘ"],
+ "ms.dayAgo":["{d} d","{d} দিন"],
+ "ms.photo":["Photo","ছবি"],
+ "ms.connecting":["Connecting…","সংযুক্ত হচ্ছে…"]
 };
 for (var k in Q_EXT) { D[k] = Q_EXT[k]; }
 
@@ -576,7 +605,7 @@ function api(path, body){
       .catch(function(){ return { status:r.status, data:{ error:'bad_response' } }; });
   }).catch(function(){ return { status:0, data:{ error:'offline' } }; });
 }
-var ERR_CODES = ['email_exists','phone_exists','invalid','not_found','weak','unverified','invalid_code','expired','too_many','network','offline','bad_response','missing','no_session','route','method','purpose','forbidden','email','phone','name','mismatch','required','type','code','locked','generic','title','category','location','desc','message','image','self_quote','post_not_found','role_not_allowed','duplicate','post_closed','quote_not_found','not_pending','own_quote','action'];
+var ERR_CODES = ['email_exists','phone_exists','invalid','not_found','weak','unverified','invalid_code','expired','too_many','network','offline','bad_response','missing','no_session','route','method','purpose','forbidden','email','phone','name','mismatch','required','type','code','locked','generic','title','category','location','desc','message','image','self_quote','post_not_found','role_not_allowed','duplicate','post_closed','quote_not_found','not_pending','own_quote','action','self_conv','conv_not_found'];
 function errMsg(e){
   e = e || 'generic';
   if(ERR_CODES.indexOf(e) >= 0) return t('err.'+e);

@@ -437,6 +437,84 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 .nt-item span{font-size:.7rem;color:#8A95AC;display:block;margin-top:3px}
 .nt-empty{padding:34px 16px;text-align:center;color:#8A95AC;font-size:.84rem}
 
+/* ============ Messages / Chat ============ */
+.chat-main{display:block;padding:14px clamp(10px,2.5vw,24px) 20px;min-height:0}
+.chat-shell{max-width:1180px;margin:0 auto;background:#fff;border:1px solid #E4E9F2;border-radius:20px;box-shadow:0 20px 50px -24px rgba(10,17,34,.18);display:flex;height:calc(100vh - 128px);min-height:480px;overflow:hidden}
+.conv-list{width:340px;flex-shrink:0;border-right:1px solid #EDF0F6;display:flex;flex-direction:column;background:#FBFCFE}
+.conv-list-head{padding:16px 16px 12px;border-bottom:1px solid #EDF0F6}
+.conv-list-head h2{font-size:1.05rem;font-weight:800;color:#101828}
+.conv-list-head p{font-size:.74rem;color:#8A95AC;margin-top:2px}
+.conv-items{flex:1;overflow-y:auto;padding:8px}
+.conv-item{display:flex;gap:11px;align-items:center;width:100%;text-align:left;background:none;border:none;border-radius:14px;padding:11px 12px;cursor:pointer;transition:background .2s;font-family:inherit}
+.conv-item:hover{background:#F0F4FB}
+.conv-item.on{background:#EBF1FF}
+.conv-item .ci-av{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:.95rem;font-weight:800;color:#fff;background:linear-gradient(135deg,#4C84FF,#2F6BFF);overflow:hidden;flex-shrink:0}
+.conv-item .ci-av img{width:100%;height:100%;object-fit:cover}
+.conv-item .ci-body{flex:1;min-width:0}
+.conv-item .ci-name{font-size:.88rem;font-weight:750;color:#101828;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conv-item .ci-prev{font-size:.76rem;color:#8A95AC;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.conv-item .ci-side{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
+.conv-item .ci-time{font-size:.68rem;color:#A6B1C7}
+.conv-item .ci-unread{min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:#E5484D;color:#fff;font-size:.64rem;font-weight:800;display:grid;place-items:center}
+.conv-empty{padding:46px 22px;text-align:center;color:#8A95AC;font-size:.85rem;line-height:1.7}
+.conv-empty b{display:block;font-size:.95rem;color:#57627A;margin-bottom:5px}
+
+.chat-pane{flex:1;display:flex;flex-direction:column;min-width:0;background:#fff}
+.chat-head{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #EDF0F6;background:#FBFCFE}
+.chat-back{display:none;background:none;border:1px solid #DDE3EE;border-radius:10px;width:36px;height:36px;place-items:center;cursor:pointer;color:#4A5870;font-size:1rem}
+.chat-head .ch-av{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:.9rem;font-weight:800;color:#fff;background:linear-gradient(135deg,#4C84FF,#2F6BFF);overflow:hidden;flex-shrink:0}
+.chat-head .ch-av img{width:100%;height:100%;object-fit:cover}
+.chat-head .ch-info{flex:1;min-width:0}
+.chat-head .ch-info b{display:block;font-size:.95rem;font-weight:750;color:#101828;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-head .ch-info span{font-size:.72rem;color:#8A95AC}
+.chat-head .ch-cta a{font-size:.78rem;font-weight:650;color:#2F6BFF;white-space:nowrap}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#F8FAFD}
+.chat-msgs .cm-start{text-align:center;color:#A6B1C7;font-size:.78rem;margin:auto 0 8px;line-height:1.6}
+.msg-row{display:flex;max-width:76%}
+.msg-row.mine{align-self:flex-end}
+.msg-row.theirs{align-self:flex-start}
+.bubble{padding:9px 13px;border-radius:16px;font-size:.9rem;line-height:1.55;position:relative;word-break:break-word;box-shadow:0 2px 8px -4px rgba(10,17,34,.12)}
+.msg-row.mine .bubble{background:linear-gradient(135deg,#4C84FF,#2F6BFF);color:#fff;border-bottom-right-radius:5px}
+.msg-row.theirs .bubble{background:#fff;border:1px solid #E8EDF5;color:#2A3550;border-bottom-left-radius:5px}
+.bubble img.bimg{max-width:230px;max-height:230px;border-radius:10px;display:block;cursor:pointer;object-fit:cover}
+.bubble .b-time{display:block;font-size:.64rem;opacity:.72;margin-top:5px;text-align:right}
+.msg-row.mine .bubble .b-time{color:#E4EDFF}
+.msg-row.theirs .bubble .b-time{color:#A6B1C7}
+.msg-day{text-align:center;font-size:.68rem;color:#A6B1C7;margin:6px 0 2px;font-weight:650}
+.chat-input{border-top:1px solid #EDF0F6;padding:10px 14px;background:#FBFCFE}
+.chat-preview{display:none;align-items:center;gap:10px;background:#fff;border:1px solid #E4E9F2;border-radius:12px;padding:8px 10px;margin-bottom:8px}
+.chat-preview img{width:52px;height:52px;border-radius:9px;object-fit:cover}
+.chat-preview .cp-name{font-size:.78rem;color:#57627A;flex:1}
+.chat-preview button{background:none;border:none;color:#C03221;cursor:pointer;font-size:.8rem;font-weight:650}
+.chat-input-row{display:flex;gap:9px;align-items:flex-end}
+.chat-input-row textarea{flex:1;min-height:44px;max-height:120px;resize:none;background:#fff;border:1.5px solid #E4E9F2;border-radius:14px;padding:11px 14px;font-size:.92rem;line-height:1.5;outline:none;transition:border-color .25s,box-shadow .25s}
+.chat-input-row textarea:focus{border-color:#2F6BFF;box-shadow:0 0 0 3px rgba(47,107,255,.1)}
+.chat-ico{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#EDF0F7;border:1px solid #DDE3EE;color:#4A5870;cursor:pointer;transition:all .25s;flex-shrink:0}
+.chat-ico:hover{background:#E3EAFA;color:#2F6BFF}
+.chat-send{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,#4C84FF,#2F6BFF);border:none;color:#fff;cursor:pointer;transition:all .25s;flex-shrink:0;box-shadow:0 8px 18px -8px rgba(47,107,255,.55)}
+.chat-send:hover{transform:translateY(-1px)}
+.chat-send:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.chat-send .spinner{width:16px;height:16px;border:2.2px solid rgba(255,255,255,.35);border-top-color:#fff}
+.chat-placeholder{flex:1;display:grid;place-items:center;text-align:center;padding:30px;color:#8A95AC}
+.chat-placeholder .cp-ic{font-size:2.6rem;margin-bottom:12px}
+
+/* lightbox */
+.lightbox{position:fixed;inset:0;background:rgba(8,14,28,.92);z-index:600;display:none;align-items:center;justify-content:center;padding:22px}
+.lightbox.on{display:flex}
+.lightbox img{max-width:92vw;max-height:88vh;border-radius:12px;object-fit:contain;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.lightbox .lb-close{position:absolute;top:16px;right:18px;background:rgba(255,255,255,.12);border:none;color:#fff;width:42px;height:42px;border-radius:50%;font-size:1.25rem;cursor:pointer;display:grid;place-items:center}
+
+@media (max-width:860px){
+  .chat-shell{height:calc(100vh - 118px)}
+  .conv-list{width:100%;border-right:none}
+  .chat-pane{display:none;width:100%}
+  .chat-shell.in-chat .conv-list{display:none}
+  .chat-shell.in-chat .chat-pane{display:flex}
+  .chat-back{display:grid}
+  .msg-row{max-width:88%}
+}
+@media (max-width:520px){.chat-shell{height:calc(100vh - 108px)}}
+
 </style>
 </head>
 <body data-meta="meta.forgot">
@@ -765,6 +843,8 @@ var D = {
  "err.not_pending":["This quote is no longer pending.","এই কোটেশনটি আর অপেক্ষমাণ নেই।"],
  "err.own_quote":["You cannot respond to your own quote.","নিজের কোটেশনে সাড়া দেওয়া যাবে না।"],
  "err.action":["Invalid action.","ভুল নির্দেশ।"],
+ "err.self_conv":["You cannot message yourself.","নিজেকে মেসেজ পাঠানো যাবে না।"],
+ "err.conv_not_found":["Conversation not found.","কথোপকথনটি পাওয়া যায়নি।"],
  "ok.sent":["Code sent!","কোড পাঠানো হয়েছে!"],
  "ok.verified":["Verified!","যাচাই হয়েছে!"],
  "dev.note":["Demo mode — your code: {c} (in production it is sent by SMS/email)","ডেমো মোড — আপনার কোড: {c} (প্রকৃত পরিবেশে এটি এসএমএস/ইমেইলে যাবে)"],
@@ -940,7 +1020,34 @@ var Q_EXT = {
  "bp.notFound":["Business profile not found.","ব্যবসায়িক প্রোফাইল পাওয়া যায়নি।"],
  "bp.role.buyer":["Buyer","ক্রেতা"],
  "bp.role.supplier":["Supplier / Manufacturer","সরবরাহকারী / প্রস্তুতকারক"],
- "bp.role.both":["Buyer & Supplier","ক্রেতা ও সরবরাহকারী"]
+ "bp.role.both":["Buyer & Supplier","ক্রেতা ও সরবরাহকারী"],
+ "ms.title":["Messages","মেসেজ"],
+ "ms.sub":["Business conversations","ব্যবসায়িক কথোপকথন"],
+ "ms.noConv":["No conversations yet","এখনো কোনো কথোপকথন নেই"],
+ "ms.noConvD":["Message a business from their profile or a marketplace post to start.","কোনো ব্যবসার প্রোফাইল বা মার্কেটপ্লেস পোস্ট থেকে মেসেজ পাঠিয়ে শুরু করুন।"],
+ "ms.startChat":["Start the conversation","কথোপকথন শুরু করুন"],
+ "ms.startChatD":["Send a message to discuss requirements, pricing, or samples.","প্রয়োজন, দাম বা নমুনা নিয়ে আলোচনা করতে মেসেজ পাঠান।"],
+ "ms.typeMsg":["Write a message…","মেসেজ লিখুন…"],
+ "ms.send":["Send","পাঠান"],
+ "ms.attach":["Attach image","ছবি যুক্ত করুন"],
+ "ms.removeImg":["Remove image","ছবি সরান"],
+ "ms.you":["You","আপনি"],
+ "ms.back":["← Back to conversations","← কথোপকথনে ফিরুন"],
+ "ms.loading":["Loading…","লোড হচ্ছে…"],
+ "ms.sendError":["Could not send message. Please try again.","মেসেজ পাঠানো যায়নি। আবার চেষ্টা করুন।"],
+ "ms.loadError":["Could not load messages.","মেসেজ লোড করা যায়নি।"],
+ "ms.imageTooBig":["Image is too large (max 1.5MB).","ছবিটি অনেক বড় (সর্বোচ্চ ১.৫MB)।"],
+ "ms.imageType":["Only JPG, PNG or WEBP images are allowed.","শুধু JPG, PNG বা WEBP ছবি অনুমোদিত।"],
+ "ms.viewImage":["View full image","পুরো ছবি দেখুন"],
+ "ms.close":["Close","বন্ধ করুন"],
+ "ms.newChat":["Message","মেসেজ"],
+ "ms.unreadBadge":["Unread","অপঠিত"],
+ "ms.justNow":["just now","এইমাত্র"],
+ "ms.minAgo":["{m} min","{m} মি"],
+ "ms.hrAgo":["{h} hr","{h} ঘ"],
+ "ms.dayAgo":["{d} d","{d} দিন"],
+ "ms.photo":["Photo","ছবি"],
+ "ms.connecting":["Connecting…","সংযুক্ত হচ্ছে…"]
 };
 for (var k in Q_EXT) { D[k] = Q_EXT[k]; }
 
@@ -1148,7 +1255,7 @@ function api(path, body){
       .catch(function(){ return { status:r.status, data:{ error:'bad_response' } }; });
   }).catch(function(){ return { status:0, data:{ error:'offline' } }; });
 }
-var ERR_CODES = ['email_exists','phone_exists','invalid','not_found','weak','unverified','invalid_code','expired','too_many','network','offline','bad_response','missing','no_session','route','method','purpose','forbidden','email','phone','name','mismatch','required','type','code','locked','generic','title','category','location','desc','message','image','self_quote','post_not_found','role_not_allowed','duplicate','post_closed','quote_not_found','not_pending','own_quote','action'];
+var ERR_CODES = ['email_exists','phone_exists','invalid','not_found','weak','unverified','invalid_code','expired','too_many','network','offline','bad_response','missing','no_session','route','method','purpose','forbidden','email','phone','name','mismatch','required','type','code','locked','generic','title','category','location','desc','message','image','self_quote','post_not_found','role_not_allowed','duplicate','post_closed','quote_not_found','not_pending','own_quote','action','self_conv','conv_not_found'];
 function errMsg(e){
   e = e || 'generic';
   if(ERR_CODES.indexOf(e) >= 0) return t('err.'+e);

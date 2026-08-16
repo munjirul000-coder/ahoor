@@ -103,3 +103,13 @@ Push to GitHub → Deploy on Render (free tier):
 - All fields optional (Skip for now) — editable anytime from the Business Profile
 - Saved to profile: businessName, category, district, buyProducts, typicalQty, productsServices, moq
 - Public business page shows "Products usually bought" + "Typical quantity" when filled
+
+## Features (v5 — Real-time Business Messaging / Chat)
+
+- **Private conversations** between businesses — start from Business Profile ("Contact Business"), Marketplace post (💬 button), Quote cards ("Contact Supplier"), or directly `/messages.html?with=USERID`
+- **Messages page**: conversation list (logo, name, last message, time, unread badge) + chat pane (bubbles, timestamps, day separators); mobile shows list first with back button
+- **Text + image messages**: attach JPG/PNG/WEBP (≤1.5MB, client+server validated), preview before sending, remove option, click-to-open lightbox
+- **Real-time via SSE** (`/api/stream`) — new messages appear instantly; polling fallback (list 20s, chat 6s) only when tab visible
+- **Unread counts**: badge on conversation items + dashboard Messages card; auto-cleared on read
+- **Security**: participants-only access (403 otherwise), unauthenticated redirect, safe image validation, input limits — no secrets exposed
+- Fully bilingual (বাংলা/EN); 28/28 chat E2E tests + full regression pass

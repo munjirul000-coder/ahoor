@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahoor — Messages</title>
+<meta name="theme-color" content="#0A1122">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1430'/%3E%3Cpath d='M16 8.5 9.6 23.5h12.8z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='9.6' cy='23.5' r='2.6' fill='%23fff'/%3E%3Ccircle cx='22.4' cy='23.5' r='2.6' fill='%23FF8A4C'/%3E%3C/svg%3E">
+<style>
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,__INTER__) format('woff2')}
+@font-face{font-family:'Noto Sans Bengali';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,__NSB__) format('woff2')}
+:root{--ink:#0A1122;--bg:#F4F6FA;--text:#101828;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+html[lang="bn"]{--font:'Noto Sans Bengali','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+html[lang="bn"] body{line-height:1.72}
+__CSS__
+</style>
+</head>
+<body data-meta="ms.title">
+
+<header class="auth-nav">
+  <div class="container">
+    <a class="brand" href="/index.html" aria-label="Ahoor — home">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="9" fill="url(#lg1)"/>
+        <path d="M16 8.5 9.6 23.5h12.8z" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/>
+        <circle cx="16" cy="8.5" r="2.7" fill="#fff"/><circle cx="9.6" cy="23.5" r="2.7" fill="#fff"/><circle cx="22.4" cy="23.5" r="2.7" fill="#FF8A4C"/>
+        <defs><linearGradient id="lg1" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#3B77FF"/><stop offset="1" stop-color="#1E4FD8"/></linearGradient></defs>
+      </svg>
+      <span class="brand-name">Ahoor<em>.</em></span>
+    </a>
+    <div class="auth-nav-right">
+      <a class="back-home" href="/dashboard.html">
+        <svg class="arr" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        <span data-i18n="nav.dash">Dashboard</span>
+      </a>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" class="lang-btn on" data-lang="bn" aria-pressed="true">বাংলা</button>
+        <span class="lsep" aria-hidden="true">|</span>
+        <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="chat-main">
+  <div class="chat-shell" id="chatShell">
+    <!-- LEFT: conversation list -->
+    <aside class="conv-list">
+      <div class="conv-list-head">
+        <h2 data-i18n="ms.title">Messages</h2>
+        <p data-i18n="ms.sub">Business conversations</p>
+      </div>
+      <div class="conv-items" id="convItems">
+        <div class="conv-empty" id="convLoad"><b data-i18n="ms.loading">Loading…</b></div>
+      </div>
+    </aside>
+
+    <!-- RIGHT: chat pane -->
+    <section class="chat-pane" id="chatPane">
+      <div class="chat-placeholder" id="chatEmpty">
+        <div>
+          <div class="cp-ic">💬</div>
+          <b style="display:block;color:#57627A;margin-bottom:6px" data-i18n="ms.startChat">Start the conversation</b>
+          <span data-i18n="ms.startChatD">Send a message to discuss requirements, pricing, or samples.</span>
+        </div>
+      </div>
+
+      <div id="chatActive" style="display:none;flex-direction:column;flex:1;min-height:0">
+        <div class="chat-head">
+          <button class="chat-back" id="chatBack" aria-label="Back">←</button>
+          <span class="ch-av" id="chAv">A</span>
+          <div class="ch-info">
+            <b id="chName">—</b>
+            <span id="chMeta"></span>
+          </div>
+          <div class="ch-cta"><a id="chProfile" href="#" data-i18n="bp.viewPublic">View Public Profile</a></div>
+        </div>
+        <div class="chat-msgs" id="chatMsgs"></div>
+        <div class="chat-input">
+          <div class="chat-preview" id="chatPreview">
+            <img id="cpImg" alt="">
+            <span class="cp-name" data-i18n="ms.photo">Photo</span>
+            <button type="button" id="cpRemove" data-i18n="ms.removeImg">Remove image</button>
+          </div>
+          <div class="chat-input-row">
+            <textarea id="chatText" rows="1" data-i18n-ph="ms.typeMsg" placeholder="Write a message…"></textarea>
+            <button class="chat-ico" id="chatAttach" title="Attach image" aria-label="Attach image">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+            </button>
+            <input type="file" id="chatFile" accept="image/jpeg,image/png,image/webp" style="display:none">
+            <button class="chat-send" id="chatSend" aria-label="Send">
+              <span class="spinner"></span>
+              <svg class="send-ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+  <img id="lbImg" alt="">
+</div>
+
+<script>
+__JS__
+(function(){
+  'use strict';
+  var A = window.Ahoor;
+  var me = null;
+  var convs = [];
+  var activeConvId = null;
+  var pendingImage = null;
+  var sending = false;
+  var es = null;
+
+  /* ---------- helpers ---------- */
+  function timeAgo(iso){
+    var diff = (Date.now() - new Date(iso).getTime()) / 60000;
+    if (diff < 1) return A.t('ms.justNow');
+    if (diff < 60) return A.t('ms.minAgo').replace('{m}', Math.floor(diff));
+    if (diff < 60 * 24) return A.t('ms.hrAgo').replace('{h}', Math.floor(diff / 60));
+    return A.t('ms.dayAgo').replace('{d}', Math.floor(diff / 1440));
+  }
+  function fmtTime(iso){
+    return new Date(iso).toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+  }
+  function fmtDay(iso){
+    var d = new Date(iso);
+    return d.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+  }
+  function bizName(u){ return u ? (u.businessName || u.name || '—') : '—'; }
+  function avatarHtml(u){
+    var n = bizName(u);
+    if (u && u.image) return '<img src="' + u.image + '" alt="">';
+    return A.esc(n.charAt(0).toUpperCase());
+  }
+  function bizTypeName(v){
+    if(!v) return '';
+    var t = A.AhoorData.businessTypes.find(function(x){ return x[0] === v; });
+    if(!t) return v;
+    return A.LANG === 'bn' ? t[1] : (A.AhoorData.businessTypeNames[v] || v);
+  }
+
+  /* ---------- session ---------- */
+  A.api('/api/session').then(function(r){
+    if (!r.data || !r.data.user) { location.href = '/login.html?next=/messages.html'; return; }
+    me = r.data.user;
+    loadConversations().then(function(){
+      var withId = new URLSearchParams(location.search).get('with');
+      if (withId && withId !== me.id) openWith(withId);
+    });
+    connectSSE();
+    setInterval(function(){ if (!document.hidden) loadConversations(true); }, 20000);
+    setInterval(function(){ if (activeConvId && !document.hidden) loadMessages(activeConvId, true); }, 6000);
+  });
+
+  /* ---------- conversation list ---------- */
+  function loadConversations(silent){
+    return fetch('/api/conversations', { credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (!d) return;
+        convs = d.conversations || [];
+        renderConvList();
+      })
+      .catch(function(){});
+  }
+  function renderConvList(){
+    var box = document.getElementById('convItems');
+    if (!convs.length) {
+      box.innerHTML = '<div class="conv-empty"><b data-i18n="ms.noConv">No conversations yet</b><span data-i18n="ms.noConvD">Message a business from their profile or a marketplace post to start.</span></div>';
+      applyI18n(box);
+      return;
+    }
+    box.innerHTML = '';
+    convs.forEach(function(c){
+      var el = document.createElement('button');
+      el.className = 'conv-item' + (c.id === activeConvId ? ' on' : '');
+      var last = c.lastMessage;
+      var prev = last ? (last.type === 'image' ? '📷 ' + A.t('ms.photo') : A.esc(last.text)) : '';
+      var time = c.lastMessage ? timeAgo(c.lastMessage.createdAt) : '';
+      el.innerHTML =
+        '<span class="ci-av">' + avatarHtml(c.other) + '</span>' +
+        '<span class="ci-body">' +
+          '<span class="ci-name">' + A.esc(bizName(c.other)) + '</span>' +
+          '<span class="ci-prev">' + (last && last.senderId === me.id ? A.t('ms.you') + ': ' : '') + prev + '</span>' +
+        '</span>' +
+        '<span class="ci-side">' +
+          (time ? '<span class="ci-time">' + time + '</span>' : '') +
+          (c.unread ? '<span class="ci-unread">' + (c.unread > 99 ? '99+' : c.unread) + '</span>' : '') +
+        '</span>';
+      el.addEventListener('click', function(){ openConv(c.id); });
+      box.appendChild(el);
+    });
+  }
+  function applyI18n(root){
+    root.querySelectorAll('[data-i18n]').forEach(function(el){
+      var v = A.t(el.getAttribute('data-i18n'));
+      if (v) el.textContent = v;
+    });
+  }
+
+  /* ---------- open conversation ---------- */
+  function openConv(id, silent){
+    activeConvId = id;
+    var conv = convs.find(function(c){ return c.id === id; });
+    if (!conv) return;
+    document.getElementById('chatShell').classList.add('in-chat');
+    document.getElementById('chatEmpty').style.display = 'none';
+    var active = document.getElementById('chatActive');
+    active.style.display = 'flex';
+    document.getElementById('chAv').innerHTML = avatarHtml(conv.other);
+    document.getElementById('chName').textContent = bizName(conv.other);
+    var metaParts = [];
+    if (conv.other && conv.other.businessType) metaParts.push(bizTypeName(conv.other.businessType));
+    if (conv.other && conv.other.district) metaParts.push(A.locName(A.AhoorData.districts, conv.other.district));
+    document.getElementById('chMeta').textContent = metaParts.join(' · ');
+    document.getElementById('chProfile').href = '/business.html?id=' + conv.other.id;
+    renderConvList();
+    loadMessages(id, silent);
+    document.getElementById('chatText').focus();
+  }
+  function openWith(userId){
+    A.api('/api/conversations', { withUserId: userId }).then(function(r){
+      if (r.status === 200) {
+        var exists = convs.find(function(c){ return c.id === r.data.conversation.id; });
+        if (!exists) convs.unshift(r.data.conversation);
+        else convs = convs.map(function(c){ return c.id === r.data.conversation.id ? r.data.conversation : c; });
+        openConv(r.data.conversation.id);
+      } else if (r.status === 401) {
+        location.href = '/login.html?next=/messages.html?with=' + userId;
+      } else {
+        A.toast(A.errMsg(r.data.error), 'er');
+      }
+    });
+  }
+
+  /* ---------- messages ---------- */
+  function loadMessages(convId, silent){
+    return fetch('/api/conversations/' + convId + '/messages', { credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (!d.messages || convId !== activeConvId) return;
+        renderMessages(d.messages);
+        // refresh list (unread changed)
+        loadConversations(true);
+      })
+      .catch(function(){});
+  }
+  function renderMessages(msgs){
+    var box = document.getElementById('chatMsgs');
+    box.innerHTML = '';
+    if (!msgs.length) {
+      var st = document.createElement('div');
+      st.className = 'cm-start';
+      st.textContent = A.t('ms.startChatD');
+      box.appendChild(st);
+      return;
+    }
+    var lastDay = '';
+    msgs.forEach(function(m){
+      var day = fmtDay(m.createdAt);
+      if (day !== lastDay) {
+        lastDay = day;
+        var d = document.createElement('div');
+        d.className = 'msg-day';
+        d.textContent = day;
+        box.appendChild(d);
+      }
+      var mine = m.senderId === me.id;
+      var row = document.createElement('div');
+      row.className = 'msg-row ' + (mine ? 'mine' : 'theirs');
+      if (m.type === 'image') {
+        row.innerHTML = '<div class="bubble"><img class="bimg" src="' + m.image + '" alt=""><span class="b-time">' + fmtTime(m.createdAt) + '</span></div>';
+        row.querySelector('.bimg').addEventListener('click', function(){ openLightbox(m.image); });
+      } else {
+        row.innerHTML = '<div class="bubble">' + A.esc(m.text) + '<span class="b-time">' + fmtTime(m.createdAt) + '</span></div>';
+      }
+      box.appendChild(row);
+    });
+    box.scrollTop = box.scrollHeight;
+  }
+
+  /* ---------- send ---------- */
+  function sendMessage(){
+    if (sending || !activeConvId) return;
+    var text = document.getElementById('chatText').value.trim();
+    if (!text && !pendingImage) return;
+    sending = true;
+    var btn = document.getElementById('chatSend');
+    btn.disabled = true;
+    btn.querySelector('.send-ic').style.display = 'none';
+    btn.querySelector('.spinner').style.display = 'inline-block';
+    var body = pendingImage ? { image: pendingImage } : { text: text };
+    A.api('/api/conversations/' + activeConvId + '/messages', body).then(function(r){
+      sending = false;
+      btn.disabled = false;
+      btn.querySelector('.send-ic').style.display = '';
+      btn.querySelector('.spinner').style.display = 'none';
+      if (r.status === 201) {
+        document.getElementById('chatText').value = '';
+        clearPendingImage();
+        loadMessages(activeConvId);
+      } else if (r.status === 401) {
+        location.href = '/login.html?next=/messages.html';
+      } else {
+        A.toast(A.errMsg(r.data.error), 'er');
+      }
+    });
+  }
+  function clearPendingImage(){
+    pendingImage = null;
+    document.getElementById('chatPreview').style.display = 'none';
+    document.getElementById('cpImg').src = '';
+    document.getElementById('chatFile').value = '';
+  }
+  document.getElementById('chatSend').addEventListener('click', sendMessage);
+  document.getElementById('chatText').addEventListener('keydown', function(e){
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+  document.getElementById('chatAttach').addEventListener('click', function(){ document.getElementById('chatFile').click(); });
+  document.getElementById('chatFile').addEventListener('change', function(){
+    var f = this.files[0];
+    if (!f) return;
+    if (!/^image\/(jpeg|jpg|png|webp)$/.test(f.type)) { A.toast(A.t('ms.imageType'), 'er'); return; }
+    if (f.size > 1500000) { A.toast(A.t('ms.imageTooBig'), 'er'); return; }
+    var rd = new FileReader();
+    rd.onload = function(e){
+      pendingImage = e.target.result;
+      document.getElementById('cpImg').src = pendingImage;
+      document.getElementById('chatPreview').style.display = 'flex';
+    };
+    rd.readAsDataURL(f);
+  });
+  document.getElementById('cpRemove').addEventListener('click', clearPendingImage);
+  document.getElementById('chatBack').addEventListener('click', function(){
+    document.getElementById('chatShell').classList.remove('in-chat');
+    activeConvId = null;
+    document.getElementById('chatActive').style.display = 'none';
+    document.getElementById('chatEmpty').style.display = '';
+    renderConvList();
+  });
+
+  /* ---------- lightbox ---------- */
+  function openLightbox(src){
+    document.getElementById('lbImg').src = src;
+    document.getElementById('lightbox').classList.add('on');
+  }
+  document.getElementById('lbClose').addEventListener('click', function(){ document.getElementById('lightbox').classList.remove('on'); });
+  document.getElementById('lightbox').addEventListener('click', function(e){
+    if (e.target === this) this.classList.remove('on');
+  });
+
+  /* ---------- real-time (SSE) with polling fallback ---------- */
+  function connectSSE(){
+    if (typeof EventSource === 'undefined') return;
+    try {
+      es = new EventSource('/api/stream');
+      es.onmessage = function(ev){
+        try {
+          var d = JSON.parse(ev.data);
+          if (d.type === 'message') {
+            if (activeConvId && d.conversationId === activeConvId) {
+              loadMessages(activeConvId);
+            } else {
+              loadConversations(true);
+            }
+          }
+        } catch (e) {}
+      };
+      es.onerror = function(){
+        // EventSource auto-reconnects; nothing to do
+      };
+    } catch (e) {}
+  }
+})();
+</script>
+</body>
+</html>

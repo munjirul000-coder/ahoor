@@ -99,8 +99,9 @@ __CSS__
         <a class="dash-card" href="#quotesSec">
           <span class="di">📩</span><b data-i18n="db.received">Received Quotes</b><span data-i18n="db.receivedD">Inquiries on your posts</span>
         </a>
-        <a class="dash-card" href="#msgSec">
+        <a class="dash-card" href="/messages.html">
           <span class="di">💬</span><b data-i18n="db.msgs">Messages</b><span data-i18n="db.msgsD">Business conversations</span>
+          <span class="ci-unread" id="msgUnread" style="display:none;position:absolute;top:12px;right:12px">0</span>
         </a>
       </div>
 
@@ -151,6 +152,7 @@ __JS__
     loadQuotes();
     loadSent();
     loadNotifs();
+    loadMsgUnread();
   });
 
   function render(){
@@ -252,7 +254,7 @@ __JS__
               ? '<button class="btn btn-primary btn-sm" data-acc="' + q.id + '">' + A.t('qt.accept') + '</button>' +
                 '<button class="btn btn-outline btn-sm" data-rej="' + q.id + '">' + A.t('qt.reject') + '</button>'
               : '') +
-            '<a class="quote-link" href="/marketplace.html">' + A.t('qt.contact') + '</a>' +
+            '<a class="quote-link" href="/messages.html?with=' + (q.sender ? q.sender.id : '') + '">💬 ' + A.t('qt.contact') + '</a>' +
           '</div>';
         var acc = el.querySelector('[data-acc]');
         if(acc) acc.addEventListener('click', function(){ respondQuote(q.id, 'accept'); });
@@ -371,6 +373,18 @@ __JS__
   });
 
   setInterval(loadNotifs, 30000); /* notification polling */
+  function loadMsgUnread(){
+    fetch('/api/conversations', { credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        var total = (d.conversations || []).reduce(function(a, c){ return a + (c.unread || 0); }, 0);
+        var el = document.getElementById('msgUnread');
+        if (total > 0) { el.style.display = ''; el.textContent = total > 99 ? '99+' : total; }
+        else el.style.display = 'none';
+      })
+      .catch(function(){});
+  }
+  setInterval(loadMsgUnread, 25000);
 
   document.getElementById('btnSignout').addEventListener('click', function(){
     var b = this;

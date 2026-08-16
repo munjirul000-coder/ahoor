@@ -245,9 +245,7 @@ __JS__
     if(p.deadline && isBuyer) meta += '<span>' + A.t('mp.deadline') + ': <b>' + A.esc(p.deadline) + '</b></span>';
     meta += '<span>' + A.locName(A.AhoorData.districts, p.location) + '</span>';
     var dateTxt = new Date(p.createdAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
-    var btn = isBuyer
-      ? '<button class="btn btn-primary btn-sm" data-quote="' + p.id + '">' + A.t('qt.sendQuote') + '</button>'
-      : '<button class="btn btn-orange btn-sm" data-quote="' + p.id + '">' + A.t('qt.reqQuote') + '</button>';
+    var me_id = me ? me.id : null;
     el.innerHTML =
       (img ? img : '') +
       '<div class="post-top">' +
@@ -264,7 +262,10 @@ __JS__
           '<span>' + A.t('mp.postedOn') + ': ' + dateTxt + '</span>' +
         '</span>' +
       '</div>' +
-      btn;
+      '<div class="qcard-actions" style="display:flex;gap:8px">' +
+        '<button class="btn btn-primary btn-sm" style="flex:1" data-quote="' + p.id + '">' + A.t(isBuyer ? 'qt.sendQuote' : 'qt.reqQuote') + '</button>' +
+        (p.owner && p.owner.id !== me_id ? '<a class="btn btn-outline btn-sm" href="/messages.html?with=' + p.owner.id + '" title="' + A.t('ms.newChat') + '" style="flex-shrink:0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></a>' : '') +
+      '</div>';
     el.querySelector('[data-quote]').addEventListener('click', function(){ openQuote(p); });
     return el;
   }

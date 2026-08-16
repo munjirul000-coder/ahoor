@@ -99,7 +99,7 @@ __CSS__
             </div>
           </div>
           <div class="bp-hbtns">
-            <a class="btn btn-primary" href="#bpContactSec"><span data-i18n="bp.contact">Contact Business</span></a>
+            <a class="btn btn-primary" id="bpContactBtn" href="#bpContactSec"><span data-i18n="bp.contact">Contact Business</span></a>
             <a class="btn btn-ghost-dark" href="/marketplace.html"><span data-i18n="bp.viewOpps">View Opportunities</span></a>
             <a class="btn btn-ghost-dark" id="bpEditBtn" href="/profile-setup.html" style="display:none"><span data-i18n="bp.edit">Edit Business Profile</span></a>
           </div>
@@ -183,7 +183,12 @@ __JS__
     document.getElementById('bpLoc').textContent = locParts.length ? locParts.join(', ') : '—';
     document.getElementById('bpLoc').style.display = locParts.length ? '' : 'none';
     document.getElementById('bpVrf').textContent = '✓ ' + A.t('bp.verif.' + (p.verificationStatus === 'verified' ? 'verified' : 'basic'));
-    if(p.isOwn) document.getElementById('bpEditBtn').style.display = '';
+    if(p.isOwn){
+      document.getElementById('bpEditBtn').style.display = '';
+      document.getElementById('bpContactBtn').style.display = 'none';
+    } else {
+      document.getElementById('bpContactBtn').href = '/messages.html?with=' + p.id;
+    }
 
     document.getElementById('bpAbout').textContent = p.description || '—';
 
